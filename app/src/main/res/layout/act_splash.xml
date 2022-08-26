@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/app_color"
+    android:layout_height="match_parent"
+    tools:context=".SplashActivity">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:foregroundGravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/logo_yellow" />
+    <LinearLayout
+        style="@style/WrapContent"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/text_splash_app_title"
+            style="@style/SplashAppTitleStyle"
+            tools:text="@string/app_name" />
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/text_splash_app_version"
+            style="@style/SplashAppVersionStyle"
+            android:layout_marginTop="20dp"
+            tools:text="1.0.0" />
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:fontFamily="@font/gilroy_bold"
+        android:text="@string/dim_dim"
+        android:id="@+id/dim"
+        android:textColor="@color/black"
+        android:textSize="24sp" />
+    <ImageView
+        style="@style/SplashLogoStyle"
+        android:layout_below="@id/dim"
+        android:layout_marginBottom="40dp" />
+
+</RelativeLayout>

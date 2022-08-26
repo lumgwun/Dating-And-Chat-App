@@ -1,0 +1,146 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url "https://maven.java.net/content/groups/public/"
+        }
+
+        maven { url "https://jcenter.bintray.com" }
+        //jcenter()
+        maven { url 'https://maven.fabric.io/public'
+        }
+        maven {
+            url "https://maven.java.net/content/groups/public/"
+        }
+
+        maven {
+            url "https://maven.springframework.org/release"
+        }
+        maven { url 'https://oss.jfrog.org/artifactory/oss-snapshot-local/' }
+        maven {
+            url "https://maven.restlet.com"
+        }
+        maven {
+            url "https://jitpack.io"
+        }
+        maven {
+            url 'https://mvnrepository.com/artifact/com.android.tools.lint/lint-gradle-api'
+        }
+
+        maven {
+            url 'https://github.com/suckgamony/RapidDecoder/raw/master/repository'
+        }
+        maven {
+            url "https://repo.maven.apache.org/maven2"
+        }
+        maven {
+            url "https://repo.spring.io/release"
+        }
+        maven {
+            url "https://repository.jboss.org/maven2/"
+        }
+        maven {
+            url 'https://repo.example.com/maven2/'
+        }
+        maven {
+            url 'file://local/repo/'
+        }
+        ivy {
+            url 'https://repo.example.com/ivy'
+        }
+        maven { url "https://dl.google.com/dl/android/maven2/"
+        }
+
+        maven { url 'https://repo1.maven.org/maven2' }
+        maven { url 'https://plugins.gradle.org/m2/'}
+        maven {
+            url "https://github.com/QuickBlox/quickblox-android-sdk-releases/raw/master/"
+        }
+        maven {
+            url 'https://dl.bintray.com/kotlin/kotlin-dev'
+            content {
+                includeGroup('org.jetbrains.dokka')
+            }
+        }
+        maven { url 'https://oss.jfrog.org/artifactory/oss-snapshot-local' }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:4.2.2"
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+        //classpath 'com.google.gms:google-services:4.3.0'
+        classpath 'com.google.gms:google-services:4.3.13'
+        classpath 'io.fabric.tools:gradle:1.31.0'
+        classpath 'io.fabric.tools:gradle:1.28.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.14.2'
+        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.4.10.2'
+        classpath 'com.github.matthiasrobbers:shortbread-gradle-plugin:1.4.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31"
+        classpath 'com.google.firebase:perf-plugin:1.4.1'
+        classpath ('com.google.firebase:perf-plugin:1.4.1') {
+            exclude group: 'com.google.guava', module: 'guava-jdk5'
+        }
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.5-SNAPSHOT'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+        //classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.4.20.2-dev-64'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter() // Warning: this repository is going to shut down soon
+        maven { url 'https://jitpack.io' }
+        maven {
+            url "https://github.com/QuickBlox/quickblox-android-sdk-releases/raw/master/"
+        }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url 'http://dl.bintray.com/amulyakhare/maven'
+        }
+        /*maven {
+            url "https://mqttchat.jfrog.io/artifactory/libs-release-local"
+            credentials {
+                username = "mqttchat"
+                password = "telifoun"
+            }
+        }
+        maven {
+            url 'https://dl.bintray.com/kotlin/kotlin-dev'
+            content {
+                includeGroup('org.jetbrains.dokka')
+            }
+        }*/
+    }
+}
+ext {
+    dimensionDefault = 'default'
+
+    lintAbortOnError = false
+
+    // QuickBlox SDK version
+    qbSdkVersion = '3.9.15'
+
+    //Firebase
+    firebaseCoreVersion = '21.0.0'
+
+    //Material
+    materialVersion = '1.6.0'
+
+    //RobotoTextView
+    robotoTextViewVersion = '4.0.0'
+
+    //Pull to refresh
+    pullToRefreshVersion = '3.2.3'
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

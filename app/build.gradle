@@ -1,0 +1,246 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+    id 'com.google.firebase.firebase-perf'
+    id 'com.github.johnrengelman.shadow'
+}
+
+android {
+    compileSdkVersion 32
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "com.lahoriagency.cikolive"
+        minSdkVersion 24
+        targetSdkVersion 32
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        renderscriptSupportModeEnabled true    // Enable RS support
+        renderscriptTargetApi 19
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildFeatures.dataBinding = true
+
+    signingConfigs {
+        buildTypes {
+            debug {
+                buildConfigField "java.util.Date", "buildTime", "new java.util.Date(" + System.currentTimeMillis() + "L)"
+            }
+            release {
+                buildConfigField "java.util.Date", "buildTime", "new java.util.Date(" + System.currentTimeMillis() + "L)"
+            }
+        }
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        buildTypes.each {
+
+            it.buildConfigField 'String', 'QUICKBLOX_APP_ID', quickblox_App_ID
+            it.buildConfigField 'String', 'QUICKBLOX_AUTH_KEY', quickblox_Authorization_key
+            it.buildConfigField 'String', 'QUICKBLOX_SECRET_KEY', quickblox_Authorization_secret
+            it.buildConfigField 'String', 'QUICKBLOX_ACCT_KEY', quickblox_Account_key
+            it.buildConfigField 'String', 'APPLICATION_ID', client_App_ID
+            it.buildConfigField 'String', 'APP_ID_MQTTchat', MQTTchat_APP_ID
+            it.buildConfigField 'String', 'SECRET_KEY_MQTTchat', MQTTchat_APP_SECRET
+
+            //buildConfigField "String", "QUICKBLOX_APP_ID_L", localProperties['quickblox_App_ID22']
+            //buildConfigField "String", "QUICKBLOX_AUTH_KEY_L", localProperties['quickblox_Authorization_key22']
+            //buildConfigField "String", "QUICKBLOX_SECRET_KEY_L", localProperties['quickblox_Authorization_secret22']
+            //buildConfigField "String", "QUICKBLOX_ACCT_KEY_L", localProperties.getProperty("quickblox_Account_key22")
+
+
+        }
+
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+
+        exclude 'src/main/res/values/m3_comp_bottom_app_bar_container_color'
+        //exclude 'META-INF/SPRING.SCHEMAS'
+    }
+    android {
+        packagingOptions {
+            pickFirst 'META-INF/DEPENDENCIES'
+            pickFirst 'META-INF/AL2.0'
+            pickFirst 'META-INF/LGPL2.1'
+            pickFirst 'META-INF/LICENSE.txt'
+            pickFirst 'META-INF/spring.schemas'
+            pickFirst 'META-INF/spring.tooling'
+            pickFirst 'META-INF/spring.handlers'
+
+        }
+        configurations.implementation {
+            //exclude group: "androidx.lifecycle", module: "lifecycle-viewmodel-ktx"
+            //exclude group: "org.webrtc", module: "google-webrtc"
+
+
+
+            //exclude group: "org.jbundle.util.osgi.wrapped", module: "org.jbundle.util.osgi.wrapped.org.apache.http.client"
+            //exclude group: "com.sun.mail", module: "android-activation"
+            //exclude group: "com.sun.mail", module: "android-activation"
+
+           // exclude group: "org.apache.commons.logging.Log"
+
+
+            //exclude group: "org.springframework", module: "spring-jcl"
+            //exclude group: "commons-logging", module: "commons-logging"
+
+            //exclude group: "commons-logging", module: "commons-logging"
+
+
+
+        }
+
+
+    }
+    lintOptions {
+
+        checkReleaseBuilds false
+
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.5.0'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation 'androidx.navigation:navigation-fragment:2.5.1'
+    implementation 'androidx.navigation:navigation-ui:2.5.1'
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+    implementation 'com.quickblox:quickblox-android-sdk-core:3.9.0'
+
+    //implementation "com.quickblox:quickblox-android-sdk-chat:3.9.1"
+    implementation "com.quickblox:quickblox-android-sdk-content:3.9.1"
+    //implementation "com.quickblox:quickblox-android-sdk-messages:3.9.1"
+    //implementation "com.quickblox:quickblox-android-sdk-customobjects:3.9.1"
+    //implementation 'org.webrtc:google-webrtc:1.0.32006'
+
+    implementation "com.quickblox:quickblox-android-sdk-videochat-webrtc:3.3.3"
+    implementation "com.google.firebase:firebase-messaging:23.0.6"
+    implementation "com.google.firebase:firebase-core:21.1.0"
+    implementation 'com.github.mtotschnig:stickylistheaders:2.8.0'
+    implementation 'com.timehop.stickyheadersrecyclerview:library:[0.4.3]@aar'
+    implementation 'com.rom4ek:arcnavigationview:2.0.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'com.rom4ek:arcnavigationview:2.0.0'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation 'com.github.bumptech.glide:annotations:4.12.0'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0-alpha01"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.0-alpha01"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.6.0-alpha01"
+    implementation "androidx.lifecycle:lifecycle-service:2.6.0-alpha01"
+    implementation "androidx.lifecycle:lifecycle-process:2.6.0-alpha01"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "androidx.lifecycle:lifecycle-runtime-testing:2.6.0-alpha01"
+    implementation 'com.github.ismaeldivita:chip-navigation-bar:1.4.0'
+    //implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.github.johnkil.android-robototextview:robototextview:4.0.0'
+    implementation 'com.facebook.android:facebook-login:11.1.0'
+    implementation 'com.facebook.android:facebook-android-sdk:11.1.0'
+    implementation 'com.facebook.android:audience-network-sdk:5.11.0'
+    implementation platform('com.google.firebase:firebase-bom:29.1.0')
+    implementation 'com.google.firebase:firebase-core'
+    implementation('com.github.bumptech.glide:okhttp3-integration:4.12.0') {
+        exclude group: 'glide-parent'
+    }
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation 'org.greenrobot:eventbus:3.3.1'
+    implementation 'com.github.smarteist:autoimageslider:1.4.0'
+    implementation 'com.android.volley:volley:1.2.1'
+    implementation 'com.bignerdranch.android:recyclerview-multiselect:0.2'
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.7.0'
+    implementation 'com.hbb20:ccp:2.6.0'
+    implementation 'com.appsflyer:af-android-sdk:6.2.0'
+    implementation 'com.android.installreferrer:installreferrer:2.2'
+    implementation 'com.wang.avi:library:1.0.5'
+    implementation 'com.google.maps:google-maps-services:2.0.0'
+    implementation 'com.google.maps.android:android-maps-utils:2.2.3'
+    implementation 'com.google.android.libraries.places:places:2.6.0'
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
+    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+
+    implementation 'net.steamcrafted:materialiconlib:1.0.8'
+    implementation 'com.balysv:material-ripple:1.0.2'
+    implementation 'com.klinkerapps:android-smsmms:5.2.6'
+    implementation 'com.melnykov:floatingactionbutton:1.3.0'
+    dependencies {
+        implementation 'com.github.clans:fab:1.6.4'
+    }
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
+    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
+    implementation "com.quickblox:quickblox-android-sdk-conference:3.9.0"
+    implementation 'com.google.android.gms:play-services-pay:16.0.3'
+    implementation 'com.google.android.gms:play-services-wallet:19.1.0'
+    implementation 'com.flaviofaria:kenburnsview:1.0.7'
+    implementation "com.navercorp.pulltorefresh:library:3.2.3"
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.navigation:navigation-fragment:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+    implementation 'com.ismaeldivita.chipnavigation:chip-navigation-bar:1.3.4'
+    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
+    implementation 'io.paperdb:paperdb:2.6'
+    implementation 'com.github.florent37:shapeofview:1.3.2'
+    implementation 'com.daimajia.easing:library:2.4@aar'
+
+
+
+
+    implementation 'androidx.navigation:navigation-ui:2.5.1'
+    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'com.rom4ek:arcnavigationview:2.0.0'
+    implementation 'com.mig35:carousellayoutmanager:1.4.6'
+    implementation 'com.melnykov:floatingactionbutton:1.3.0'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
+    implementation 'com.mikhaellopez:circularimageview:4.3.0'
+
+    //implementation 'com.telifoun.mqttchat:mqttchat-core:4.0.0'
+    //implementation 'com.telifoun.mqttchat:mqttchat-gui:4.0.0'
+    //implementation 'id.zelory:compressor:2.1.0'
+    //implementation 'id.zelory:compressor:3.0.1'
+
+}

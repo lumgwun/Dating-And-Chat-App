@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="-30dp"
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9"
+
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp"
+            app:cardMaxElevation="0dp">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingBottom="30dp">
+
+                <RelativeLayout
+                    android:id="@+id/top_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/app_color"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="12dp">
+
+                    <ImageView
+                        android:id="@+id/btn_closeW"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/ic_close"
+                        app:tint="@color/black"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_heading"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/gilroy_bold"
+                        android:gravity="center"
+                        android:text="@string/report"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+
+                        />
+
+
+                </RelativeLayout>
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/top_bar"
+                    android:layout_marginHorizontal="15dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+
+                            android:ellipsize="end"
+                            android:fontFamily="@font/gilroy_bold"
+                            android:maxLines="1"
+                            android:text="@string/reason_for_report"
+                            android:textColor="@color/gray"
+                            android:textSize="17sp" />
+
+
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/et_reason"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="@drawable/rect6h"
+                        android:backgroundTint="@color/bg_chats"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:imeOptions="actionNext"
+
+                        android:paddingHorizontal="15dp"
+                        android:paddingVertical="12dp"
+                        android:scrollbars="vertical"
+                        android:text=""
+                        android:textColor="@color/gray_light"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+
+                            android:ellipsize="end"
+                            android:fontFamily="@font/gilroy_bold"
+
+                            android:text="@string/how_it_hurts_you"
+                            android:textColor="@color/gray"
+                            android:textSize="17sp" />
+
+
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/et_heart"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:background="@drawable/rect6h"
+                        android:backgroundTint="@color/bg_chats"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:gravity="top"
+                        android:imeOptions="actionNext"
+
+                        android:paddingHorizontal="15dp"
+                        android:paddingVertical="12dp"
+                        android:scrollbars="vertical"
+                        android:text=""
+                        android:textColor="@color/gray_light"
+                        android:textSize="14sp" />
+
+
+                    <!--                    <LinearLayout-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_marginTop="20dp"-->
+                    <!--                        android:layout_marginBottom="8dp"-->
+                    <!--                        android:gravity="center_vertical"-->
+                    <!--                        android:orientation="horizontal">-->
+
+                    <!--                        <TextView-->
+
+                    <!--                            android:layout_width="wrap_content"-->
+                    <!--                            android:layout_height="wrap_content"-->
+
+
+                    <!--                            android:ellipsize="end"-->
+                    <!--                            android:fontFamily="@font/gilroy_bold"-->
+
+                    <!--                            android:text="@string/contact_detail"-->
+                    <!--                            android:textColor="@color/gray"-->
+                    <!--                            android:textSize="17sp" />-->
+
+
+                    <!--                    </LinearLayout>-->
+
+                    <!--                    <EditText-->
+                    <!--                        android:id="@+id/et_contact"-->
+                    <!--                        android:layout_width="match_parent"-->
+                    <!--                        android:layout_height="60dp"-->
+
+
+                    <!--                        android:background="@drawable/bg_cornered_rect_5"-->
+                    <!--                        android:backgroundTint="@color/bg_chats"-->
+                    <!--                        android:fontFamily="@font/gilroy_medium"-->
+                    <!--                        android:imeOptions="actionNext"-->
+                    <!--                        android:maxLines="2"-->
+                    <!--                        android:paddingHorizontal="15dp"-->
+                    <!--                        android:paddingVertical="12dp"-->
+                    <!--                        android:scrollbars="vertical"-->
+                    <!--                        android:text=""-->
+                    <!--                        android:textColor="@color/gray_light"-->
+                    <!--                        android:textSize="14sp" />-->
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_reportT"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="35dp"
+                        android:layout_marginTop="20dp"
+                        android:padding="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/bg_with_ring_app_color"
+                        android:fontFamily="@font/gilroy_bold"
+                        android:text="@string/report"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+
+                    <TextView
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginVertical="20dp"
+
+                        android:fontFamily="@font/gilroy_light"
+                        android:gravity="center"
+
+                        android:text="@string/report_text"
+                        android:textColor="@color/gray_light"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/btn_privacy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+
+                        android:fontFamily="@font/gilroy_bold"
+                        android:gravity="center"
+                        android:lineSpacingExtra="2dp"
+                        android:text="@string/privacy_policy"
+                        android:textColor="@color/red_brown_dark"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

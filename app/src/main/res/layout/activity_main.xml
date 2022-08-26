@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_model_2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Landing Area"
+        android:textSize="45sp"
+        android:gravity="top"
+        android:id="@+id/landingText"
+        android:layout_alignParentTop="true"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Where you are:"
+        android:textSize="20sp"
+        android:id="@+id/whereText"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/landingText"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_centerInParent="true"/>
+    <androidx.fragment.app.FragmentContainerView
+        android:layout_width="match_parent"
+        android:id="@+id/main_content"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"/>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="wrap_content"
+        android:id="@+id/bottomCoord"
+        android:background="@null"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content">
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:fabCradleMargin="5dp"
+            android:background="@null"
+            app:fabCradleRoundedCornerRadius="10dp"
+            app:fabCradleVerticalOffset="10dp">
+
+            <com.ismaeldivita.chipnavigation.ChipNavigationBar
+                android:id="@+id/bottom_nav_barC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/shape_layer1d"
+                app:itemIconSize="@dimen/_10sdp"
+                android:layout_alignParentBottom="true"
+                app:itemBackground="@drawable/shape_layer_1a"
+                app:itemRippleColor="@color/primary_purple"
+                app:itemIconTint="@color/g_default_base_ripple"
+                app:itemTextColor="@color/color_red"
+                android:layout_above="@id/bottomCoord"
+                android:fadingEdge="horizontal"
+                app:cnb_orientationMode="vertical"
+                app:cnb_addBottomInset="true"
+                app:cnb_addLeftInset="false"
+                app:cnb_addRightInset="false"
+                app:cnb_addTopInset="true"
+                app:cnb_unselectedColor="@color/red_brown_dark"
+                app:cnb_badgeColor="@color/dark_and_red"
+                app:cnb_radius="8dp"
+                app:cnb_iconSize="24dp"
+                app:cnb_menuResource="@menu/bottom_menu" />
+
+        </com.google.android.material.bottomappbar.BottomAppBar>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_chats"
+            app:layout_anchor="@id/bottom_nav_barC" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/main_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="10dp"
+        app:itemIconSize="@dimen/_10sdp"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@drawable/shape_layer_1a"
+        app:itemRippleColor="@color/primary_purple"
+        app:itemIconTint="@color/g_default_base_ripple"
+        app:itemTextColor="@color/color_red"
+        app:menu="@menu/main_act_bottom" />
+
+</RelativeLayout>

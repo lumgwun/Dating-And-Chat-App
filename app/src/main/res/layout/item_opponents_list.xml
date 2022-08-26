@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
+    style="@style/ListItem"
+    tools:ignore="RtlHardcoded">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_opponent_icon"
+            style="@style/UserIconStyle"
+            android:src="@drawable/ic_admin_user"
+            tools:background="@drawable/rect6da"/>
+
+        <TextView
+            android:id="@+id/text_user_avatar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingBottom="2dp"
+            android:textColor="@color/text_color_white"
+            android:textSize="17sp"
+            android:textStyle="normal"
+            tools:text="E" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/opponents_name"
+        style="@style/UserTitleStyle"
+        tools:text="User Name"/>
+
+    <CheckBox
+        android:id="@+id/checkbox_user"
+        style="@style/UserCheckboxStyle" />
+</LinearLayout>

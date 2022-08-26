@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".HostProfileAct">
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/app_color"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/bg_cornered_rect_500"
+            android:backgroundTint="@color/white_50"
+            android:padding="11dp"
+            android:rotation="90"
+            android:src="@drawable/ic_down_arrow"
+            app:tint="@color/black" />
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/gilroy_black"
+            android:letterSpacing=".08"
+            android:text="@string/profile"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topBar"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_extra_bold"
+                    android:maxLines="1"
+                    android:text="@string/photos"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="17sp" />
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:layout_marginStart="5dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:maxLines="1"
+                    android:text="@string/_5_images_of_your_self"
+
+                    android:textColor="@color/gray_light"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_images"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_add_images" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_extra_bold"
+                    android:maxLines="1"
+                    android:text="@string/videos"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="17sp" />
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:layout_marginStart="5dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:maxLines="1"
+                    android:text="@string/minimum_2_videos_of_yourself"
+
+                    android:textColor="@color/gray_light"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_videos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_add_images" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_extra_bold"
+                    android:maxLines="1"
+                    android:text="@string/age"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="17sp" />
+
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/et_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_cornered_rect_10"
+                android:backgroundTint="@color/bg_chats"
+                android:ellipsize="start"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:hint="@string/enter_your_age"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:maxLines="1"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="12dp"
+                android:text="24"
+
+                android:textColor="@color/gray_light"
+                android:textColorHint="@color/gray_light_pro"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_extra_bold"
+                    android:maxLines="1"
+                    android:text="@string/original_full_name"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="17sp" />
+
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/et_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+
+                android:background="@drawable/bg_cornered_rect_10"
+                android:backgroundTint="@color/bg_chats"
+
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:hint="@string/your_full_name"
+                android:imeOptions="actionNext"
+                android:paddingHorizontal="15dp"
+
+
+                android:paddingVertical="12dp"
+                android:text="Jesica Joseph Robinson"
+
+                android:textColor="@color/gray_light"
+                android:textColorHint="@color/gray_light_pro"
+                android:textSize="14sp" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_extra_bold"
+                    android:maxLines="1"
+                    android:text="@string/about_yourself"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="17sp" />
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:layout_marginStart="5dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:maxLines="1"
+                    android:text="@string/visible_for_public"
+
+                    android:textColor="@color/gray_light"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/et_about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_cornered_rect_10"
+                android:backgroundTint="@color/bg_chats"
+                android:fontFamily="@font/gilroy_regular"
+                android:hint="@string/write_something_about_you"
+                android:imeOptions="actionNext"
+                android:maxLines="7"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="12dp"
+                android:scrollbars="vertical"
+                android:text="I’m a princess 💖, not because I have a Prince, but
+because my dad is a king 👑
+I’m a princess 💖, not because I have a Prince, but
+because my dad is a king 👑
+, Ok and I love boys
+too.
+"
+                android:textColor="@color/gray_light"
+                android:textColorHint="@color/gray_light_pro"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_extra_bold"
+                    android:maxLines="1"
+                    android:text="@string/your_interests"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="17sp" />
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:layout_marginStart="5dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:maxLines="1"
+                    android:text="@string/eg_sports_music_dance"
+
+                    android:textColor="@color/gray_light"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/et_interests"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/bg_cornered_rect_10"
+                android:backgroundTint="@color/bg_chats"
+                android:fontFamily="@font/gilroy_regular"
+                android:hint="@string/your_interests"
+
+                android:imeOptions="actionNext"
+                android:maxLines="4"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="12dp"
+                android:scrollbars="vertical"
+                android:text="Writing, Dance"
+                android:textColor="@color/gray_light"
+                android:textColorHint="@color/gray_light_pro"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_extra_bold"
+                    android:maxLines="1"
+                    android:text="@string/bio"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/tv_bio_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:layout_marginStart="5dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:maxLines="1"
+                    android:text="(0"
+
+                    android:textColor="@color/gray_light"
+                    android:textSize="16sp" />
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:maxLines="1"
+                    android:text="@string/_80"
+
+                    android:textColor="@color/gray_light"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/et_bio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/bg_cornered_rect_10"
+                android:backgroundTint="@color/bg_chats"
+                android:fontFamily="@font/gilroy_regular"
+                android:hint="@string/add_your_bio"
+                android:imeOptions="actionNext"
+
+                android:maxLines="7"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="12dp"
+                android:scrollbars="vertical"
+                android:text="I’m a princess 💖, not because I have a Prince,
+but because my dad is a king 👑"
+                android:textColor="@color/gray_light"
+                android:textColorHint="@color/gray_light_pro"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_extra_bold"
+                    android:maxLines="1"
+                    android:text="@string/availability_hours"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="17sp" />
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:layout_marginStart="5dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:maxLines="1"
+                    android:text="@string/per_day"
+
+                    android:textColor="@color/gray_light"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/et_hour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+
+                android:background="@drawable/bg_cornered_rect_10"
+                android:backgroundTint="@color/bg_chats"
+                android:ellipsize="start"
+                android:fontFamily="@font/gilroy_regular"
+                android:hint="@string/availability_hours"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:maxLines="1"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="12dp"
+                android:text="6"
+
+                android:textColor="@color/gray_light"
+                android:textColorHint="@color/gray_light_pro"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_extra_bold"
+                    android:maxLines="1"
+                    android:text="@string/billing_address"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="17sp" />
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:layout_marginStart="5dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:maxLines="1"
+                    android:text="@string/for_earnings_invoices"
+
+                    android:textColor="@color/gray_light"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/et_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_cornered_rect_10"
+                android:backgroundTint="@color/bg_chats"
+                android:fontFamily="@font/gilroy_regular"
+                android:hint="@string/your_address"
+                android:imeOptions="actionNext"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="12dp"
+                android:text="302, Silver Plaza\n
+NYC\n
+USA : 456786"
+                android:textColor="@color/gray_light"
+                android:textColorHint="@color/gray_light_pro"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_extra_bold"
+                    android:maxLines="1"
+                    android:text="@string/contact_email"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="17sp" />
+
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+
+                android:background="@drawable/bg_cornered_rect_10"
+                android:backgroundTint="@color/bg_chats"
+                android:fontFamily="@font/gilroy_regular"
+                android:hint="@string/email_address"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="12dp"
+                android:text="jesicarobi@gmail.com"
+                android:textColor="@color/gray_light"
+                android:textColorHint="@color/gray_light_pro"
+                android:textSize="14sp" />
+
+
+            <Button
+                android:id="@+id/btn_update"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:onClick="doUpdate"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="30dp"
+                android:background="@drawable/bg_gradiant_10"
+                android:fontFamily="@font/gilroy_bold"
+                android:text="@string/update_profile"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
+</RelativeLayout>

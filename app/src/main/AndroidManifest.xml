@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.lahoriagency.cikolive">
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission
+        android:name="android.permission.LOCAL_MAC_ADDRESS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+    <uses-permission
+        android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.quickblox.sample.chat.java.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="com.quickblox.sample.messages.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACTION_MANAGE_OVERLAY_PERMISSION" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:installLocation="preferExternal"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.CIKOLIVE"
+        android:value="androidx.core.app.CoreComponentFactory"
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:node="replace">
+
+        <activity android:name=".CheckoutActivity">
+
+        </activity>
+        <activity android:name=".ContentAct">
+
+        </activity>
+        <activity android:name=".MessagesActivity" />
+        <activity android:name=".MessageInfoAct" />
+        <activity android:name=".ChatInfoAct" />
+        <activity android:name=".AttachVideoAct" />
+        <activity android:name=".MatchFragmentAct" />
+        <activity android:name=".HostLiveAct" />
+        <activity
+            android:name=".FacebookAct"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation" />
+        <activity android:name=".ProfileEditActivity" />
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".NewGroupActivity" />
+        <activity android:name=".ForwardToActivity" />
+        <activity android:name=".AttachmentImageActivity" />
+        <activity android:name=".DialogsActivity" />
+        <activity android:name=".SMSAct" />
+        <activity android:name=".SelectUsersActivity" />
+        <activity android:name=".AppInfoActivity" />
+
+        <service
+            android:name=".Classes.CallService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".Classes.LoginService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".Video_And_Call.PermissionsActivity" />
+        <activity android:name=".Video_And_Call.OpponentsActivity" />
+        <activity android:name=".CallActivity" />
+        <activity android:name=".LoginDirectory" />
+        <activity android:name=".ChatAct" />
+        <activity android:name=".HostProfileAct" />
+        <activity
+            android:name=".UserLiveActivity"
+            android:label="@string/title_activity_user_live"
+            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
+        <activity
+            android:name=".UserCallingActivity"
+            android:label="@string/title_activity_user_calling"
+            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
+        <activity
+            android:name=".UserCallActivity"
+            android:label="@string/title_activity_user_call"
+            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
+        <activity
+            android:name=".SignInActivity"
+            android:label="@string/title_activity_sign_in"
+            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
+        <activity
+            android:name=".PurchaseDiamondActivity"
+            android:label="@string/title_activity_purchase_diamond"
+            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
+        <activity
+            android:name=".HostMainActivity"
+            android:label="@string/title_activity_host_main"
+            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
+        <activity
+            android:name=".FindMatchActivity"
+            android:label="@string/title_activity_find_match"
+            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
+        <activity
+            android:name=".DiamondHistoryActivity"
+            android:label="@string/title_activity_diamond_history"
+            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
+        <activity
+            android:name=".CreateProfileActivity"
+            android:label="@string/title_activity_create_profile"
+            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
+        <activity
+            android:name=".RedeemRequestActivity"
+            android:label="@string/title_activity_redeem_request"
+            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
+        <activity
+            android:name=".ChattingActivity"
+            android:label="@string/title_activity_chatting"
+            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
+
+        <activity
+            android:name=".SubmitRedeemActivity"
+            android:label="@string/title_activity_submit_redeem"
+            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
+        <activity android:name=".StreamEndedActivity" />
+        <activity android:name=".NotificationAct" />
+        <activity android:name=".SavedProfileActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".BaseActivity" />
+        <activity android:name=".SplashActivity"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.quickblox.messages.TYPE"
+            android:value="GCM" />
+        <meta-data
+            android:name="com.quickblox.messages.SENDER_ID"
+            android:value="@string/sender_id" />
+        <meta-data
+            android:name="com.quickblox.messages.QB_ENVIRONMENT"
+            android:value="DEVELOPMENT" />
+        <meta-data
+            android:name="com.quickblox.messages.TYPE"
+            android:value="GCM" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <service
+            android:name="com.quickblox.messages.services.fcm.QBFcmPushInstanceIDService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.quickblox.messages.services.fcm.QBFcmPushInstanceIDService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "810586473830",
+    "project_id": "ciko-live-app",
+    "storage_bucket": "ciko-live-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810586473830:android:9def9f42f51fcfdeb974a7",
+        "android_client_info": {
+          "package_name": "com.lahoriagency.cikolive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810586473830-aao25dbb8p8nmoml7uvm779ldf7dk0dq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfJ4j1Cuo_rBSN3zxa4tXm3FprvSGsId4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810586473830-aao25dbb8p8nmoml7uvm779ldf7dk0dq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

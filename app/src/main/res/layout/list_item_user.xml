@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ListItem"
+    tools:ignore="RtlHardcoded">
+
+    <ImageView style="@style/UserIconStyle" />
+
+    <TextView
+        style="@style/UserTitleStyle"
+        tools:text="Alexander" />
+
+    <CheckBox
+        android:id="@+id/checkbox_user"
+        style="@style/UserCheckboxStyle"
+        tools:checked="true" />
+</LinearLayout>

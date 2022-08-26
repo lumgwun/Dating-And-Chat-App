@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white_50">#7FFFFFFF</color>
+    <color name="white_90">#E5FFFFFF</color>
+    <color name="white_70">#B3FFFFFF</color>
+    <color name="white_30">#4DFFFFFF</color>
+    <color name="white_10">#1BFFFFFF</color>
+    <color name="white_20">#32FFFFFF</color>
+
+    <color name="bg_chats">#F6F6F6</color>
+    <color name="bg_chat_messages">#F0F0F0</color>
+
+    <color name="app_color">#FDE64E</color>
+    <color name="app_color_light_pro">#FFF5B0</color>
+    <color name="yellow_intense">#FFDE00</color>
+
+    <color name="gray_light_pro">#D9D9D9</color>
+    <color name="gray_light">#AAAAAA</color>
+    <color name="gray">#818181</color>
+    <color name="gray_dark">#444444</color>
+    <color name="gray_10">#1A8A8A8A</color>
+
+    <color name="black_5">#0C000000</color>
+    <color name="black_40">#67000000</color>
+    <color name="black_instead_blur">#77000000</color>
+    <color name="black_80">#CC000000</color>
+
+    <color name="transparent">#00FFFFFF</color>
+    <color name="fb_blue">#1D67FC</color>
+
+
+    <color name="green">#0B8500</color>
+    <color name="green_22">#371ED600</color>
+    <color name="red">#ff0000</color>
+    <color name="red_13">#20FF0000</color>
+    <color name="orange_20">#33FF700A</color>
+
+
+    <color name="colorPrimaryDark">#025BC0</color>
+    <color name="colorPrimaryLight">#389fF3</color>
+    <color name="colorPrimaryLight2">#278EF2</color>
+
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="color_grey">#d3d3d3</color>
+    <color name="color_accent">@color/color_green_qb</color>
+    <color name="color_green_qb">#4ad24d</color>
+
+    <color name="divider_color">#f0f0f0</color>
+    <color name="settings_background">#f5f5f5</color>
+    <color name="selected_list_item_color">#e0e0e0</color>
+
+    <color name="random_color_2">#007aff</color>
+    <color name="random_color_3">#ff0091</color>
+    <color name="random_color_7">#77a6d0</color>
+    <color name="color_blue_qb">#046ad0</color>
+    <color name="text_color_dark_grey">#6e6e6e</color>
+    <color name="text_color_primary">#212121</color>
+    <color name="text_color_white">#ffffff</color>
+
+
+    <color name="text_color_medium_grey">#b1b1b1</color>
+
+    <color name="text_color_black">#000000</color>
+    <color name="gray_material">#5f6368</color>
+    <color name="black_profile_name">#555555</color>
+    <color name="black_profile_description">#757575</color>
+    <color name="color_button_rounded_press">#EE3162</color>
+    <color name="primary_blue">#6a82ec</color>
+    <color name="primary_blue_light">#acc4ff</color>
+    <color name="primary_purple">#764aa1</color>
+    <color name="primary_purple_dark">#542899</color>
+    <color name="swipe_like_button_tint">#3AE296</color>
+    <color name="swipe_button_ring">#C2C1C3</color>
+
+    <color name="color_primary">@color/white</color>
+    <color name="color_primary_dark">#d0d0d0</color>
+
+    <color name="color_light_blue_qb">#87cefa</color>
+    <color name="color_red">#ff0000</color>
+    <color name="color_new_blue">#3978FC</color>
+    <color name="color_unread">#00CC4C</color>
+    <color name="color_text_highlight">#DAE5FE</color>
+    <color name="color_text_last_message">#6C7A92</color>
+    <color name="color_search_hint">#6C7A92</color>
+
+    <color name="background_app_color">#ffffff</color>
+
+    <color name="color_popup_menu">#F2FFFFFF</color>
+    <color name="dark_gray">#6c6c6c</color>
+    <color name="blue">#007FFF</color>
+    <color name="text_color_white_alpha_06">#96ffffff</color>
+
+    <color name="black_transparent_50">#50000000</color>
+    <color name="grey_transparent_50">#50606060</color>
+    <color name="grey_transparent_20">#20606060</color>
+    <color name="color_blue_accent">#0088e7</color>
+    <color name="toolbar_subtitle_color">#6e6e6e</color>
+    <color name="toolbar_title_color">#1f1f1f</color>
+
+    <color name="background_color_selected_user_item">#eeeeee</color>
+    <color name="background_color_normal_user_item">#ffffff</color>
+    <color name="background_fragment_conversation">#2b2a2a</color>
+    <color name="icon_background_color_selected_user">#959595</color>
+
+    <color name="button_end_call_pressed_color">#FC5876</color>
+
+    <color name="text_color_outgoing_opponents_names_audio_call">#1f1f1f</color>
+    <color name="text_color_call_type">#6e6e6e</color>
+    <color name="text_color_also_on_call">@color/text_color_call_type</color>
+    <color name="text_color_other_inc_users">#1f1f1f</color>
+    <color name="text_color_caller_name">#1f1f1f</color>
+
+    <color name="bg_screen1">#16c266</color>
+
+    <!-- dots inactive colors -->
+
+    <!-- dots active colors -->
+
+
+    <color name="red_brown_dark">#FF610463</color>
+
+
+    <color name="white">#FFFFFF</color>
+
+    <color name="dark_and_red">#2F0205</color>
+
+    <color name="green_dark">#008000</color>
+
+
+    <color name="orange">#ff8c6a</color>
+
+
+</resources>
