@@ -90,8 +90,7 @@ android {
 
         }
         configurations.implementation {
-            //exclude group: "androidx.lifecycle", module: "lifecycle-viewmodel-ktx"
-            //exclude group: "org.webrtc", module: "google-webrtc"
+            exclude group: "com.ismaeldivita.chipnavigation", module: "chip-navigation-bar"
 
 
 
@@ -141,12 +140,12 @@ dependencies {
 
     //implementation "com.quickblox:quickblox-android-sdk-chat:3.9.1"
     implementation "com.quickblox:quickblox-android-sdk-content:3.9.1"
-    //implementation "com.quickblox:quickblox-android-sdk-messages:3.9.1"
+    implementation "com.quickblox:quickblox-android-sdk-messages:3.9.1"
     //implementation "com.quickblox:quickblox-android-sdk-customobjects:3.9.1"
     //implementation 'org.webrtc:google-webrtc:1.0.32006'
 
     implementation "com.quickblox:quickblox-android-sdk-videochat-webrtc:3.3.3"
-    implementation "com.google.firebase:firebase-messaging:23.0.6"
+    implementation "com.google.firebase:firebase-messaging:23.0.7"
     implementation "com.google.firebase:firebase-core:21.1.0"
     implementation 'com.github.mtotschnig:stickylistheaders:2.8.0'
     implementation 'com.timehop.stickyheadersrecyclerview:library:[0.4.3]@aar'
@@ -237,6 +236,7 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
     implementation 'com.mikhaellopez:circularimageview:4.3.0'
+    implementation 'com.github.omadahealth:swipy:1.2.3@aar'
 
     //implementation 'com.telifoun.mqttchat:mqttchat-core:4.0.0'
     //implementation 'com.telifoun.mqttchat:mqttchat-gui:4.0.0'
