@@ -23,14 +23,18 @@ public class SavedProfile implements Parcelable, Serializable {
     public static final String SAVED_PROFILE_COUNTRY = "saved_p_Country";
     public static final String SAVED_PROFILE_DEVICEID = "saved_p_device";
     public static final String SAVED_PROFILE_REFERRER = "saved_p_referrer";
+    public static final String SAVED_PROFILE_ABOUT_ME = "saved_p_about_me";
+    public static final String SAVED_PROFILE_MY_INT = "saved_p_my_int";
+    public static final String SAVED_PROFILE_DATE_JOINED = "saved_p_JoinedDate";
+    public static final String SAVED_PROFILE_LOOKING_GENDER = "saved_p_Looking_for";
 
     public static final String CREATE_SAVED_PROFILES_TABLE = "CREATE TABLE " + SAVED_PROFILE_TABLE + " (" + SAVED_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SAVED_PROFILE_NAME + " TEXT, " + SAVED_PROFILE_AGE + " TEXT, " + SAVED_PROFILE_LOC + " TEXT, " + SAVED_PROFILE_GENDER + " TEXT, " + SAVED_PROFILE_PHOTO + " TEXT, " + SAVED_PROFILE_PHONE + " TEXT, " +
-            SAVED_PROFILE_EMAIL + " TEXT, " + SAVED_PROFILE_PASSWORD + " TEXT, " + SAVED_PROFILE_DEVICEID + " TEXT,"+ SAVED_PROFILE_DOB + " TEXT,"+ SAVED_PROFILE_COUNTRY + " TEXT,"+ SAVED_PROFILE_REFERRER + " TEXT)";
+            SAVED_PROFILE_EMAIL + " TEXT, " + SAVED_PROFILE_PASSWORD + " TEXT, " + SAVED_PROFILE_DEVICEID + " TEXT,"+ SAVED_PROFILE_DOB + " TEXT,"+ SAVED_PROFILE_COUNTRY + " TEXT,"+ SAVED_PROFILE_REFERRER + " TEXT,"+ SAVED_PROFILE_ABOUT_ME + " TEXT,"+ SAVED_PROFILE_MY_INT + " TEXT,"+ SAVED_PROFILE_LOOKING_GENDER + " TEXT,"+ SAVED_PROFILE_DATE_JOINED + " TEXT)";
     private int savedProfID;
     private String name;
     private String age;
     private String location;
-    private String gender;
+    private int gender;
     private String phone;
     private String email;
     private String dob;
@@ -39,6 +43,10 @@ public class SavedProfile implements Parcelable, Serializable {
     private String password;
     private String lastSeen;
     private String status;
+    private String dateJoined;
+    private String aboutMe;
+    private String myInterest;
+    private String lookingFor;
     private String deviceID;
     private Uri image;
     private QBUser qbUser;
@@ -55,7 +63,7 @@ public class SavedProfile implements Parcelable, Serializable {
         name = in.readString();
         age = in.readString();
         location = in.readString();
-        gender = in.readString();
+        gender = in.readInt();
         phone = in.readString();
         email = in.readString();
         password = in.readString();
@@ -75,7 +83,20 @@ public class SavedProfile implements Parcelable, Serializable {
         }
     };
 
-    public SavedProfile(String surname, String uFirstName, String emailStrg, String passwordStg, String dateOfBirth, String gender, String phoneNO, String country, String cityStrg, Uri mImageUri) {
+    public SavedProfile(String surname, String emailStrg, String passwordStg, String aboutMe, String myInterest, String age, int myGender, String lookingFor, String dateJoined, String country, String cityStrg, Uri mImageUri) {
+     this.name=surname;
+        this.name=surname;
+        this.email=emailStrg;
+        this.password=passwordStg;
+        this.age=age;
+        this.age=aboutMe;
+        this.age=myInterest;
+        this.gender=myGender;
+        this.lookingFor=lookingFor;
+        this.dateJoined=dateJoined;
+        this.country=country;
+        this.location=cityStrg;
+        this.image=mImageUri;
 
     }
 
@@ -120,11 +141,11 @@ public class SavedProfile implements Parcelable, Serializable {
     }
 
 
-    public String getGender() {
+    public int getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 
@@ -171,7 +192,7 @@ public class SavedProfile implements Parcelable, Serializable {
         parcel.writeString(name);
         parcel.writeString(age);
         parcel.writeString(location);
-        parcel.writeString(gender);
+        parcel.writeInt(gender);
         parcel.writeString(phone);
         parcel.writeString(email);
         parcel.writeString(password);
@@ -249,5 +270,37 @@ public class SavedProfile implements Parcelable, Serializable {
 
     public void setUserProfileInfoModel(UserProfileInfoModel userProfileInfoModel) {
         this.userProfileInfoModel = userProfileInfoModel;
+    }
+
+    public String getLookingFor() {
+        return lookingFor;
+    }
+
+    public void setLookingFor(String lookingFor) {
+        this.lookingFor = lookingFor;
+    }
+
+    public String getDateJoined() {
+        return dateJoined;
+    }
+
+    public void setDateJoined(String dateJoined) {
+        this.dateJoined = dateJoined;
+    }
+
+    public String getAboutMe() {
+        return aboutMe;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
+    }
+
+    public String getMyInterest() {
+        return myInterest;
+    }
+
+    public void setMyInterest(String myInterest) {
+        this.myInterest = myInterest;
     }
 }

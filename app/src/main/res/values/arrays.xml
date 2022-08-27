@@ -17,6 +17,11 @@
         <item>Sunday</item>
     </string-array>
 
+    <string-array name="gender">
+        <item></item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
     <string-array name="payment_Gateways">
         <item></item>
         <item>PayPal</item>

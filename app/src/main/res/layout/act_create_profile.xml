@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-    </data>
-
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.lahoriagency.cikolive.CreateProfileActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.CreateProfileActivity">
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/topBar"
@@ -50,9 +49,188 @@
 
 
         </LinearLayout>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/layoutTop"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/gilroy_extra_bold"
+                android:maxLines="1"
+                android:id="@+id/where_You_Are"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_horizontal"
+                android:text="Where you are:"
+                android:textColor="@color/gray_dark"
+                android:textSize="17sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/gilroy_extra_bold"
+                    android:maxLines="1"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/original_full_name"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="17sp" />
+
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_nameC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rect6h"
+                android:padding="20dp"
+                android:backgroundTint="@color/bg_chats"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:hint="@string/your_full_name"
+                android:imeOptions="actionNext"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="12dp"
+                android:textColor="@color/gray_light"
+                android:textColorHint="@color/gray_light_pro"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_extra_bold"
+                    android:maxLines="1"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/contact_email"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="17sp" />
+
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_emailC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rect6h"
+                android:padding="20dp"
+                android:backgroundTint="@color/bg_chats"
+                android:fontFamily="@font/gilroy_regular"
+                android:hint="@string/email_address"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="12dp"
+                android:textColor="@color/gray_light"
+                android:textColorHint="@color/gray_light_pro"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_extra_bold"
+                    android:maxLines="1"
+                    android:text="Email Password"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="17sp" />
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:maxLines="1"
+                    android:text="(Google)"
+                    android:textColor="@color/gray_light"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_PasswordC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rect6h"
+                android:padding="20dp"
+                android:backgroundTint="@color/bg_chats"
+                android:fontFamily="@font/gilroy_regular"
+                android:hint="@string/your_address"
+                android:imeOptions="actionNext"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="12dp"
+                android:maxLines="5"
+                android:scrollbars="vertical"
+                android:textColor="@color/gray_light"
+                android:textColorHint="@color/gray_light_pro"
+                android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_Firebase"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:onClick="registerUser"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="30dp"
+                android:background="@drawable/bg_gradiant_10"
+                android:fontFamily="@font/gilroy_bold"
+                android:text="Verify Email Address"
+                android:textSize="15sp" />
+
+
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:layout_width="wrap_content"
+            app:direction="clockwise"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/progressBarC"
+            android:layout_height="wrap_content"/>
 
         <ScrollView
             android:layout_width="match_parent"
+            android:id="@+id/layoutDown"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp">
 
@@ -60,13 +238,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="15dp"
-
                 android:orientation="vertical">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gilroy_extra_bold"
+                    android:maxLines="1"
+                    android:id="@+id/WelcomeE"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center_horizontal"
+                    android:text="Welcome back"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="17sp" />
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:layout_width="70dp"
+                    android:id="@+id/takePhoto"
+                    android:onClick="doSelectPix"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_admin_user"
+                    android:layout_height="70dp"/>
+
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
+                    android:layout_gravity="center_horizontal"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -74,8 +273,6 @@
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
-
                         android:ellipsize="end"
                         android:fontFamily="@font/gilroy_extra_bold"
                         android:maxLines="1"
@@ -88,20 +285,18 @@
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
-
                         android:layout_marginStart="5dp"
                         android:ellipsize="end"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:maxLines="1"
-                        android:text="@string/_5_images_of_your_self"
-
+                        android:text="A good picture of You"
                         android:textColor="@color/gray_light"
                         android:textSize="16sp" />
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_images"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
@@ -115,6 +310,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="10dp"
                     android:gravity="center_vertical"
+                    android:visibility="gone"
                     android:orientation="horizontal">
 
                     <TextView
@@ -149,6 +345,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_videos"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
@@ -181,13 +378,12 @@
 
                 </LinearLayout>
 
-                <EditText
-                    android:id="@+id/et_age"
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_ageC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-
-                    android:background="@drawable/bg_cornered_rect_10"
+                    android:background="@drawable/rect6h"
+                    android:padding="20dp"
                     android:backgroundTint="@color/bg_chats"
                     android:ellipsize="start"
                     android:fontFamily="@font/gilroy_semi_bold"
@@ -202,52 +398,6 @@
                     android:textColorHint="@color/gray_light_pro"
                     android:textSize="14sp" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-
-                        android:ellipsize="end"
-                        android:fontFamily="@font/gilroy_extra_bold"
-                        android:maxLines="1"
-                        android:text="@string/original_full_name"
-                        android:textAllCaps="true"
-                        android:textColor="@color/gray_dark"
-                        android:textSize="17sp" />
-
-
-                </LinearLayout>
-
-                <EditText
-                    android:id="@+id/et_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-
-                    android:background="@drawable/bg_cornered_rect_10"
-                    android:backgroundTint="@color/bg_chats"
-
-                    android:fontFamily="@font/gilroy_semi_bold"
-                    android:hint="@string/your_full_name"
-                    android:imeOptions="actionNext"
-                    android:paddingHorizontal="15dp"
-
-
-                    android:paddingVertical="12dp"
-
-                    android:textColor="@color/gray_light"
-                    android:textColorHint="@color/gray_light_pro"
-                    android:textSize="14sp" />
-
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -261,8 +411,6 @@
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
-
                         android:ellipsize="end"
                         android:fontFamily="@font/gilroy_extra_bold"
                         android:maxLines="1"
@@ -275,35 +423,30 @@
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
-
                         android:layout_marginStart="5dp"
                         android:ellipsize="end"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:maxLines="1"
                         android:text="@string/visible_for_public"
-
                         android:textColor="@color/gray_light"
                         android:textSize="16sp" />
                 </LinearLayout>
 
-                <EditText
-                    android:id="@+id/et_about"
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_aboutC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-
-                    android:background="@drawable/bg_cornered_rect_10"
                     android:backgroundTint="@color/bg_chats"
                     android:fontFamily="@font/gilroy_regular"
                     android:hint="@string/write_something_about_you"
                     android:imeOptions="actionNext"
                     android:maxLines="7"
+                    android:background="@drawable/rect6h"
+                    android:padding="20dp"
                     android:scrollbars="vertical"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="12dp"
                     android:text=""
-
                     android:textColor="@color/gray_light"
                     android:textColorHint="@color/gray_light_pro"
                     android:textSize="14sp" />
@@ -346,14 +489,15 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
-                <EditText
-                    android:id="@+id/et_interests"
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_interestsC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
                     android:hint="@string/write_your_interests"
                     android:maxLines="4"
-                    android:background="@drawable/bg_cornered_rect_10"
+                    android:background="@drawable/rect6h"
+                    android:padding="20dp"
                     android:backgroundTint="@color/bg_chats"
 
                     android:fontFamily="@font/gilroy_regular"
@@ -377,219 +521,86 @@
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
-
                         android:ellipsize="end"
                         android:fontFamily="@font/gilroy_extra_bold"
                         android:maxLines="1"
-                        android:text="@string/bio"
+                        android:text="Gender"
                         android:textAllCaps="true"
                         android:textColor="@color/gray_dark"
                         android:textSize="17sp" />
 
                     <TextView
-                        android:id="@+id/tv_bio_count"
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
-
                         android:layout_marginStart="5dp"
                         android:ellipsize="end"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:maxLines="1"
-                        android:text="(0"
-
+                        android:text="Specify"
                         android:textColor="@color/gray_light"
                         android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <RadioGroup
+                    android:id="@+id/sexgroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
+
+                    <RadioButton
+                        android:id="@+id/male"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Male"
+                        android:checked="true" />
+                    <RadioButton
+                        android:id="@+id/female"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Female" />
+
+                </RadioGroup>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
-                        android:fontFamily="@font/gilroy_semi_bold"
+                        android:id="@+id/tv_Looking_For"
+                        android:fontFamily="@font/gilroy_extra_bold"
                         android:maxLines="1"
-                        android:text="@string/_80"
+                        android:text="Looking For"
+                        android:textAllCaps="true"
+                        android:textColor="@color/gray_dark"
+                        android:textSize="17sp" />
 
-                        android:textColor="@color/gray_light"
-                        android:textSize="16sp" />
                 </LinearLayout>
 
-                <EditText
-                    android:id="@+id/et_bio"
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spn_Gender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-
-                    android:background="@drawable/bg_cornered_rect_10"
+                    android:background="@drawable/rect6h"
+                    android:padding="20dp"
+                    android:entries="@array/gender"
                     android:backgroundTint="@color/bg_chats"
-
                     android:fontFamily="@font/gilroy_regular"
-                    android:hint="@string/add_your_bio"
+                    android:hint="Female"
                     android:imeOptions="actionNext"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="12dp"
-
                     android:maxLines="7"
                     android:scrollbars="vertical"
-                    android:textColor="@color/gray_light"
-                    android:textColorHint="@color/gray_light_pro"
-                    android:textSize="14sp" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-
-                        android:ellipsize="end"
-                        android:fontFamily="@font/gilroy_extra_bold"
-                        android:maxLines="1"
-                        android:text="@string/availability_hours"
-                        android:textAllCaps="true"
-                        android:textColor="@color/gray_dark"
-                        android:textSize="17sp" />
-
-                    <TextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-
-                        android:layout_marginStart="5dp"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/gilroy_semi_bold"
-                        android:maxLines="1"
-                        android:text="@string/per_day"
-
-                        android:textColor="@color/gray_light"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
-
-                <EditText
-                    android:id="@+id/et_hour"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-
-                    android:background="@drawable/bg_cornered_rect_10"
-                    android:backgroundTint="@color/bg_chats"
-                    android:ellipsize="start"
-                    android:fontFamily="@font/gilroy_regular"
-                    android:hint="@string/availability_hours"
-                    android:imeOptions="actionNext"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:paddingHorizontal="15dp"
-                    android:paddingVertical="12dp"
-                    android:textColor="@color/gray_light"
-                    android:textColorHint="@color/gray_light_pro"
-                    android:textSize="14sp" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-
-                        android:ellipsize="end"
-                        android:fontFamily="@font/gilroy_extra_bold"
-                        android:maxLines="1"
-                        android:text="@string/billing_address"
-                        android:textAllCaps="true"
-                        android:textColor="@color/gray_dark"
-                        android:textSize="17sp" />
-
-                    <TextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-
-                        android:layout_marginStart="5dp"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/gilroy_semi_bold"
-                        android:maxLines="1"
-                        android:text="@string/for_earnings_invoices"
-
-                        android:textColor="@color/gray_light"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
-
-                <EditText
-                    android:id="@+id/et_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_cornered_rect_10"
-                    android:backgroundTint="@color/bg_chats"
-                    android:fontFamily="@font/gilroy_regular"
-                    android:hint="@string/your_address"
-                    android:imeOptions="actionNext"
-                    android:paddingHorizontal="15dp"
-                    android:paddingVertical="12dp"
-                    android:maxLines="5"
-                    android:scrollbars="vertical"
-                    android:textColor="@color/gray_light"
-                    android:textColorHint="@color/gray_light_pro"
-                    android:textSize="14sp" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-
-                        android:ellipsize="end"
-                        android:fontFamily="@font/gilroy_extra_bold"
-                        android:maxLines="1"
-                        android:text="@string/contact_email"
-                        android:textAllCaps="true"
-                        android:textColor="@color/gray_dark"
-                        android:textSize="17sp" />
-
-
-                </LinearLayout>
-
-                <EditText
-                    android:id="@+id/et_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-
-                    android:background="@drawable/bg_cornered_rect_10"
-                    android:backgroundTint="@color/bg_chats"
-                    android:fontFamily="@font/gilroy_regular"
-                    android:hint="@string/email_address"
-                    android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress"
-                    android:paddingHorizontal="15dp"
-                    android:paddingVertical="12dp"
                     android:textColor="@color/gray_light"
                     android:textColorHint="@color/gray_light_pro"
                     android:textSize="14sp" />
@@ -603,7 +614,7 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/checkbox"
+                        android:id="@+id/checkboxC"
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
                         android:buttonTint="@color/text_color_caller_name" />
@@ -619,8 +630,6 @@
 
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-
-
                             android:ellipsize="end"
                             android:fontFamily="@font/gilroy_regular"
                             android:maxLines="1"
@@ -632,7 +641,6 @@
 
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-
 
                             android:layout_marginStart="5dp"
                             android:ellipsize="end"
@@ -648,7 +656,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
 
-
                             android:layout_marginStart="5dp"
                             android:ellipsize="end"
                             android:fontFamily="@font/gilroy_regular"
@@ -662,10 +669,11 @@
 
                 </LinearLayout>
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_submit"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:onClick="registerUser"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginVertical="30dp"
                     android:background="@drawable/bg_gradiant_10"
@@ -673,8 +681,46 @@
                     android:text="@string/submit"
                     android:textSize="15sp" />
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/gilroy_extra_bold"
+                        android:maxLines="1"
+                        android:text="or"
+                        android:textAllCaps="true"
+                        android:textColor="@color/gray_dark"
+                        android:textSize="17sp" />
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:ellipsize="end"
+                        android:id="@+id/txt_Btn_SignIn"
+                        android:fontFamily="@font/gilroy_semi_bold"
+                        android:maxLines="1"
+                        android:text="Sign in"
+                        android:textColor="@color/gray_light"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+
             </LinearLayout>
         </ScrollView>
 
     </LinearLayout>
-</layout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

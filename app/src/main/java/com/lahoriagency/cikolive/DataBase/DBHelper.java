@@ -88,7 +88,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String phone =lastProfileUsed.getPhone();
         String dob =lastProfileUsed.getDob();
         String age =lastProfileUsed.getAge();
-        String gender =lastProfileUsed.getGender();
+        int gender =lastProfileUsed.getGender();
         String email =lastProfileUsed.getEmail();
         String location =lastProfileUsed.getLocation();
         String password =lastProfileUsed.getPassword();
@@ -98,19 +98,31 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(SAVED_PROFILE_NAME, name);
         contentValues.put(SAVED_PROFILE_DEVICEID, deviceID);
-        contentValues.put(SAVED_PROFILE_AGE, age);
-        contentValues.put(SAVED_PROFILE_DOB, dob);
         contentValues.put(SAVED_PROFILE_LOC, location);
-        contentValues.put(SAVED_PROFILE_PHOTO, String.valueOf(profilePicture));
-        contentValues.put(SAVED_PROFILE_GENDER, gender);
-        contentValues.put(SAVED_PROFILE_PHONE, phone);
         contentValues.put(SAVED_PROFILE_EMAIL, email);
         contentValues.put(SAVED_PROFILE_PASSWORD, password);
-        contentValues.put(SAVED_PROFILE_REFERRER, referrer);
         contentValues.put(SAVED_PROFILE_COUNTRY, country);
         sqLiteDatabase.insert(SAVED_PROFILE_TABLE,null,contentValues);
         sqLiteDatabase.close();
         return savedProfID;
+    }
+    public void upDateUser(SavedProfile lastProfileUsed) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        String deviceID = lastProfileUsed.getDeviceID();
+        String name =lastProfileUsed.getName();
+        String country =lastProfileUsed.getCountry();
+        String phone =lastProfileUsed.getPhone();
+        String dob =lastProfileUsed.getDob();
+        String age =lastProfileUsed.getAge();
+        int gender =lastProfileUsed.getGender();
+        String email =lastProfileUsed.getEmail();
+        String location =lastProfileUsed.getLocation();
+        String password =lastProfileUsed.getPassword();
+        String referrer =lastProfileUsed.getReferrer();
+        Uri profilePicture =lastProfileUsed.getImage();
+        int savedProfID =lastProfileUsed.getSavedProfID();
+        ContentValues contentValues = new ContentValues();
+
     }
     public ArrayList<SavedProfile> getAllSavedProfiles(){
         ArrayList<SavedProfile> profileList = new ArrayList<>();
@@ -125,7 +137,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 savedProfile.setCountry(cursor.getString(10));
                 savedProfile.setLocation(cursor.getString(3));
                 savedProfile.setImage(Uri.parse(cursor.getString(5)));
-                savedProfile.setGender(cursor.getString(4));
+                savedProfile.setGender(cursor.getInt(4));
                 profileList.add(savedProfile);
             }while(cursor.moveToNext());
         }
@@ -178,6 +190,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return count;
 
     }
+
 
 
 }
