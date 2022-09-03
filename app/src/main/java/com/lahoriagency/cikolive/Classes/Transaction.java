@@ -45,6 +45,14 @@ public class Transaction extends Observable implements Parcelable, Serializable 
             TRANSACTIONS_TYPE + " TEXT, " + TRANSACTION_METHOD_OF_PAYMENT + " TEXT, "+ TRANSACTION_APPROVER + TRANSACTION_APPROVAL_DATE + " TEXT, "+  TRANSACTION_STATUS + " TEXT, " + "PRIMARY KEY(" +TRANSACTION_ID + "), " +"FOREIGN KEY(" + TRANSACTION_SAVEDPROF_ID + ") REFERENCES " + SAVED_PROFILE_TABLE + "(" + SAVED_PROFILE_ID + "))";
 
 
+
+
+
+
+    public Transaction() {
+        super();
+
+    }
     protected Transaction(Parcel in) {
         tranID = in.readInt();
         tranSenderSavedProfID = in.readInt();
