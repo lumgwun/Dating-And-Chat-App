@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-    </data>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -30,14 +31,14 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/img"
+                    android:id="@+id/long_userPic"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     android:src="@drawable/img_model" />
 
                 <FrameLayout
-                    android:id="@+id/lout_live"
+                    android:id="@+id/long_lout_live"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -66,7 +67,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tv_name"
+                            android:id="@+id/long_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
 
@@ -79,7 +80,7 @@
                             tools:text="Mimi Brown" />
 
                         <TextView
-                            android:id="@+id/tv_age"
+                            android:id="@+id/long_tv_age"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
@@ -100,7 +101,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/tv_location"
+                        android:id="@+id/tv_long_loc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
@@ -140,7 +141,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tv_diamond_rate"
+                            android:id="@+id/tv_diamond34_"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
 
@@ -153,7 +154,7 @@
                             android:textSize="14sp" />
 
                         <TextView
-                            android:id="@+id/tv_time"
+                            android:id="@+id/txtV_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
 
@@ -172,4 +173,6 @@
 
 
     </androidx.cardview.widget.CardView>
-</layout>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

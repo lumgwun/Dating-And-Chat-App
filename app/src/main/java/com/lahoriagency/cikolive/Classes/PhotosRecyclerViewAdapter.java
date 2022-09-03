@@ -30,6 +30,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.lahoriagency.cikolive.ProfileEditActivity.REQUEST_READ_EXTERNAL_STORAGE;
+
+@SuppressWarnings("deprecation")
 public class PhotosRecyclerViewAdapter extends RecyclerView.Adapter<PhotosRecyclerViewAdapter.ItemViewHolder>
         implements ItemTouchHelperAdapter {
 

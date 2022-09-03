@@ -5,14 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.retry.dimdim.R;
-import com.retry.dimdim.adapters.ExploreProfileAdapter;
-import com.retry.dimdim.databinding.FragmentExploreProfilesBinding;
-import com.retry.dimdim.modals.ModelItem;
-import com.retry.dimdim.utils.SampleData;
+
+import com.lahoriagency.cikolive.Adapters.ExploreProfileAdapter;
+import com.lahoriagency.cikolive.Classes.ModelItem;
+import com.lahoriagency.cikolive.R;
+import com.lahoriagency.cikolive.Utils.SampleData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,26 +21,21 @@ import java.util.List;
 
 public class ExploreProfilesFragment extends Fragment {
 
-    FragmentExploreProfilesBinding binding;
     ExploreProfileAdapter profileAdapter;
     List<ModelItem> proList = new ArrayList<>();
+    private RecyclerView recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_explore_profiles, container, false);
+        View rootView =  inflater.inflate(R.layout.fragment_explore_profiles, container, false);
+
+        recyclerView = rootView.findViewById(R.id.rv_user_profiles);
         makeList();
-        init();
+        init(recyclerView);
+        return rootView;
 
-
-        return binding.getRoot();
     }
-
-
-
-
-
     private void makeList() {
 
         ModelItem item1 = new ModelItem();
@@ -97,9 +92,9 @@ public class ExploreProfilesFragment extends Fragment {
         proList.add(item6);
     }
 
-    public void init() {
+    public void init(RecyclerView recyclerView) {
         profileAdapter = new ExploreProfileAdapter(1);
-        binding.rvProfiles.setAdapter(profileAdapter);
+        this.recyclerView.setAdapter(profileAdapter);
         proList.addAll(Collections.unmodifiableList(proList));
         profileAdapter.updateItems(proList);
     }

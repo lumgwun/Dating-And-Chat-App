@@ -1,6 +1,8 @@
 package com.lahoriagency.cikolive.Interfaces;
 
 import com.lahoriagency.cikolive.CallActivity;
+import com.lahoriagency.cikolive.Classes.CallService;
+import com.quickblox.conference.ConferenceSession;
 import com.quickblox.videochat.webrtc.BaseSession;
 import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
@@ -76,4 +78,39 @@ public interface ConversationFragmentCallback {
     HashMap<Integer, QBRTCVideoTrack> getVideoTrackMap();
 
     QBRTCVideoTrack getVideoTrack(Integer userId);
+
+
+    void addClientConnectionCallback(QBRTCSessionStateCallback<ConferenceSession> clientConnectionCallbacks);
+
+    void removeClientConnectionCallback(QBRTCSessionStateCallback clientConnectionCallbacks);
+
+    void addCurrentCallStateCallback(CallService.CurrentCallStateCallback currentCallStateCallback);
+
+    void removeCurrentCallStateCallback(CallService.CurrentCallStateCallback currentCallStateCallback);
+
+    void addReconnectionCallback(ReconnectionCallback reconnectionCallback);
+
+    void removeReconnectionCallback(ReconnectionCallback reconnectionCallback);
+
+
+    void onLeaveCurrentSession();
+
+
+    void onStartJoinConference();
+
+
+    boolean isScreenSharingState();
+
+
+    void onReturnToChat();
+
+    void onManageGroup();
+
+    String getDialogID();
+
+    String getRoomID();
+
+    String getRoomTitle();
+
+    boolean isListenerRole();
 }

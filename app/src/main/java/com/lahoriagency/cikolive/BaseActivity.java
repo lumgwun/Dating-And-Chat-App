@@ -1,13 +1,18 @@
 package com.lahoriagency.cikolive;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -34,6 +39,7 @@ import com.lahoriagency.cikolive.Classes.ErrorUtils;
 import com.lahoriagency.cikolive.Classes.Gift;
 import com.lahoriagency.cikolive.Classes.Notification;
 import com.lahoriagency.cikolive.Classes.PurchaseDiamond;
+import com.lahoriagency.cikolive.Classes.QBResRequestExecutor;
 import com.lahoriagency.cikolive.Classes.RedeemRequest;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
@@ -51,6 +57,9 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
 
 
+import org.jetbrains.annotations.NotNull;
+
+import eightbitlab.com.blurview.BlurAlgorithm;
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
 
@@ -58,6 +67,7 @@ public class BaseActivity extends AppCompatActivity {
     private static final String TAG = BaseActivity.class.getSimpleName();
     private static String DUMMY_VALUE = "dummy_value";
     protected ActionBar actionBar;
+    private BlurAlgorithm blurAlgorithm;
 
     private ProgressDialog progressDialog = null;
     public final List<String> listOfImages = new ArrayList<>();
@@ -69,6 +79,8 @@ public class BaseActivity extends AppCompatActivity {
     public final List<CityName> cityList = new ArrayList<>();
     public final List<SavedProfile> savedProfileList = new ArrayList<>();
     public final List<Comments> commentsList = new ArrayList<>();
+    protected SharedPrefsHelper sharedPrefsHelper;
+    protected QBResRequestExecutor requestExecutor;
 
 
     private Snackbar snackbar;
@@ -121,6 +133,42 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        actionBar = getSupportActionBar();
+        requestExecutor = App.getInstance().getQbResRequestExecutor();
+        sharedPrefsHelper = SharedPrefsHelper.getInstance();
+        blurAlgorithm= new BlurAlgorithm() {
+            @Override
+            public Bitmap blur(Bitmap bitmap, float blurRadius) {
+                return null;
+            }
+
+            @Override
+            public void destroy() {
+
+            }
+
+            @Override
+            public boolean canModifyBitmap() {
+                return false;
+            }
+
+            @NonNull
+            @NotNull
+            @Override
+            public Bitmap.Config getSupportedBitmapConfig() {
+                return null;
+            }
+
+            @Override
+            public float scaleFactor() {
+                return 0;
+            }
+
+            @Override
+            public void render(@NonNull @NotNull Canvas canvas, @NonNull @NotNull Bitmap bitmap) {
+
+            }
+        };
 
         actionBar = getSupportActionBar();
 
@@ -139,11 +187,64 @@ public class BaseActivity extends AppCompatActivity {
     public <T extends View> T _findViewById(int viewId) {
         return (T) findViewById(viewId);
     }
+    public void initDefaultActionBar() {
+        String currentUserFullName = "";
+        if (sharedPrefsHelper.getQbUser() != null) {
+            currentUserFullName = sharedPrefsHelper.getQbUser().getFullName();
+        }
+
+        setActionBarTitle("");
+        setActionbarSubTitle(String.format(getString(R.string.subtitle_text_logged_in_as), currentUserFullName));
+    }
+
+    public void setActionbarSubTitle(String subTitle) {
+        if (actionBar != null)
+            actionBar.setSubtitle(subTitle);
+    }
+
+    public void removeActionbarSubTitle() {
+        if (actionBar != null)
+            actionBar.setSubtitle(null);
+    }
 
     public void setActionBarTitle(int title) {
         if (actionBar != null) {
             actionBar.setTitle(title);
         }
+    }
+    void showProgressDialog(@StringRes int messageId) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+
+            // Disable the back button
+            DialogInterface.OnKeyListener keyListener = new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                    return keyCode == KeyEvent.KEYCODE_BACK;
+                }
+            };
+            progressDialog.setOnKeyListener(keyListener);
+        }
+        progressDialog.setMessage(getString(messageId));
+        progressDialog.show();
+    }
+
+
+
+    protected boolean checkPermission(String[] permissions) {
+        for (String permission : permissions) {
+            if (checkPermission(permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkPermission(String permission) {
+        return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED;
     }
 
     public void setActionBarTitle(CharSequence title) {
@@ -606,12 +707,12 @@ public class BaseActivity extends AppCompatActivity {
         ViewGroup rootView = (ViewGroup) decorView.findViewById(android.R.id.content);
         Drawable windowBackground = decorView.getBackground();
 
-        blurView.setupWith(rootView)
+        blurView.setupWith(rootView,blurAlgorithm)
                 .setFrameClearDrawable(windowBackground)
-                .setBlurAlgorithm(new RenderScriptBlur(this))
+                //.setBlurAlgorithm(new RenderScriptBlur(this))
                 .setBlurRadius(radius)
-                .setBlurAutoUpdate(true)
-                .setHasFixedTransformationMatrix(false);// Or false if it's in a scrolling container or might be animated
+                .setBlurAutoUpdate(true);
+                //.setHasFixedTransformationMatrix(false);// Or false if it's in a scrolling container or might be animated
     }
 
 

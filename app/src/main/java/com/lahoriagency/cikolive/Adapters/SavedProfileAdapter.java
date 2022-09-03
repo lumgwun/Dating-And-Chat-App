@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,7 +17,6 @@ import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.R;
 import com.lahoriagency.cikolive.SavedProfileActivity;
 
-import net.qiujuer.genius.ui.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;

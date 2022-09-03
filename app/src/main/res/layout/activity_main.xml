@@ -68,7 +68,7 @@
                 android:layout_alignParentBottom="true"
                 app:itemBackground="@drawable/shape_layer_1a"
                 app:itemRippleColor="@color/primary_purple"
-                app:itemIconTint="@color/g_default_base_ripple"
+                app:itemIconTint="@color/red_brown_dark"
                 app:itemTextColor="@color/color_red"
                 android:layout_above="@id/bottomCoord"
                 android:fadingEdge="horizontal"
@@ -103,7 +103,7 @@
         android:layout_alignParentBottom="true"
         app:itemBackground="@drawable/shape_layer_1a"
         app:itemRippleColor="@color/primary_purple"
-        app:itemIconTint="@color/g_default_base_ripple"
+        app:itemIconTint="@color/red_brown_dark"
         app:itemTextColor="@color/color_red"
         app:menu="@menu/main_act_bottom" />
 

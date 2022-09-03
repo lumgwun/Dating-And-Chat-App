@@ -27,6 +27,7 @@ import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -115,7 +116,7 @@ public class SignInActivity extends BaseActivity {
     DBHelper dbHelper;
     SavedProfile savedProfile;
     private static final int MIN_LENGTH = 3;
-    net.qiujuer.genius.ui.widget.Button btnForgotP,btnCreateNewAcct;
+    Button btnForgotP,btnCreateNewAcct;
     private AppCompatEditText edtUser,edtPassword;
     private  Bundle fbBundle;
     private OnLoginChangeView onLoginChangeView;
@@ -133,6 +134,9 @@ public class SignInActivity extends BaseActivity {
     private static final int MAX_LOGIN_LENGTH = 50;
     private static final int UNAUTHORIZED = 401;
     private String message;
+
+    private Button buttonLogin;
+    private EditText editTextLogin;
 
 
 
@@ -165,6 +169,7 @@ public class SignInActivity extends BaseActivity {
         callbackManager = CallbackManager.Factory.create();
         preferencesManager = App.getPreferencesManager();
         myPreferences = App.getPreferences();
+
 
         if(accessToken != null)
             startLogin(true);

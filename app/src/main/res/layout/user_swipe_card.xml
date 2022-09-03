@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <net.qiujuer.genius.ui.widget.ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/user_swipe_card_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:background="@drawable/background_user_swipe_black_gradation"
+            android:background="@drawable/shape_layer1c"
             android:layout_alignParentBottom="true">
 
             <TextView

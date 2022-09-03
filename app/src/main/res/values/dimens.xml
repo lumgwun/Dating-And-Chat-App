@@ -70,7 +70,57 @@
 
     <dimen name="text_size_medium">16sp</dimen>
 
+    <dimen name="_1sdp">1dp</dimen>
+    <dimen name="_8sdp">8dp</dimen>
+    <dimen name="_16dp">16dp</dimen>
+    <dimen name="_16sdp">16dp</dimen>
+    <dimen name="_4sdp">4dp</dimen>
+    <dimen name="_18sdp">18dp</dimen>
+    <dimen name="_12sdp">12dp</dimen>
+
     <integer name="push_max_length">1000</integer>
+
+    <dimen name="layout_height_small">32dp</dimen>
+    <dimen name="layout_height_medium">48dp</dimen>
+
+    <dimen name="line_width">1dp</dimen>
+
+    <dimen name="margin_medium">46dp</dimen>
+
+    <dimen name="text_size_small">14sp</dimen>
+
+    <dimen name="fab_margin_right">16dp</dimen>
+    <dimen name="fab_margin_bottom">16dp</dimen>
+    <dimen name="_22sdp">22dp</dimen>
+    <dimen name="_10sdp">10dp</dimen>
+    <dimen name="_85sdp">85dp</dimen>
+    <dimen name="_120sdp">120dp</dimen>
+    <dimen name="_2sdp">2dp</dimen>
+    <dimen name="_28sdp">28dp</dimen>
+    <dimen name="_20sdp">20dp</dimen>
+    <dimen name="_130sdp">130dp</dimen>
+    <dimen name="_30sdp">30dp</dimen>
+    <dimen name="_48sdp">48dp</dimen>
+    <dimen name="_96sdp">96dp</dimen>
+    <dimen name="_240sdp">240dp</dimen>
+    <dimen name="_180sdp">180dp</dimen>
+    <dimen name="_415sdp">415dp</dimen>
+    <dimen name="_80sdp">80dp</dimen>
+    <dimen name="_15sdp">15dp</dimen>
+    <dimen name="_24sdp">24dp</dimen>
+    <dimen name="_32sdp">32dp</dimen>
+    <dimen name="_250sdp">250dp</dimen>
+    <dimen name="_160sdp">160dp</dimen>
+    <dimen name="_36sdp">36sp</dimen>
+    <dimen name="_100sdp">100dp</dimen>
+
+    <dimen name="toolbar_elevation">4dp</dimen>
+
+
+    <!--Pager fragment-->
+    <dimen name="pager_image_width">400dp</dimen>
+    <dimen name="pager_image_height">500dp</dimen>
+
 
 
 </resources>

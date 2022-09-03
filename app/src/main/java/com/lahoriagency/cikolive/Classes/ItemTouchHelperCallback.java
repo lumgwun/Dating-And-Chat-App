@@ -4,16 +4,28 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lahoriagency.cikolive.Adapters.DialogAdapter44;
 import com.lahoriagency.cikolive.Adapters.DialogsAdapter;
 import com.lahoriagency.cikolive.Interfaces.ItemTouchHelperAdapter;
 
 @SuppressWarnings("deprecation")
 public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
-    private final ItemTouchHelperAdapter mAdapter;
+    private ItemTouchHelperAdapter mAdapter;
+    private DialogsAdapter dialogsAdapter;
+    DialogAdapter44 dialogsAdapter33;
 
-    public ItemTouchHelperCallback(DialogsAdapter adapter) {
+
+    public ItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
+    }
+    public ItemTouchHelperCallback(DialogsAdapter adapter) {
+        dialogsAdapter = adapter;
+    }
+
+    public ItemTouchHelperCallback(DialogAdapter44 dialogsAdapter) {
+        dialogsAdapter33 = dialogsAdapter;
+
     }
 
     @Override
@@ -44,4 +56,5 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
     }
+
 }

@@ -30,5 +30,10 @@ public interface Consts {
     String[] PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
 
 
-
+    String EXTRA_ROOM_ID = "17094";
+    String EXTRA_ROOM_TITLE = "Room Tittle";
+    String EXTRA_DIALOG_ID = "876";
+    String EXTRA_DIALOG_OCCUPANTS = "9";
+    String EXTRA_AS_LISTENER = "8";
+    String PREF_MIC_ENABLED = "MIC ENABLED";
 }

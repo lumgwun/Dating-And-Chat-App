@@ -136,5 +136,8 @@
 
     <color name="orange">#ff8c6a</color>
 
+    <color name="text_color_light_grey">#dedede</color>
+    <color name="text_color_medium_dark_grey">#747474</color>
+
 
 </resources>

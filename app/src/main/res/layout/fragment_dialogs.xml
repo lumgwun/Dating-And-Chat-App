@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_root"
+    android:background="@drawable/shape_layer1d"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:ignore="RtlHardcoded,RtlSymmetry">
@@ -39,6 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
+                    android:layout_marginStart="10dp"
                     android:overScrollMode="never"
                     android:paddingTop="@dimen/_8sdp"/>
             </RelativeLayout>
@@ -61,6 +63,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/dialogs_recycler_view"
                     android:layout_width="match_parent"
+                    android:layout_marginStart="10dp"
                     android:layout_height="match_parent"
                     android:nestedScrollingEnabled="false"
                     android:overScrollMode="never" />

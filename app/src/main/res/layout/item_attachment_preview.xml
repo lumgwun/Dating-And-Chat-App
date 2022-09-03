@@ -21,7 +21,6 @@
 
     <ImageButton
         android:id="@+id/button_attachment_preview_delete"
-        style="@style/BorderlessImageButtonStyle"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="top|right"

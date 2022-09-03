@@ -1,6 +1,7 @@
 package com.lahoriagency.cikolive.Classes;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.ContentUris;
 import android.content.Context;
@@ -15,11 +16,31 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.util.Log;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
+import androidx.fragment.app.Fragment;
+
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import com.lahoriagency.cikolive.Interfaces.MimeType;
 import com.lahoriagency.cikolive.R;
 import com.quickblox.core.io.IOUtils;
 
@@ -50,12 +71,124 @@ public class ImageUtils {
     public static final int CAMERA_REQUEST_CODE = 212;
     public static final int FILE_REQUEST_CODE = 189;
 
+
     public static final int PREFERRED_IMAGE_SIZE_FULL = ResourceUtils.dpToPx(320);
 
     private static final boolean isKitkatSupportDevice = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
     private ImageUtils() {
     }
+    public static String saveUriToFile(Uri uri) throws Exception {
+        ParcelFileDescriptor parcelFileDescriptor = App.getInstance().getContentResolver().openFileDescriptor(uri, "r");
+        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+
+        InputStream inputStream = new FileInputStream(fileDescriptor);
+        BufferedInputStream bis = new BufferedInputStream(inputStream);
+
+        File parentDir = StorageUtils.getAppExternalDataDirectoryFile();
+        String fileName = String.valueOf(System.currentTimeMillis()) + ".jpg";
+        File resultFile = new File(parentDir, fileName);
+
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(resultFile));
+
+        byte[] buf = new byte[2048];
+        int length;
+
+        try {
+            while ((length = bis.read(buf)) > 0) {
+                bos.write(buf, 0, length);
+            }
+        } catch (Exception e) {
+            throw new IOException("Can\'t save Storage API bitmap to a file!", e);
+        } finally {
+            parcelFileDescriptor.close();
+            bis.close();
+            bos.close();
+        }
+
+        return resultFile.getAbsolutePath();
+    }
+
+    public static void startImagePicker(Activity activity) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(MimeType.IMAGE_MIME);
+        activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.dlg_choose_image_from)), GALLERY_REQUEST_CODE);
+    }
+
+    public static void startImagePicker(Fragment fragment) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(MimeType.IMAGE_MIME);
+        fragment.startActivityForResult(Intent.createChooser(intent, fragment.getString(R.string.dlg_choose_image_from)), GALLERY_REQUEST_CODE);
+    }
+
+    public static void startCameraForResult(Activity activity) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(activity.getPackageManager()) == null) {
+            return;
+        }
+
+        File photoFile = getTemporaryCameraFile();
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+        activity.startActivityForResult(intent, CAMERA_REQUEST_CODE);
+    }
+
+    public static void startCameraForResult(Fragment fragment) {
+        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // TODO Files: Uncomment to add sending all file types
+
+        Intent chooser = Intent.createChooser(pictureIntent, "Capture with");
+        //Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+
+
+        // TODO Files: Uncomment to add sending all file types
+        //chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(videoIntent));
+
+        ComponentName component = chooser.resolveActivity(App.getInstance().getPackageManager());
+        if (component != null) {
+            File mediaFile = getTemporaryCameraFile(fragment.getContext());
+            pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getValidUri(mediaFile, fragment.getContext()));
+            fragment.startActivityForResult(chooser, CAMERA_REQUEST_CODE);
+        }
+        if (pictureIntent.resolveActivity(App.getInstance().getPackageManager()) == null) {
+            return;
+        }
+
+        File photoFile = getTemporaryCameraFile();
+        pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+        fragment.startActivityForResult(pictureIntent, CAMERA_REQUEST_CODE);
+    }
+
+    public static File getTemporaryCameraFile() {
+        File storageDir = StorageUtils.getAppExternalDataDirectoryFile();
+        File file = new File(storageDir, getTemporaryCameraFileName());
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
+    public static File getLastUsedCameraFile() {
+        File dataDir = StorageUtils.getAppExternalDataDirectoryFile();
+        File[] files = dataDir.listFiles();
+        List<File> filteredFiles = new ArrayList<>();
+        for (File file : files) {
+            if (file.getName().startsWith(CAMERA_FILE_NAME_PREFIX)) {
+                filteredFiles.add(file);
+            }
+        }
+
+        Collections.sort(filteredFiles);
+        if (!filteredFiles.isEmpty()) {
+            return filteredFiles.get(filteredFiles.size() - 1);
+        } else {
+            return null;
+        }
+    }
+
+
 
     private static boolean isExtStorageDocument(Uri uri) {
         return EXTERNAL_STORAGE_URI.equals(uri.getAuthority());
@@ -242,23 +375,7 @@ public class ImageUtils {
         fragment.startActivityForResult(Intent.createChooser(intent, fragment.getString(R.string.dlg_choose_file_from)), GALLERY_REQUEST_CODE);
     }
 
-    public static void startCameraForResult(Fragment fragment) {
-        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // TODO Files: Uncomment to add sending all file types
-        //Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
-        Intent chooser = Intent.createChooser(pictureIntent, "Capture with");
-
-        // TODO Files: Uncomment to add sending all file types
-        //chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(videoIntent));
-
-        ComponentName component = chooser.resolveActivity(App.getInstance().getPackageManager());
-        if (component != null) {
-            File mediaFile = getTemporaryCameraFile(fragment.getContext());
-            pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getValidUri(mediaFile, fragment.getContext()));
-            fragment.startActivityForResult(chooser, CAMERA_REQUEST_CODE);
-        }
-    }
 
     public static File getTemporaryCameraFile(Context context) {
         String imageFileName = getTemporaryCameraFileName();

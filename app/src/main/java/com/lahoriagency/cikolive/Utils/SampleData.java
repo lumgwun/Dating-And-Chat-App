@@ -1,6 +1,9 @@
 package com.lahoriagency.cikolive.Utils;
 
-import com.retry.dimdim.modals.SavedProfile;
+
+import android.net.Uri;
+
+import com.lahoriagency.cikolive.Classes.SavedProfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,23 +50,23 @@ public class SampleData {
         item1.setName("Jhonson Smith ");
         item1.setLocation("Paris,France1");
         item1.setAge("15");
-        item1.setImage(SampleData.imagesOfModel[1]);
+        item1.setImage(Uri.parse(SampleData.imagesOfModel[1]));
 
         item2.setName("Mimi Brown");
         item2.setLocation("Paris,France2");
         item2.setAge("25");
-        item2.setImage(SampleData.imagesOfModel[0]);
+        item2.setImage(Uri.parse(SampleData.imagesOfModel[0]));
 
         item3.setName("Jhonson Smith ");
         item3.setLocation("Paris,France3");
         item3.setAge("15");
-        item3.setImage(SampleData.imagesOfModel[4]);
+        item3.setImage(Uri.parse(SampleData.imagesOfModel[4]));
 
 
         item4.setName("Janny Goa");
         item4.setLocation("Paris,France4");
         item4.setAge("35");
-        item4.setImage(SampleData.imagesOfModel[5]);
+        item4.setImage(Uri.parse(SampleData.imagesOfModel[5]));
 
         savedProfileList.add(item1);
         savedProfileList.add(item2);

@@ -9,6 +9,9 @@
     <string name="and">and</string>
     <string name="chats">Chats</string>
     <string name="profile">Profile</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+
+    <string name="navigation_drawer_close">Close navigation drawer</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="diamond_wallet">DIAMOND WALLET</string>
@@ -488,4 +491,92 @@
     <string name="google_wallet_status_unavailable" translatable="false">Unfortunately, Google Wallet is not available on this phone.</string>
     <string name="payments_show_name">Successfully received payment data for %s!</string>
     <string name="add_google_wallet_success" translatable="false">The pass was added successfully!</string>
+
+
+    <string name="menu_delete_match">Delete match</string>
+    <string name="chat_load_users_error">Load chat users errors</string>
+
+    <string name="chat_info">Chat info</string>
+    <string name="chat_info_add_people_error">Add people errors</string>
+    <string name="group_chat_join_error">Could not join chat, errors:</string>
+
+    <string name="dlg_error">Error</string>
+    <string name="dlg_choose_image_from">Select photo from…</string>
+    <string name="new_pair">You\'ve got new pair!</string>
+
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nibh augue, suscipit a, scelerisque sed, lacinia in, mi.</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="login_with_facebook">Login with facebook</string>
+
+    <string name="no_more_matches">There is no one more around you! Expand maximum discovery distance your settings!</string>
+    <string name="chat_matched_with_message">You matched with </string>
+    <string name="reconnection_failed">reconnection failed</string>
+    <string name="load_user">Load User</string>
+    <string name="conv_p">How are you today?</string>
+    <string name="online_participants_label">Online participants</string>
+    <string name="online_participants_label_single">An online VIP</string>
+    <string name="manage_group_update_users_error">error</string>
+    <string name="manage_group_chat_subtitle">Subtittle</string>
+    <string name="login_hint">incorrect password</string>
+
 </resources>

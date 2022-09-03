@@ -4,18 +4,19 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.retry.dimdim.R;
-import com.retry.dimdim.activities.ProfileActivity;
-import com.retry.dimdim.activities.UserLiveActivity;
-import com.retry.dimdim.databinding.ItemExploreProfileLongBinding;
-import com.retry.dimdim.databinding.ItemExploreProfileShortBinding;
-import com.retry.dimdim.modals.ModelItem;
+import com.lahoriagency.cikolive.Classes.ModelItem;
+import com.lahoriagency.cikolive.ProfileActivity;
+import com.lahoriagency.cikolive.R;
+import com.lahoriagency.cikolive.UserLiveActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +39,7 @@ public class ExploreProfileAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+
         View viewShort = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_explore_profile_short, parent, false);
         View viewLong = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_explore_profile_long, parent, false);
 
@@ -107,12 +109,21 @@ public class ExploreProfileAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
     public class ItemHolderShort extends RecyclerView.ViewHolder {
+        private ImageView img;
+        private TextView tvName,tvLocation,tvAge,tvDiamondRate,livCount;
+        private FrameLayout loutLive;
 
-        ItemExploreProfileShortBinding binding;
 
         public ItemHolderShort(@NonNull @NotNull View itemView) {
             super(itemView);
-            binding = DataBindingUtil.bind(itemView);
+            img = itemView.findViewById(R.id.imgCik);
+            tvName = itemView.findViewById(R.id.tv_nameBabe);
+            tvLocation = itemView.findViewById(R.id.tv_loc_user);
+            tvAge = itemView.findViewById(R.id.tv_short_age);
+            tvDiamondRate = itemView.findViewById(R.id.tv_diamond_short_rate);
+            tvAge = itemView.findViewById(R.id.loutCountry);
+            livCount = itemView.findViewById(R.id.tv_live_count);
+            loutLive = itemView.findViewById(R.id.short_lout_live);
         }
 
 
@@ -122,19 +133,19 @@ public class ExploreProfileAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
             if (type == 1) {
-                binding.loutLive.setVisibility(View.GONE);
+                loutLive.setVisibility(View.GONE);
             } else {
-                binding.loutLive.setVisibility(View.VISIBLE);
+                loutLive.setVisibility(View.VISIBLE);
 
             }
-            Glide.with(itemView.getContext()).load(model.getActorImage()).into(binding.img);
-            binding.tvName.setText(model.getActorName());
-            binding.tvLocation.setText(model.getLocation());
-            binding.tvDiamondRate.setText(String.valueOf(model.getDiamond()));
-            binding.tvAge.setText(String.valueOf(model.getAge()));
+            Glide.with(itemView.getContext()).load(model.getActorImage()).into(img);
+            tvName.setText(model.getActorName());
+            tvLocation.setText(model.getLocation());
+            tvDiamondRate.setText(String.valueOf(model.getDiamond()));
+            tvAge.setText(String.valueOf(model.getAge()));
 
 
-            binding.getRoot().setOnClickListener(view -> {
+            itemView.setOnClickListener(view -> {
                 if (type == 1) {
 
                     itemView.getContext().startActivity(new Intent(itemView.getContext(), ProfileActivity.class));
@@ -149,12 +160,22 @@ public class ExploreProfileAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
     public class ItemHolderLong extends RecyclerView.ViewHolder {
+        private ImageView img;
+        private TextView tvName,tvLocation,tvAge,tvDiamondRate,time,liveCount;
+        private FrameLayout loutLive;
 
-        ItemExploreProfileLongBinding binding;
 
         public ItemHolderLong(@NonNull @NotNull View view1) {
             super(view1);
-            binding = DataBindingUtil.bind(view1);
+            img = itemView.findViewById(R.id.long_userPic);
+            tvName = itemView.findViewById(R.id.long_name);
+            tvLocation = itemView.findViewById(R.id.tv_long_loc);
+            tvAge = itemView.findViewById(R.id.long_tv_age);
+            tvDiamondRate = itemView.findViewById(R.id.tv_diamond34_);
+            tvAge = itemView.findViewById(R.id.long_tv_age);
+            time = itemView.findViewById(R.id.txtV_time);
+            liveCount = itemView.findViewById(R.id.tv_live_count);
+            loutLive = itemView.findViewById(R.id.long_lout_live);
         }
 
         private void setDataLong(int position) {
@@ -163,19 +184,19 @@ public class ExploreProfileAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
             if (type == 1) {
-                binding.loutLive.setVisibility(View.GONE);
+                loutLive.setVisibility(View.GONE);
             } else {
-                binding.loutLive.setVisibility(View.VISIBLE);
+                loutLive.setVisibility(View.VISIBLE);
 
             }
-            Glide.with(itemView.getContext()).load(model.getActorImage()).into(binding.img);
-            binding.tvName.setText(model.getActorName());
-            binding.tvLocation.setText(model.getLocation());
-            binding.tvDiamondRate.setText(String.valueOf(model.getDiamond()));
-            binding.tvAge.setText(String.valueOf(model.getAge()));
+            Glide.with(itemView.getContext()).load(model.getActorImage()).into(img);
+            tvName.setText(model.getActorName());
+            tvLocation.setText(model.getLocation());
+            tvDiamondRate.setText(String.valueOf(model.getDiamond()));
+            tvAge.setText(String.valueOf(model.getAge()));
 
 
-            binding.getRoot().setOnClickListener(view -> {
+            loutLive.setOnClickListener(view -> {
                 if (type == 1) {
 
                     itemView.getContext().startActivity(new Intent(itemView.getContext(), ProfileActivity.class));

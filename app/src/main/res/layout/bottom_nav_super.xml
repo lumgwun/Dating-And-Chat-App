@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.lahoriagency.cikolive.SuperAdmin.SuperAdminOffice">
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:id="@+id/bottomCoord"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content">
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottomAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:fabCradleMargin="5dp"
+            app:fabCradleRoundedCornerRadius="10dp"
+            app:fabCradleVerticalOffset="10dp">
+
+            <com.ismaeldivita.chipnavigation.ChipNavigationBar
+                android:id="@+id/bottom_nav_barSuper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="false"
+                android:layout_gravity="center_horizontal"
+                android:background="#fff"
+                android:layout_above="@id/bottomCoord"
+                android:fadingEdge="horizontal"
+                app:cnb_orientationMode="horizontal"
+                app:cnb_addBottomInset="true"
+                app:cnb_addLeftInset="false"
+                app:cnb_addRightInset="false"
+                app:cnb_addTopInset="true"
+                app:cnb_unselectedColor="@color/red_brown_dark"
+                app:cnb_badgeColor="@color/dark_and_red"
+                app:cnb_radius="8dp"
+                app:cnb_iconSize="24dp"
+                app:cnb_menuResource="@menu/super_bottom_menu" />
+
+        </com.google.android.material.bottomappbar.BottomAppBar>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabSuper"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="34dp"
+            android:layout_marginEnd="10dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_home"
+            app:layout_anchor="@id/bottom_nav_barSuper" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</RelativeLayout>

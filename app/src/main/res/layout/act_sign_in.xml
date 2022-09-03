@@ -62,7 +62,7 @@
                     android:layout_marginEnd="15dp"
                     android:src="@drawable/com_facebook_button_icon" />
 
-                <net.qiujuer.genius.ui.widget.Button
+                <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/gilroy_semi_bold"
@@ -94,7 +94,7 @@
                     android:layout_marginEnd="15dp"
                     android:src="@drawable/icn_google" />
 
-                <net.qiujuer.genius.ui.widget.Button
+                <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/gilroy_semi_bold"
@@ -280,7 +280,7 @@
             android:weightSum="2"
             android:orientation="horizontal">
 
-            <net.qiujuer.genius.ui.widget.Button
+            <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -296,7 +296,7 @@
                 android:textSize="17sp" />
 
 
-            <net.qiujuer.genius.ui.widget.Button
+            <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/gilroy_semi_bold"

@@ -3,17 +3,19 @@ package com.lahoriagency.cikolive;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
+
 import android.transition.Fade;
 import android.transition.Transition;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
+import androidx.viewpager.widget.PagerAdapter;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.ybq.parallaxviewpager.ParallaxViewPager;
@@ -22,7 +24,8 @@ import com.lahoriagency.cikolive.Classes.App;
 import com.lahoriagency.cikolive.Classes.ImageLoader;
 import com.lahoriagency.cikolive.Classes.UserProfileInfo;
 
-import net.qiujuer.genius.ui.widget.ImageView;
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class ProfileActivity extends AppCompatActivity {
     private boolean swipeViewSource;

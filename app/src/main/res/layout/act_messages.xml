@@ -35,7 +35,7 @@
         android:orientation="vertical">
 
         <com.devspark.robototextview.widget.RobotoTextView
-            style="@style/ListHeaderStyle"
+            style="@style/HeaderStyle"
             android:layout_marginTop="@dimen/margin_large"
             android:text="@string/received_messages" />
 

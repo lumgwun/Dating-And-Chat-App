@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.lahoriagency.cikolive.R;
 
 public class PreviewFragment extends Fragment {
@@ -30,11 +32,14 @@ public class PreviewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_screen_share, container, false);
 
+
         if (getContext() != null && getArguments() != null) {
-            ImageView ivPreview = view.findViewById(R.id.image_preview);
-            int imageDrawable = getArguments().getInt(PREVIEW_IMAGE);
-            Drawable image = ContextCompat.getDrawable(getContext(), imageDrawable);
-            ivPreview.setImageDrawable(image);
+            Glide.with(getActivity())
+                    .load(getArguments().getInt(PREVIEW_IMAGE))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .override((int) getResources().getDimension(R.dimen.pager_image_width),
+                            (int) getResources().getDimension(R.dimen.pager_image_height))
+                    .into((ImageView) view.findViewById(R.id.image_previewRed));
         }
         return view;
     }

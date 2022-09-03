@@ -9,7 +9,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -21,6 +23,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.lahoriagency.cikolive.CallActivity;
 import com.lahoriagency.cikolive.R;
 import com.quickblox.users.model.QBUser;
+import com.quickblox.videochat.webrtc.QBRTCMediaConfig;
 
 import java.util.ArrayList;
 
@@ -44,6 +47,35 @@ public class ScreenShareFragment extends BaseToolBarFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        if (view != null) {
+            ToggleButton micToggle = view.findViewById(R.id.tb_switch_mic);
+            ToggleButton cameraToggle = view.findViewById(R.id.tb_switch_cam);
+            ToggleButton endCallToggle = view.findViewById(R.id.tb_end_call);
+            ToggleButton shareScreenToggle = view.findViewById(R.id.tb_screen_share);
+            ToggleButton swapCamToggle = view.findViewById(R.id.tb_swap_cam);
+
+            micToggle.setVisibility(View.GONE);
+            cameraToggle.setVisibility(View.GONE);
+            endCallToggle.setVisibility(View.GONE);
+            swapCamToggle.setVisibility(View.GONE);
+
+            shareScreenToggle.setChecked(false);
+            shareScreenToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    Log.d(TAG, "Stop Screen Sharing");
+                    if (onSharingEvents != null) {
+                        onSharingEvents.onStopPreview();
+                    }
+                }
+            });
+        }
+
+
+        QBRTCMediaConfig.setVideoWidth(QBRTCMediaConfig.VideoQuality.HD_VIDEO.width);
+        QBRTCMediaConfig.setVideoHeight(QBRTCMediaConfig.VideoQuality.HD_VIDEO.height);
+
 
         ImagesAdapter adapter = new ImagesAdapter(getChildFragmentManager());
 

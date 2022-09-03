@@ -3,14 +3,14 @@ package com.lahoriagency.cikolive.Adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.retry.dimdim.R;
-import com.retry.dimdim.databinding.ItemIndicatorBinding;
+import com.lahoriagency.cikolive.R;
+
 
 public class ImageIndicatorAdapter extends RecyclerView.Adapter<ImageIndicatorAdapter.ItemHolder> {
 
@@ -58,22 +58,22 @@ public class ImageIndicatorAdapter extends RecyclerView.Adapter<ImageIndicatorAd
     }
 
     public class ItemHolder extends RecyclerView.ViewHolder {
+        private View indicator;
 
-        ItemIndicatorBinding binding;
 
         public ItemHolder(@NonNull View itemView) {
             super(itemView);
+            indicator = itemView.findViewById(R.id.indicatorN);
 
-            binding = DataBindingUtil.bind(itemView);
         }
 
         public void setItems(int position) {
             if (position == index) {
 
-                binding.indicator.setBackgroundTintList(ContextCompat.getColorStateList(itemView.getContext(), R.color.white));
+                indicator.setBackgroundTintList(ContextCompat.getColorStateList(itemView.getContext(), R.color.white));
 
             } else {
-                binding.indicator.setBackgroundTintList(ContextCompat.getColorStateList(itemView.getContext(), R.color.white_30));
+                indicator.setBackgroundTintList(ContextCompat.getColorStateList(itemView.getContext(), R.color.white_30));
 
             }
 

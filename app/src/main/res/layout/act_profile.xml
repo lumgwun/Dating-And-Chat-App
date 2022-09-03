@@ -17,7 +17,7 @@
             <LinearLayout
                 android:id="@+id/profile_image_section"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_350sdp"
+                android:layout_height="350dp"
                 android:background="#FFFFFF"
                 android:orientation="vertical">
 
@@ -37,8 +37,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
                 android:background="#FFFFFF"
                 android:orientation="vertical">
 
@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/proxima_soft_semibold"
                     android:textColor="@color/black_profile_name"
-                    android:textSize="@dimen/_23sdp"
+                    android:textSize="23sp"
                     android:textStyle="bold"
                     android:transitionName="username"
                     tools:text="Name, 20" />
@@ -59,8 +59,8 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="@dimen/_16sdp"
-                        android:layout_height="@dimen/_16sdp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:src="@drawable/location_mark_fg"
                         android:tint="@color/black_profile_description" />
 
@@ -69,18 +69,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/_4sdp"
+                        android:layout_marginLeft="4dp"
                         android:fontFamily="@font/proxima_soft_regular"
                         android:includeFontPadding="false"
                         android:textColor="@color/black_profile_description"
-                        android:textSize="@dimen/_17sdp"
+                        android:textSize="17sp"
                         tools:text="3 miles away" />
 
                     <ImageView
                         android:id="@+id/profile_match_heart"
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_16sdp"
-                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_width="20sp"
+                        android:layout_height="16sp"
+                        android:layout_marginLeft="10dp"
                         android:layout_gravity="center_horizontal"
                         android:src="@drawable/match_hearts_fg"
                         android:tint="@color/black_profile_description"
@@ -93,10 +93,10 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:fontFamily="@font/proxima_soft_regular"
-                        android:layout_marginLeft="@dimen/_3sdp"
+                        android:layout_marginLeft="3sp"
                         android:includeFontPadding="false"
                         android:textColor="@color/black_profile_description"
-                        android:textSize="@dimen/_17sdp"
+                        android:textSize="17sp"
                         android:visibility="invisible"
                         tools:text="match in 87%!"
                         tools:visibility="visible"/>
@@ -107,15 +107,15 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
                 android:background="@color/divider_color" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_16sdp"
-                android:layout_marginEnd="@dimen/_16sdp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:background="#FFFFFF"
                 android:orientation="vertical">
 
@@ -123,10 +123,10 @@
                     android:id="@+id/profile_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/proxima_soft_regular"
                     android:textColor="@color/black_profile_description"
-                    android:textSize="@dimen/_16sdp"
+                    android:textSize="16dp"
                     tools:text="I am a lovely person who want to flirt with Girls" />
 
             </LinearLayout>
@@ -145,7 +145,7 @@
             app:elevation="4dp"
             app:layout_anchor="@id/profile_image_section"
             app:layout_anchorGravity="bottom|right|end"
-            app:maxImageSize="@dimen/_32sdp" />
+            app:maxImageSize="32dp" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </ScrollView>

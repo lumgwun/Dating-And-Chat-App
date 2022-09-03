@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -20,20 +21,31 @@ import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarChangeListener;
 import com.facebook.login.LoginManager;
 import com.lahoriagency.cikolive.Classes.App;
-import com.lahoriagency.cikolive.Classes.BaseAsyncTask;
+import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
 import com.lahoriagency.cikolive.Classes.MyPreferences;
 import com.lahoriagency.cikolive.Classes.PreferencesManager;
 import com.lahoriagency.cikolive.Classes.QbDialogHolder;
+import com.lahoriagency.cikolive.Classes.SettingsRangeSeekbar;
+import com.lahoriagency.cikolive.Classes.SettingsSeekbar;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
+import com.lahoriagency.cikolive.Classes.UpdateSettingsRequest;
+import com.lahoriagency.cikolive.Interfaces.ServerMethodsConsts;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.messages.services.SubscribeService;
+import com.quickblox.users.QBUsers;
 
+import static com.lahoriagency.cikolive.Classes.App.TAG;
+
+@SuppressWarnings("deprecation")
 public class SettingsActivity extends AppCompatActivity {
     public static final int LOGOUT_ACTION = 942;
     public static final int START_TEST_ACTION = 466;
 
     private PreferencesManager preferencesManager;
     private MyPreferences myPreferences;
+
 
     private SettingsSeekbar distanceSeekbar;
     private SettingsSeekbar matchValueSeekbar;
@@ -207,7 +219,7 @@ public class SettingsActivity extends AppCompatActivity {
         UpdateSettingsRequest updateSettingsRequest = new UpdateSettingsRequest(myPreferences.getUserId(),
                 myPreferences.getRadious(), myPreferences.getMinMatchValue(), myPreferences.getSexChoice(),
                 myPreferences.getAgeRangeMin(), myPreferences.getAgeRangeMax());
-        BaseAsyncTask<UpdateSettingsRequest> saveSettingsTask = new BaseAsyncTask<>(ServerMethodsConsts.USERSETTINGS, updateSettingsRequest);
+        BaseAsyncTask22<UpdateSettingsRequest> saveSettingsTask = new BaseAsyncTask22<>(ServerMethodsConsts.USERSETTINGS, updateSettingsRequest);
         saveSettingsTask.setHttpMethod("POST");
         saveSettingsTask.execute();
     }
@@ -218,6 +230,34 @@ public class SettingsActivity extends AppCompatActivity {
         SubscribeService.unSubscribeFromPushes(App.getAppContext());
         SharedPrefsHelper.getInstance().removeQbUser();
         QbDialogHolder.getInstance().clear();
+
+        QBUsers.signOut().performAsync(new QBEntityCallback<Void>() {
+            @Override
+            public void onSuccess(Void aVoid, Bundle bundle) {
+                Log.d(TAG, "SignOut Successful");
+                SharedPrefsHelper.getInstance().removeQbUser();
+                Intent myIntent = new Intent(SettingsActivity.this, SignInActivity.class);
+                overridePendingTransition(R.anim.slide_in_right,
+                        R.anim.slide_out_left);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(myIntent);
+                finish();
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.d(TAG, "Unable to SignOut: " + e.getMessage());
+
+                /*View rootView = findViewById(R.id.activity_messages);
+                showErrorSnackbar(rootView, R.string.error_logout, e, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        userLogout();
+                    }
+                });*/
+            }
+        });
         //finish();
 
     }

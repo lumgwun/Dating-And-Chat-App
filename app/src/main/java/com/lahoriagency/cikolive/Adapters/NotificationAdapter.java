@@ -3,15 +3,18 @@ package com.lahoriagency.cikolive.Adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.retry.dimdim.R;
-import com.retry.dimdim.databinding.ItemNotificationBinding;
-import com.retry.dimdim.modals.Notification;
+import com.lahoriagency.cikolive.Classes.Notification;
+import com.lahoriagency.cikolive.R;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +26,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @NonNull
     @Override
     public ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notification, parent, false);
         return new ItemHolder(view);
 
@@ -45,23 +47,29 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     public class ItemHolder extends RecyclerView.ViewHolder {
+        private ImageView img;
+        private TextView tvHeadLine,tvDescription,tvTime;
 
-        ItemNotificationBinding binding;
+
 
         public ItemHolder(@NonNull View itemView) {
             super(itemView);
+            img = itemView.findViewById(R.id.imgYYYT);
+            tvHeadLine = itemView.findViewById(R.id.tv_headLineY);
+            tvDescription = itemView.findViewById(R.id.tv_descrip);
+            tvTime = itemView.findViewById(R.id.tv_timeY);
 
-            binding = DataBindingUtil.bind(itemView);
+
         }
 
         public void setItems(int position) {
             Notification model = list.get(position);
 
 
-            binding.tvHeadLine.setText(String.valueOf(model.getHeadLine()));
-            binding.tvDescription.setText(String.valueOf(model.getDescription()));
-            binding.tvTime.setText(String.valueOf(model.getTime()));
-            Glide.with(itemView.getContext()).load(model.getImage()).into(binding.img);
+            tvHeadLine.setText(String.valueOf(model.getHeadLine()));
+            tvDescription.setText(String.valueOf(model.getDescription()));
+            tvTime.setText(String.valueOf(model.getTime()));
+            Glide.with(itemView.getContext()).load(model.getImage()).into(img);
 
         }
 

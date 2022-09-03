@@ -42,26 +42,27 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@{currentPosition==0 ? @color/black :@color/transparent }"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/rect6h"
                     android:ellipsize="end"
                     android:fontFamily="@font/gilroy_bold"
                     android:gravity="center"
                     android:maxLines="2"
                     android:text="@string/profiles"
-                    android:textColor="@{currentPosition==0 ? @color/app_color :@color/black }"
+                    android:textColor="@color/red_brown_dark"
                     android:textSize="15sp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@{currentPosition==1 ? @color/black :@color/transparent }"
+                    android:background="@drawable/rect6g"
                     android:ellipsize="end"
                     android:fontFamily="@font/gilroy_bold"
                     android:gravity="center"
                     android:maxLines="2"
                     android:text="@string/live_streams"
-                    android:textColor="@{currentPosition==1 ? @color/app_color :@color/black }"
+                    android:textColor="@color/red_brown_dark"
                     android:textSize="15sp" />
 
             </LinearLayout>

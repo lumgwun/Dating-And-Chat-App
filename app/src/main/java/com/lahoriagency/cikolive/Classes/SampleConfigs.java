@@ -1,5 +1,8 @@
 package com.lahoriagency.cikolive.Classes;
 
+
+import com.google.gson.annotations.SerializedName;
+
 public class SampleConfigs {
     public SampleConfigs() {
     }

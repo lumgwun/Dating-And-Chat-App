@@ -19,7 +19,7 @@ import com.lahoriagency.cikolive.Classes.UserProfileInfo;
 import com.lahoriagency.cikolive.ProfileActivity;
 import com.lahoriagency.cikolive.R;
 
-import net.qiujuer.genius.ui.widget.ImageView;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class UserSwipeProfileAdapter extends ArrayAdapter<UserProfileInfo> {
@@ -71,7 +71,7 @@ public class UserSwipeProfileAdapter extends ArrayAdapter<UserProfileInfo> {
 
     public UserProfileInfo getProfileByUserId(int userId) {
         for (int i = 0; i < getCount(); i++) {
-            if (getItem(i).getUserId() == userId) {
+            if (getItem(i).getUserProfInfoID() == userId) {
                 return getItem(i);
             }
         }
@@ -87,7 +87,7 @@ public class UserSwipeProfileAdapter extends ArrayAdapter<UserProfileInfo> {
 
     private static class ViewHolder {
         public TextView name;
-        public ImageView image;
+        public CircleImageView image;
 
         ViewHolder(View view) {
             this.name = view.findViewById(R.id.user_swipe_card_name);

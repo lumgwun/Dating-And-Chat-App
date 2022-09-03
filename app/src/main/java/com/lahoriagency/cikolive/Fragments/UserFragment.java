@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -21,7 +22,6 @@ import com.lahoriagency.cikolive.ProfileEditActivity;
 import com.lahoriagency.cikolive.R;
 import com.lahoriagency.cikolive.SettingsActivity;
 
-import net.qiujuer.genius.ui.widget.ImageView;
 
 import java.util.Date;
 

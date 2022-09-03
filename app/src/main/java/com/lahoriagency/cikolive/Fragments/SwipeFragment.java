@@ -12,9 +12,14 @@ import androidx.fragment.app.Fragment;
 import com.lahoriagency.cikolive.Adapters.UserSwipeProfileAdapter;
 import com.lahoriagency.cikolive.Classes.App;
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask;
+import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
 import com.lahoriagency.cikolive.Classes.MyPreferences;
+import com.lahoriagency.cikolive.Classes.PushUtils;
+import com.lahoriagency.cikolive.Classes.QBUser;
+import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SwipeUserRequest;
 import com.lahoriagency.cikolive.Classes.UserProfileInfo;
+import com.lahoriagency.cikolive.Classes.UserProfileInfoHolder;
 import com.lahoriagency.cikolive.Classes.UserProfileInfoModel;
 import com.lahoriagency.cikolive.Classes.UserProfileInfoReply;
 import com.lahoriagency.cikolive.Classes.UserSwipeReply;
@@ -89,7 +94,7 @@ public class SwipeFragment extends Fragment implements SwipeStack.SwipeStackList
     @Override
     public void onViewSwipedToLeft(int position) {
         UserProfileInfo profile = userSwipeProfileAdapter.getItem(position);
-        SwipeUserRequest swipeUserRequest = new SwipeUserRequest(preferences.getUserId(), profile.getUserId(),
+        SwipeUserRequest swipeUserRequest = new SwipeUserRequest(preferences.getUserId(), profile.getUserProfInfoID(),
                 0, profile.getName(), profile.getMatchValue());
         swipeUser = new SwipeUser(ServerMethodsConsts.SWIPED, swipeUserRequest);
         swipeUser.setHttpMethod("POST");
@@ -99,7 +104,7 @@ public class SwipeFragment extends Fragment implements SwipeStack.SwipeStackList
     @Override
     public void onViewSwipedToRight(int position) {
         UserProfileInfo profile = userSwipeProfileAdapter.getItem(position);
-        SwipeUserRequest swipeUserRequest = new SwipeUserRequest(preferences.getUserId(), profile.getUserId(),
+        SwipeUserRequest swipeUserRequest = new SwipeUserRequest(preferences.getUserId(), profile.getUserProfInfoID(),
                 1, profile.getName(), profile.getMatchValue());
         swipeUser = new SwipeUser(ServerMethodsConsts.SWIPED, swipeUserRequest);
         swipeUser.setHttpMethod("POST");
@@ -111,7 +116,7 @@ public class SwipeFragment extends Fragment implements SwipeStack.SwipeStackList
         checkUserList();
     }
 
-    private class GetSwipeUsers extends BaseAsyncTask<Void> {
+    private class GetSwipeUsers extends BaseAsyncTask22<Void> {
 
         public GetSwipeUsers(String urn) {
             super(urn, null);
@@ -138,33 +143,21 @@ public class SwipeFragment extends Fragment implements SwipeStack.SwipeStackList
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), "error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
+            if (result != null) {
+                UserSwipeReply userSwipeReply = App.getGson().fromJson(result, UserSwipeReply.class);
+                if (userSwipeReply.isMatch()) {
+                    MainActivity mainActivity = (MainActivity) getContext();
+                    UserProfileInfo userProfile = userSwipeProfileAdapter.getProfileByUserId(userSwipeReply.getUserId());
+                    UserProfileInfoHolder.getInstance().putProfileInfo(userProfile);
+                    ((DialogsFragment) mainActivity.getContentFragment().getFragmentForPosition(2)).createNewDialog(userSwipeReply.getRecipientQuickBloxId(), userSwipeReply.getMatchValue());
+                    PushUtils.sendPushAboutNewPair(userSwipeReply.getRecipientQuickBloxId());
+                    onMatchCreatedListener.showMatchDialog(userProfile, false);
+                }
+            }
         }
 
-        @Override
-        public Object performInBackground(Object[] objects) throws Exception {
-            return null;
-        }
-
-        @Override
-        public void onResult(Object o) {
-
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            return null;
-        }
     }
-
-    public void setOnMatchCreatedListener(OnMatchCreated onMatchCreatedListener) {
-        this.onMatchCreatedListener = onMatchCreatedListener;
-    }
-
-    public interface OnMatchCreated {
-        void showMatchDialog(UserProfileInfo userProfileInfo, boolean fromQueue);
-    }
-
-    private class SwipeUser extends BaseAsyncTask<SwipeUserRequest> {
+    private class SwipeUser extends BaseAsyncTask22<SwipeUserRequest> {
 
         public SwipeUser(String urn, SwipeUserRequest params) {
             super(urn, params);
@@ -186,4 +179,15 @@ public class SwipeFragment extends Fragment implements SwipeStack.SwipeStackList
             }
         }
     }
+
+    public void setOnMatchCreatedListener(OnMatchCreated onMatchCreatedListener) {
+        this.onMatchCreatedListener = onMatchCreatedListener;
+    }
+
+    public interface OnMatchCreated {
+        void showMatchDialog(UserProfileInfo userProfileInfo, boolean fromQueue);
+        void showMatchDialog(SavedProfile savedProfile, boolean fromQueue);
+        void showMatchDialog(QBUser qbUser, boolean fromQueue);
+    }
+
 }

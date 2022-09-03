@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.databinding.ObservableInt;
+
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -27,8 +27,7 @@ public class ExploreFragment extends Fragment {
     private TextView btnLiveStreams,btnProfiles;
     private ViewPager2 viewPager;
     private LinearLayoutCompat loutCountry;
-    ObservableInt currentPosition = new ObservableInt(0);
-
+    int position;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,12 +57,12 @@ public class ExploreFragment extends Fragment {
         btnProfiles.setOnClickListener(view -> {
 
             viewPager.setCurrentItem(0);
-            currentPosition.set(0);
+            //position.set(0);
         });
         btnLiveStreams.setOnClickListener(view -> {
 
             viewPager.setCurrentItem(1);
-            currentPosition.set(1);
+            //currentPosition.set(1);
 
         });
 
@@ -86,7 +85,7 @@ public class ExploreFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                currentPosition.set(position);
+                //currentPosition.set(position);
             }
         });
 

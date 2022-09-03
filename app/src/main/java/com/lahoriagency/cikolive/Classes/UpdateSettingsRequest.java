@@ -23,4 +23,4 @@ public class UpdateSettingsRequest extends BaseUserRequest {
         this.ageRangeMax = ageRangeMax;
     }
 }
-}
+

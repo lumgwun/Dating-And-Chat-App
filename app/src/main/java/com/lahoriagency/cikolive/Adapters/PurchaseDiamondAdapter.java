@@ -3,15 +3,18 @@ package com.lahoriagency.cikolive.Adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
+
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.retry.dimdim.R;
-import com.retry.dimdim.databinding.ItemPurchaseDiamondBinding;
-import com.retry.dimdim.modals.PurchaseDiamond;
-import com.retry.dimdim.utils.Const;
+
+import com.lahoriagency.cikolive.Classes.PurchaseDiamond;
+import com.lahoriagency.cikolive.R;
+import com.lahoriagency.cikolive.Utils.Const;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,7 @@ public class PurchaseDiamondAdapter extends RecyclerView.Adapter<PurchaseDiamond
     @NonNull
     @Override
     public ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_purchase_diamond, parent, false);
         return new ItemHolder(view);
@@ -45,21 +49,23 @@ public class PurchaseDiamondAdapter extends RecyclerView.Adapter<PurchaseDiamond
     }
 
     public class ItemHolder extends RecyclerView.ViewHolder {
+        TextView tvCount;
+        private AppCompatButton btnPrice;
 
-        ItemPurchaseDiamondBinding binding;
 
         public ItemHolder(@NonNull View itemView) {
             super(itemView);
+            btnPrice = itemView.findViewById(R.id.btn_get_price);
+            tvCount = itemView.findViewById(R.id.tv_get_count);
 
-            binding = DataBindingUtil.bind(itemView);
         }
 
         public void setItems(int position) {
             PurchaseDiamond model = list.get(position);
 
 
-            binding.tvCount.setText(String.valueOf(model.getCount()));
-            binding.btnPrice.setText(Const.CURRENCY + " " + model.getPrice());
+            tvCount.setText(String.valueOf(model.getCount()));
+            btnPrice.setText(Const.CURRENCY + " " + model.getPrice());
 
 
         }

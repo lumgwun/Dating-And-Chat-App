@@ -7,9 +7,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.lahoriagency.cikolive.Classes.QBUser.QBUSER_ID;
+import static com.lahoriagency.cikolive.Classes.QBUser.QBUSER_TABLE;
+import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_ID;
+import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_TABLE;
+
 public class UserProfileInfo implements Parcelable {
-    private int userId;
+    private int userProfInfoID;
     private int userQbId;
+    private int userSavedProfID;
     private String name;
     private List<String> photoLinks;
     private int age;
@@ -17,11 +23,27 @@ public class UserProfileInfo implements Parcelable {
     private int distance;
     private String description;
 
+    public static final String USER_PROF_INFO_ID = "upi_Id";
+    public static final String USER_PROF_QB_ID = "upi_ID";
+    public static final String USER_PROF_INFO_SP_ID = "upi_saved_prof_id";
+    public static final String USER_PROF_INFO_NAME = "upi_name";
+    public static final String USER_PROF_INFO_AGE = "upi_Age";
+    public static final String USER_PROF_INFO_MATCHED_VALUE = "upi_MatchedV";
+    public static final String USER_PROF_INFO_DISTANCE = "upi_Distance";
+    public static final String USER_PROF_INFO_DESC = "upi_Desc";
+    public static final String USER_PROF_INFO_TABLE = "upi_table";
+
+
+    public static final String CREATE_USER_PROF_INFO_TABLE = "CREATE TABLE IF NOT EXISTS " + USER_PROF_INFO_TABLE + " ( " + USER_PROF_INFO_ID + " INTEGER  , " + USER_PROF_QB_ID + " INTEGER , " + USER_PROF_INFO_SP_ID + " INTEGER  , " +
+            USER_PROF_INFO_NAME + " TEXT, " + USER_PROF_INFO_DESC + " TEXT, " + USER_PROF_INFO_AGE + " TEXT, " + USER_PROF_INFO_MATCHED_VALUE + " TEXT, " + USER_PROF_INFO_DISTANCE + " TEXT, " +
+            "FOREIGN KEY(" + USER_PROF_QB_ID + ") REFERENCES " + QBUSER_TABLE + "(" + QBUSER_ID + "),"+ "FOREIGN KEY(" + USER_PROF_INFO_SP_ID + ") REFERENCES " + SAVED_PROFILE_TABLE + "(" + SAVED_PROFILE_ID + "),"+"PRIMARY KEY(" + USER_PROF_INFO_ID  + "))";
+
+
     public UserProfileInfo() {
     }
 
     public UserProfileInfo(UserProfileInfoModel model) {
-        this.userId = model.getUserId();
+        this.userProfInfoID = model.getUserId();
         this.userQbId = model.getQuickbloxId();
         this.name = model.getName();
         this.age = model.getAge();
@@ -30,12 +52,12 @@ public class UserProfileInfo implements Parcelable {
         this.photoLinks = splitLinks(model.getPhotoLinks());
     }
 
-    public int getUserId() {
-        return userId;
+    public int getUserProfInfoID() {
+        return userProfInfoID;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUserProfInfoID(int userProfInfoID) {
+        this.userProfInfoID = userProfInfoID;
     }
 
     public int getUserQbId() {
@@ -95,7 +117,7 @@ public class UserProfileInfo implements Parcelable {
     }
 
     protected UserProfileInfo(Parcel in) {
-        userId = in.readInt();
+        userProfInfoID = in.readInt();
         userQbId = in.readInt();
         name = in.readString();
         if (in.readByte() == 0x01) {
@@ -119,7 +141,7 @@ public class UserProfileInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(userId);
+        dest.writeInt(userProfInfoID);
         dest.writeInt(userQbId);
         dest.writeString(name);
         if (photoLinks == null) {
@@ -154,4 +176,12 @@ public class UserProfileInfo implements Parcelable {
             return new UserProfileInfo[size];
         }
     };
+
+    public int getUserSavedProfID() {
+        return userSavedProfID;
+    }
+
+    public void setUserSavedProfID(int userSavedProfID) {
+        this.userSavedProfID = userSavedProfID;
+    }
 }

@@ -47,7 +47,7 @@
             android:layout_marginRight="8dp"
             android:layout_weight="0"
             android:padding="5dp"
-            android:src="@mipmap/error1" />
+            android:src="@drawable/error_fg" />
     </LinearLayout>
 
     <TextView

@@ -2,6 +2,7 @@ package com.lahoriagency.cikolive;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,6 +19,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -106,6 +108,8 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 @SuppressWarnings("deprecation")
 public class ChatAct extends BaseActivity implements OnImagePickedListener , QBMessageStatusListener, DialogsManager.ManagingDialogsCallbacks {
+    private static boolean isNewDialog;
+    private static int code=908;
     List<ChatsItem> chatsList = new ArrayList<>();
 
     private RecyclerView recyclerView;
@@ -193,6 +197,17 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , QBM
     private SavedProfile savedProfile;
     private static final String PREF_NAME = "Ciko";
     String json, json1, json2;
+
+    private static final int REQUEST_CONFERENCE_PERMISSION_CODE = 175;
+    private static final int REQUEST_STREAM_PERMISSION_CODE = 176;
+    private static final int PERMISSIONS_FOR_SAVE_FILE_IMAGE_REQUEST = 1010;
+
+
+    public static final String EXTRA_IS_OPEN_FROM_CALL = "isOpenFromCall";
+
+    public static final long CHANGE_CONFERENCE_ROOM_DELAY = 10000;
+    public static final int MAX_CONFERENCE_OPPONENTS_ALLOWED = 12;
+
     private SystemMessagesListener systemMessagesListener = new SystemMessagesListener();
 
 
@@ -224,6 +239,12 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , QBM
         activity.startActivityForResult(intent, code);
     }
 
+    public static void startForResultFromCall(CallActivity callActivity, int requestCodeOpenConversationChat, String dialogID, boolean b) {
+        Intent intent = new Intent(callActivity, ChattingActivity.class);
+        intent.putExtra(ChatAct.EXTRA_DIALOG_ID, requestCodeOpenConversationChat);
+        intent.putExtra(ChatAct.EXTRA_IS_NEW_DIALOG, isNewDialog);
+        callActivity.startActivityForResult(intent, code);
+    }
 
 
     @Override
@@ -819,6 +840,7 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , QBM
                     ToastUtils.shortToast(R.string.error_attachment_count);
                 } else {
                     openImagePicker();
+                    openBottomSheet(v);
                 }
             }
         });
@@ -842,9 +864,40 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , QBM
                     }
                 });
 
+
         AttachmentPreviewAdapterView previewAdapterView = findViewById(R.id.adapter_attachment_preview);
         previewAdapterView.setAdapter(attachmentPreviewAdapter);
     }
+    private  void openBottomSheet(View view) {
+        Context context=view.getContext();
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        view = inflater.inflate (R.layout.chat_act_bottom_layout, null);
+        ImageView closeBottomLayout = view.findViewById(R.id.can_bottom_close);
+        final Dialog mBottomSheetDialog = new Dialog (context, R.style.Theme_Design_BottomSheetDialog);
+        mBottomSheetDialog.setContentView (view);
+        mBottomSheetDialog.setCancelable (true);
+        mBottomSheetDialog.getWindow ().setLayout (LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        mBottomSheetDialog.getWindow ().setGravity (Gravity.BOTTOM);
+        mBottomSheetDialog.show ();
+
+
+        View finalView = view;
+        closeBottomLayout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(),"Clicked Close",Toast.LENGTH_SHORT).show();
+                mBottomSheetDialog.dismiss();
+                finalView.setVisibility(View.GONE);
+            }
+        });
+
+        AttachmentPreviewAdapterView previewAdapterView = findViewById(R.id.adapter_attachment_preview);
+        previewAdapterView.setAdapter(attachmentPreviewAdapter);
+
+    }
+
 
     private void openImagePicker() {
         SystemPermissionHelper permissionHelper = new SystemPermissionHelper(this);

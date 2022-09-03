@@ -52,13 +52,19 @@
         android:value="androidx.core.app.CoreComponentFactory"
         tools:ignore="GoogleAppIndexingWarning"
         tools:node="replace">
-
-        <activity android:name=".CheckoutActivity">
-
-        </activity>
-        <activity android:name=".ContentAct">
+        <activity android:name=".PayNowAct">
 
         </activity>
+        <activity android:name=".SuperAdmin.SuperLoginAct" />
+        <activity android:name=".AppTimeLineAct" />
+        <activity android:name=".AppSettingAct" />
+        <activity android:name=".AppSupportAct" />
+        <activity android:name=".UsersListAct" />
+        <activity android:name=".PurchasesAct" />
+        <activity android:name=".ManageGroupActivity" />
+        <activity android:name=".SuperAdmin.SuperAdminOffice" />
+        <activity android:name=".CheckoutActivity" />
+        <activity android:name=".ContentAct" />
         <activity android:name=".MessagesActivity" />
         <activity android:name=".MessageInfoAct" />
         <activity android:name=".ChatInfoAct" />
@@ -98,14 +104,6 @@
             android:label="@string/title_activity_user_live"
             android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
         <activity
-            android:name=".UserCallingActivity"
-            android:label="@string/title_activity_user_calling"
-            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
-        <activity
-            android:name=".UserCallActivity"
-            android:label="@string/title_activity_user_call"
-            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
-        <activity
             android:name=".SignInActivity"
             android:label="@string/title_activity_sign_in"
             android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
@@ -122,7 +120,7 @@
             android:label="@string/title_activity_find_match"
             android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
         <activity
-            android:name=".DiamondHistoryActivity"
+            android:name=".DiamondHistoryAct"
             android:label="@string/title_activity_diamond_history"
             android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
         <activity
@@ -137,7 +135,6 @@
             android:name=".ChattingActivity"
             android:label="@string/title_activity_chatting"
             android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
-
         <activity
             android:name=".SubmitRedeemActivity"
             android:label="@string/title_activity_submit_redeem"
@@ -148,7 +145,8 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".BaseActivity" />
-        <activity android:name=".SplashActivity"
+        <activity
+            android:name=".SplashActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -165,7 +163,7 @@
             android:value="@string/sender_id" />
         <meta-data
             android:name="com.quickblox.messages.QB_ENVIRONMENT"
-            android:value="DEVELOPMENT" />
+            android:value="PRODUCTION" />
         <meta-data
             android:name="com.quickblox.messages.TYPE"
             android:value="GCM" />

@@ -96,11 +96,19 @@ public class DialogsActivity extends BaseActivity implements DialogsManager.Mana
     private static final String PREF_NAME = "Ciko";
     SharedPreferences userPreferences;
 
+    private static final long CLICK_DELAY = 700;
+
     private boolean hasMoreDialogs = true;
     private final Set<DialogJoinerAsyncTask> joinerTasksSet = new HashSet<>();
 
     public static void start(Context context) {
         Intent intent = new Intent(context, DialogsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
+    }
+    public static void start(Context context, String dialogID) {
+        Intent intent = new Intent(context, DialogsActivity.class);
+        intent.putExtra("dialogID",dialogID);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
     }
@@ -143,7 +151,7 @@ public class DialogsActivity extends BaseActivity implements DialogsManager.Mana
         }
     }
 
-    private void reloginToChat() {
+    void reloginToChat() {
         showProgressDialog(R.string.dlg_relogin);
         if (SharedPrefsHelper.getInstance().hasQbUser()) {
             ChatHelper.getInstance().loginToChat(SharedPrefsHelper.getInstance().getQbUser(), new QBEntityCallback<Void>() {
@@ -727,8 +735,7 @@ public class DialogsActivity extends BaseActivity implements DialogsManager.Mana
         userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
 
     }
-
-    private void showProgressDialog(int dlg_relogin) {
+    void showProgressDialog(int dlg_relogin) {
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(true);//you can cancel it by pressing back button
         progressDialog.setMessage("signing up wait ...");

@@ -56,5 +56,10 @@
       <option name="name" value="maven6" />
       <option name="url" value="https://dl.bintray.com/kotlin/kotlin-dev" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven5" />
+      <option name="name" value="maven5" />
+      <option name="url" value="http://dl.bintray.com/techquest/maven-repo" />
+    </remote-repository>
   </component>
 </project>

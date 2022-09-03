@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/cus_drawer2"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start"
+    tools:context="com.lahoriagency.cikolive.SuperAdmin.SuperAdminOffice">
+
+    <include
+        layout="@layout/app_bar_super"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_height="match_parent" />
+
+    <include
+        layout="@layout/bottom_nav_super"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content" />
+
+    <com.rom4ek.arcnavigationview.ArcNavigationView
+        android:id="@+id/nav_view_S"
+        android:layout_width="match_parent"
+        android:background="@drawable/rect6da"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:arc_cropDirection="cropOutside"
+        app:arc_width="96dp"
+        app:itemIconSize="20dp"
+        android:layout_marginStart="5dp"
+        android:fitsSystemWindows="true"
+        android:layout_marginEnd="5dp"
+        app:itemShapeInsetStart="10dp"
+        android:paddingVertical="20dp"
+        app:itemHorizontalPadding="40dp"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/color_blue_qb"
+        android:layout_marginBottom="10dp"
+        app:itemBackground="@drawable/shape_layer1d"
+        app:itemTextAppearance="?android:attr/textAppearanceSmallInverse"
+        app:headerLayout="@layout/super_header"
+        android:stateListAnimator="@anim/raise"
+        app:menu="@menu/super_nav_menu" />
+</androidx.drawerlayout.widget.DrawerLayout>

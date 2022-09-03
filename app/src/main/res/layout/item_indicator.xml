@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <data>
-
-    </data>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <View
-        android:id="@+id/indicator"
+        android:id="@+id/indicatorN"
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:background="@drawable/bg_cornered_rect_500"
         android:backgroundTint="@color/white_30">
 
     </View>
-</layout>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

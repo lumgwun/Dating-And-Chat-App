@@ -50,7 +50,7 @@ public class AppInfoActivity extends BaseActivity {
     }
 
     public void fillUI() {
-        appVersionTextView.setText(BuildConfig.versionCode);
+        //appVersionTextView.setText(BuildConfig.versionCode);
         sdkVersionTextView.setText(com.quickblox.BuildConfig.VERSION_NAME);
         appIDTextView.setText(QBSettings.getInstance().getApplicationId());
         authKeyTextView.setText(QBSettings.getInstance().getAuthorizationKey());

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-    </data>
-
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
     <LinearLayout
-        android:id="@+id/lout"
+        android:id="@+id/loutCountry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
@@ -26,12 +26,11 @@
             android:backgroundTint="@color/black" />
 
         <TextView
-            android:id="@+id/tv_name"
+            android:id="@+id/tv_Country_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
-
             android:fontFamily="@font/gilroy_bold"
             android:textColor="@color/black"
             android:textSize="17sp"
@@ -39,4 +38,6 @@
 
 
     </LinearLayout>
-</layout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

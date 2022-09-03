@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_marginTop="55dp"
+    android:layout_marginEnd="2dp"
+    android:paddingStart="50dp"
+    android:paddingBottom="20dp"
+    android:paddingTop="20dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/rect6d"
+    android:layout_height="wrap_content"
+    tools:context="com.lahoriagency.cikolive.SuperAdmin.SuperAdminOffice">
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="0dp"
+                android:text="Users:"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:id="@+id/ciko_users"
+                android:textSize="15sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_height="match_parent"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:layout_marginTop="10dp"
+        android:background="@null"
+        android:gravity="start"
+        android:layout_weight="1"
+        android:id="@+id/grpChats"
+        android:textColor="@android:color/holo_red_dark"
+        android:text="Group Chats"
+        android:layout_height="match_parent"/>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

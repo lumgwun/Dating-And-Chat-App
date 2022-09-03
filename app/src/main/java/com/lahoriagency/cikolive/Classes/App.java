@@ -30,7 +30,7 @@ public class App extends Application {
     public static final String TAG = App.class.getSimpleName();
 
     private static App instance;
-    public static final String USER_DEFAULT_PASSWORD = "quickblox";
+    public static final String USER_DEFAULT_PASSWORD = "@SuperBlox";
     public static final int CHAT_PORT = 5223;
     public static final int SOCKET_TIMEOUT = 300;
     public static final boolean KEEP_ALIVE = true;
@@ -55,6 +55,7 @@ public class App extends Application {
     private static QbConfigs qbConfigs;
     private static SampleConfigs sampleConfigs;
     private static ImageLoader imageLoader;
+    private QBResRequestExecutor qbResRequestExecutor;
 
     private static Context context;
     public static int year = Calendar.getInstance().get(Calendar.YEAR);
@@ -96,6 +97,11 @@ public class App extends Application {
         initDialogsManager();
 
         ProcessLifecycleOwner.get().getLifecycle().addObserver(new BackgroundListener());
+    }
+    public synchronized QBResRequestExecutor getQbResRequestExecutor() {
+        return qbResRequestExecutor == null
+                ? qbResRequestExecutor = new QBResRequestExecutor()
+                : qbResRequestExecutor;
     }
     private void initApplication() {
         instance = this;

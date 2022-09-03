@@ -23,11 +23,13 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lahoriagency.cikolive.Adapters.DialogAdapter44;
 import com.lahoriagency.cikolive.Adapters.DialogsAdapter;
 import com.lahoriagency.cikolive.Adapters.HorizontalListDialogsRecyclerViewAdapter;
 import com.lahoriagency.cikolive.ChatAct;
 import com.lahoriagency.cikolive.Classes.App;
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask;
+import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
 import com.lahoriagency.cikolive.Classes.DialogsManager;
 import com.lahoriagency.cikolive.Classes.GooglePlayServicesHelper;
@@ -78,7 +80,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
     private BroadcastReceiver pushBroadcastReceiver;
     private GooglePlayServicesHelper googlePlayServicesHelper;
-    private DialogsAdapter dialogsAdapter;
+    private DialogAdapter44 dialogsAdapter;
     private HorizontalListDialogsRecyclerViewAdapter horizontalDialogsAdapter;
     private RecyclerView dialogsRecyclerView;
     private RecyclerView horizontalDialogsRecyclerView;
@@ -195,8 +197,10 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     private void initUi(View view) {
         dialogsRecyclerView = view.findViewById(R.id.dialogs_recycler_view);
         setOnRefreshListener =  view.findViewById(R.id.swipy_refresh_layout);
+        ArrayList<QBChatDialog> dialogs = new ArrayList<>(QbDialogHolder.getInstance().getDialogs().values());
+        dialogsAdapter = new DialogAdapter44(getContext(), dialogs);
 
-        dialogsAdapter = new DialogsAdapter(new ArrayList<>(QbDialogHolder.getInstance().getDialogs().values()), getActivity());
+        //dialogsAdapter = new DialogsAdapter(new ArrayList<>(QbDialogHolder.getInstance().getDialogs().values()), getActivity());
 
         dialogsAdapter.setHasStableIds(true);
         dialogsRecyclerView.setAdapter(dialogsAdapter);
@@ -395,7 +399,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         updateDialogsAdapter();
     }
 
-    @Override
+    //@Override
     public void onDialogDeleted(String chatDialog) {
         updateDialogsAdapter();
     }
@@ -436,7 +440,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         }
     }
 
-    private class GetUsersProfileInfo extends BaseAsyncTask<UserProfileInfoRequest> {
+    private class GetUsersProfileInfo extends BaseAsyncTask22<UserProfileInfoRequest> {
 
         public GetUsersProfileInfo(String urn, UserProfileInfoRequest params) {
             super(urn, params);

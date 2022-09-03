@@ -5,17 +5,21 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.retry.dimdim.R;
-import com.retry.dimdim.databinding.ItemCountryNameBinding;
-import com.retry.dimdim.modals.CityName;
-import com.retry.dimdim.utils.Const;
-import com.retry.dimdim.utils.SessionManager;
+
+import com.lahoriagency.cikolive.Classes.CityName;
+import com.lahoriagency.cikolive.R;
+import com.lahoriagency.cikolive.Utils.Const;
+import com.lahoriagency.cikolive.Utils.SessionManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +43,7 @@ public class CityNameAdapter extends RecyclerView.Adapter<CityNameAdapter.ItemHo
     @NotNull
     @Override
     public ItemHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_country_name, parent, false);
         return new ItemHolder(view);
 
@@ -69,21 +74,21 @@ public class CityNameAdapter extends RecyclerView.Adapter<CityNameAdapter.ItemHo
 
     public class ItemHolder extends RecyclerView.ViewHolder {
         SessionManager sessionManager;
-        ItemCountryNameBinding binding;
+        private LinearLayout lout;
+        private TextView tvName;
 
         public ItemHolder(@NonNull @NotNull View itemView) {
             super(itemView);
-            binding = DataBindingUtil.bind(itemView);
+            tvName = itemView.findViewById(R.id.tv_Country_name);
+            lout = itemView.findViewById(R.id.loutCountry);
             sessionManager = new SessionManager(itemView.getContext());
-
         }
 
         @SuppressLint("UseCompatLoadingForColorStateLists")
         public void setData(int position) {
 
             CityName model = list.get(position);
-            binding.tvName.setText(model.getName());
-
+            tvName.setText(model.getName());
 
             for (int i = 0; i < list.size(); i++) {
 
@@ -91,20 +96,20 @@ public class CityNameAdapter extends RecyclerView.Adapter<CityNameAdapter.ItemHo
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-                        binding.tvName.setTypeface(itemView.getContext().getResources().getFont(R.font.gilroy_bold));
+                        tvName.setTypeface(itemView.getContext().getResources().getFont(R.font.gilroy_bold));
                     }
-                    binding.lout.setBackgroundResource(R.drawable.bg_gradiant_10);
-                    binding.lout.setBackgroundTintList(null);
+                    lout.setBackgroundResource(R.drawable.bg_gradiant_10);
+                    lout.setBackgroundTintList(null);
 
                 } else {
 
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-                        binding.tvName.setTypeface(itemView.getContext().getResources().getFont(R.font.gilroy_medium));
+                        tvName.setTypeface(itemView.getContext().getResources().getFont(R.font.gilroy_medium));
                     }
-                    binding.lout.setBackgroundResource(R.drawable.bg_cornered_rect_10);
-                    binding.lout.setBackgroundTintList(ContextCompat.getColorStateList(itemView.getContext(), R.color.bg_chats));
+                    lout.setBackgroundResource(R.drawable.bg_cornered_rect_10);
+                    lout.setBackgroundTintList(ContextCompat.getColorStateList(itemView.getContext(), R.color.bg_chats));
 
                 }
 
@@ -112,7 +117,7 @@ public class CityNameAdapter extends RecyclerView.Adapter<CityNameAdapter.ItemHo
             }
 
 
-            binding.getRoot().setOnClickListener(v -> {
+            itemView.setOnClickListener(v -> {
 
                 sessionManager.saveIntValue(Const.COUNTRY_ID, model.getId());
                 onItemClick.onClick(model.getName());

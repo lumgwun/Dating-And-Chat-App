@@ -78,9 +78,8 @@
                 android:layout_width="@dimen/_28sdp"
                 android:layout_gravity="center"
                 android:layout_height="@dimen/_28sdp"
-                android:src="@mipmap/like_fg"
-                android:scaleType="centerCrop"
-                android:tint="@color/swipe_like_button_tint"/>
+                android:src="@drawable/like3"
+                android:scaleType="centerCrop" />
         </LinearLayout>
 
     </LinearLayout>

@@ -3,14 +3,13 @@ package com.lahoriagency.cikolive.Adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.retry.dimdim.R;
-import com.retry.dimdim.databinding.ItemProfileImageBinding;
+import com.lahoriagency.cikolive.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +21,7 @@ public class FindMatchAdapter extends RecyclerView.Adapter<FindMatchAdapter.Item
     @NonNull
     @Override
     public ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_profile_image, parent, false);
         return new ItemHolder(view);
@@ -44,18 +44,18 @@ public class FindMatchAdapter extends RecyclerView.Adapter<FindMatchAdapter.Item
     }
 
     public class ItemHolder extends RecyclerView.ViewHolder {
+        private ImageView img;
 
-        ItemProfileImageBinding binding;
 
         public ItemHolder(@NonNull View itemView) {
             super(itemView);
+            img = itemView.findViewById(R.id.imgProfImg);
 
-            binding = DataBindingUtil.bind(itemView);
         }
 
         public void setItems(int position) {
 
-            Glide.with(itemView.getContext()).load(list.get(position)).into(binding.img);
+            Glide.with(itemView.getContext()).load(list.get(position)).into(img);
 
 
         }

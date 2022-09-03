@@ -1,18 +1,30 @@
 package com.lahoriagency.cikolive.Classes;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.IntRange;
+import androidx.annotation.RequiresApi;
 
 import com.lahoriagency.cikolive.R;
 
+import java.math.BigInteger;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.Security;
+import java.security.spec.RSAPublicKeySpec;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import javax.crypto.Cipher;
+
+@SuppressWarnings("deprecation")
 public class UiUtils {
     private static final int RANDOM_COLOR_START_RANGE = 0;
     private static final int RANDOM_COLOR_END_RANGE = 9;
@@ -25,6 +37,22 @@ public class UiUtils {
     private static int previousColor;
 
     private UiUtils() {
+    }
+    public static Drawable getColorCircleDrawable(Context context, int colorPosition) {
+        return getColoredCircleDrawable(context, getCircleColor(context, colorPosition % RANDOM_COLOR_END_RANGE));
+    }
+
+    private static Drawable getColoredCircleDrawable(Context context, @ColorInt int color) {
+        GradientDrawable drawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.shape_progressbar_circle);
+        drawable.setColor(color);
+        return drawable;
+    }
+
+    private static int getCircleColor(Context context, @IntRange(from = RANDOM_COLOR_START_RANGE, to = RANDOM_COLOR_END_RANGE)
+            int colorPosition) {
+        String colorIdName = String.format("random_color_%d", colorPosition + 1);
+        int colorId = context.getResources().getIdentifier(colorIdName, "color", context.getPackageName());
+        return context.getResources().getColor(colorId);
     }
 
     public static Drawable getGreyCircleDrawable() {
@@ -88,4 +116,22 @@ public class UiUtils {
         color = Color.HSVToColor(hsv);
         return color;
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String getAuthData(String version, String pan, String pin, String expiryDate, String cvv2) throws Exception {
+        String authData = "";
+        String authDataCipher = version + "Z" + pan + "Z" + pin + "Z" + expiryDate + "Z" + cvv2;
+        // The Modulus and Public Exponent will be supplied by Interswitch. please ask for one
+        String modulus = "XXXXXXX";
+        String publicExponent = "XXXXXXX";
+        //Security.addProvider(new BouncyCastleProvider());
+        RSAPublicKeySpec publicKeyspec = new RSAPublicKeySpec(new BigInteger(modulus, 16), new BigInteger(publicExponent, 16));
+        KeyFactory factory = KeyFactory.getInstance("RSA"); //, "JHBCI");
+        PublicKey publicKey = factory.generatePublic(publicKeyspec);
+        Cipher encryptCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", "BC");
+        encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        byte[] authDataBytes = encryptCipher.doFinal(authDataCipher.getBytes("UTF8"));
+        authData = Base64.getEncoder().encodeToString(authDataBytes).replaceAll("\\r|\\n", "");
+        return authData;
+    }
+
 }

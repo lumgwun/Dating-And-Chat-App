@@ -25,12 +25,16 @@ import com.lahoriagency.cikolive.Classes.Consts;
 import com.lahoriagency.cikolive.Classes.LoginService;
 import com.lahoriagency.cikolive.Classes.PermissionsChecker;
 import com.lahoriagency.cikolive.Classes.PushNotificationSender;
+import com.lahoriagency.cikolive.Classes.QBResRequestExecutor;
 import com.lahoriagency.cikolive.Classes.QbUsersDbManager;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.ToastUtils;
+import com.lahoriagency.cikolive.Classes.UsersUtils;
 import com.lahoriagency.cikolive.Classes.WebRtcSessionManager;
 import com.lahoriagency.cikolive.R;
+import com.lahoriagency.cikolive.SettingsActivity;
 import com.lahoriagency.cikolive.SignInActivity;
+import com.lahoriagency.cikolive.SuperAdmin.SuperAdminOffice;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
@@ -65,6 +69,10 @@ public class OpponentsActivity extends BaseActivity {
     private QbUsersDbManager dbManager;
 
     private PermissionsChecker checker;
+    private SharedPrefsHelper sharedPrefsHelper;
+    private QBResRequestExecutor requestExecutor = new QBResRequestExecutor();
+
+
 
     public static void start(Context context) {
         Intent intent = new Intent(context, OpponentsActivity.class);
@@ -208,7 +216,12 @@ public class OpponentsActivity extends BaseActivity {
                 return true;
 
             case R.id.settings:
-                SettingsActivity.start(this);
+                Intent myIntent = new Intent(OpponentsActivity.this, SuperAdminOffice.class);
+                overridePendingTransition(R.anim.slide_in_right,
+                        R.anim.slide_out_left);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(myIntent);
                 return true;
 
             case R.id.log_out:

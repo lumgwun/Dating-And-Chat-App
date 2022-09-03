@@ -8,9 +8,16 @@ import com.quickblox.users.model.QBUser;
 
 import java.io.Serializable;
 
+import static com.lahoriagency.cikolive.Classes.QBUser.QBUSER_ID;
+import static com.lahoriagency.cikolive.Classes.QBUser.QBUSER_TABLE;
+import static com.lahoriagency.cikolive.Classes.UserProfileInfo.USER_PROF_INFO_ID;
+import static com.lahoriagency.cikolive.Classes.UserProfileInfo.USER_PROF_INFO_TABLE;
+
 public class SavedProfile implements Parcelable, Serializable {
     public static final String SAVED_PROFILE_NAME = "saved_p_name";
     public static final String SAVED_PROFILE_ID = "saved_p_id";
+    public static final String SAVED_PROFILE_USERPROF_INFO_ID = "saved_prof_upi_id";
+    public static final String SAVED_PROFILE_QBID = "saved_p_Qbid";
     public static final String SAVED_PROFILE_AGE = "saved_p_age";
     public static final String SAVED_PROFILE_DOB = "saved_p_dob";
     public static final String SAVED_PROFILE_LOC = "saved_p_loc";
@@ -27,10 +34,20 @@ public class SavedProfile implements Parcelable, Serializable {
     public static final String SAVED_PROFILE_MY_INT = "saved_p_my_int";
     public static final String SAVED_PROFILE_DATE_JOINED = "saved_p_JoinedDate";
     public static final String SAVED_PROFILE_LOOKING_GENDER = "saved_p_Looking_for";
+    public static final String SAVED_PROFILE_LAST_SEEN = "saved_p_Last_seen";
 
-    public static final String CREATE_SAVED_PROFILES_TABLE = "CREATE TABLE " + SAVED_PROFILE_TABLE + " (" + SAVED_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SAVED_PROFILE_NAME + " TEXT, " + SAVED_PROFILE_AGE + " TEXT, " + SAVED_PROFILE_LOC + " TEXT, " + SAVED_PROFILE_GENDER + " TEXT, " + SAVED_PROFILE_PHOTO + " TEXT, " + SAVED_PROFILE_PHONE + " TEXT, " +
-            SAVED_PROFILE_EMAIL + " TEXT, " + SAVED_PROFILE_PASSWORD + " TEXT, " + SAVED_PROFILE_DEVICEID + " TEXT,"+ SAVED_PROFILE_DOB + " TEXT,"+ SAVED_PROFILE_COUNTRY + " TEXT,"+ SAVED_PROFILE_REFERRER + " TEXT,"+ SAVED_PROFILE_ABOUT_ME + " TEXT,"+ SAVED_PROFILE_MY_INT + " TEXT,"+ SAVED_PROFILE_LOOKING_GENDER + " TEXT,"+ SAVED_PROFILE_DATE_JOINED + " TEXT)";
+
+    public static final String CREATE_SAVED_PROFILES_TABLE = "CREATE TABLE IF NOT EXISTS " + SAVED_PROFILE_TABLE + " (" + SAVED_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SAVED_PROFILE_NAME + " TEXT, " + SAVED_PROFILE_AGE + " TEXT, " + SAVED_PROFILE_LOC + " TEXT, " + SAVED_PROFILE_GENDER + " TEXT, " + SAVED_PROFILE_PHOTO + " TEXT, " + SAVED_PROFILE_PHONE + " TEXT, " +
+            SAVED_PROFILE_EMAIL + " TEXT, " + SAVED_PROFILE_PASSWORD + " TEXT, " + SAVED_PROFILE_DEVICEID + " TEXT,"+ SAVED_PROFILE_DOB + " TEXT,"+ SAVED_PROFILE_COUNTRY + " TEXT,"+ SAVED_PROFILE_REFERRER + " TEXT,"+ SAVED_PROFILE_ABOUT_ME + " TEXT,"+ SAVED_PROFILE_MY_INT + " TEXT,"+ SAVED_PROFILE_LOOKING_GENDER + " TEXT,"+ SAVED_PROFILE_DATE_JOINED + " TEXT, "+ SAVED_PROFILE_USERPROF_INFO_ID + " TEXT,"+ SAVED_PROFILE_QBID + " TEXT,"+ SAVED_PROFILE_LAST_SEEN + " TEXT," + "FOREIGN KEY(" + SAVED_PROFILE_USERPROF_INFO_ID + ") REFERENCES " + USER_PROF_INFO_TABLE + "(" + USER_PROF_INFO_ID + "),"+ "FOREIGN KEY(" + SAVED_PROFILE_QBID + ") REFERENCES " + QBUSER_TABLE + "(" + QBUSER_ID + "),"+"PRIMARY KEY(" + SAVED_PROFILE_ID  + "))";
+
+
+
+
+
+
     private int savedProfID;
+    private int savedProfQBID;
+    private int savedProfUserProfInfoID;
     private String name;
     private String age;
     private String location;
@@ -50,12 +67,34 @@ public class SavedProfile implements Parcelable, Serializable {
     private String deviceID;
     private Uri image;
     private QBUser qbUser;
+    private ModelItem modelItem;
     private UserProfileInfo userProfileInfo;
     private UserProfileInfoModel userProfileInfoModel;
     private QBUserCustomData qbUserCustomData;
 
     public SavedProfile() {
         super();
+    }
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + savedProfID;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        SavedProfile other = (SavedProfile) obj;
+        if (savedProfID != other.savedProfID)
+            return false;
+        return true;
     }
 
     public SavedProfile(Parcel in) {
@@ -302,5 +341,29 @@ public class SavedProfile implements Parcelable, Serializable {
 
     public void setMyInterest(String myInterest) {
         this.myInterest = myInterest;
+    }
+
+    public int getSavedProfQBID() {
+        return savedProfQBID;
+    }
+
+    public void setSavedProfQBID(int savedProfQBID) {
+        this.savedProfQBID = savedProfQBID;
+    }
+
+    public int getSavedProfUserProfInfoID() {
+        return savedProfUserProfInfoID;
+    }
+
+    public void setSavedProfUserProfInfoID(int savedProfUserProfInfoID) {
+        this.savedProfUserProfInfoID = savedProfUserProfInfoID;
+    }
+
+    public ModelItem getModelItem() {
+        return modelItem;
+    }
+
+    public void setModelItem(ModelItem modelItem) {
+        this.modelItem = modelItem;
     }
 }

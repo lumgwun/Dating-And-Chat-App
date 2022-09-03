@@ -13,7 +13,7 @@
 
         <ImageView
             android:id="@+id/image_caller_avatar"
-            style="@style/CallerAvatar" />
+            style="@style/Widget.Material3.Chip.Input.Icon.Elevated" />
 
         <TextView
             android:id="@+id/text_caller_name"

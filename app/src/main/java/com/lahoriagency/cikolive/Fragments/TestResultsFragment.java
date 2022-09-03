@@ -58,8 +58,14 @@ public class TestResultsFragment extends Fragment {
         TextPResult = (TextView) view.findViewById(R.id.PText);
         TextJResult = (TextView) view.findViewById(R.id.JText);
         typeTResult = (TextView) view.findViewById(R.id.resultType);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        backButton.setOnClickListener(v -> ((MainActivity) getActivity()).getFbLoginFragment().changeFragment((MainActivity) getActivity()));
+            }
+        });
+
+        //backButton.setOnClickListener(v -> ((MainActivity) getActivity()).getFbLoginFragment().changeFragment((MainActivity) getActivity()));
 
         return view;
     }

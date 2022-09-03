@@ -7,9 +7,9 @@
     android:background="@color/settings_background"
     tools:context="com.lahoriagency.cikolive.SettingsActivity">
     <LinearLayout
-        android:layout_marginTop="@dimen/_8sdp"
-        android:layout_marginLeft="@dimen/_8sdp"
-        android:layout_marginRight="@dimen/_8sdp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -18,14 +18,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_4sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_8sdp">
+            android:layout_marginStart="4sp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/proxima_nova_semibold"
-                android:textSize="@dimen/_18sdp"
+                android:textSize="8dp"
                 android:text="@string/minimum_match_value"/>
 
             <TextView
@@ -35,34 +35,32 @@
                 android:layout_gravity="right"
                 android:gravity="right"
                 android:fontFamily="@font/proxima_nova_semibold"
-                android:textSize="@dimen/_18sdp"
+                android:textSize="8dp"
                 tools:text="50%"/>
         </LinearLayout>
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="@dimen/_1sdp"
-            app:cardElevation="@dimen/_1sdp"
+            app:cardCornerRadius="1dp"
+            app:cardElevation="1dp"
             app:cardUseCompatPadding="true">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/_16sdp"
-                android:layout_marginStart="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_16sdp"
-                android:layout_marginBottom="@dimen/_16sdp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rect6h"
+                android:layout_marginBottom="16dp"
                 android:orientation="vertical">
-                <com.eternalsrv.ui.widget.SettingsSeekbar
+                <com.lahoriagency.cikolive.Classes.SettingsSeekbar
                     android:id="@+id/settings_match_value_seekbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/_16sdp"
-                    android:paddingBottom="@dimen/_16sdp"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
                     app:bar_color="@color/settings_background"
-                    app:bar_highlight_color_mode="solid"
                     app:bar_highlight_color="@color/primary_blue"
-                    app:thumb_color="@color/primary_blue_light"
-                    app:thumb_color_pressed="@color/primary_blue"
                     app:corner_radius="5"
                     app:min_value="0"
                     app:min_start_value="50"
@@ -74,14 +72,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_4sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_8sdp">
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/proxima_nova_semibold"
-                android:textSize="@dimen/_18sdp"
+                android:textSize="8dp"
                 android:text="@string/show_me"/>
 
             <TextView
@@ -91,14 +89,14 @@
                 android:layout_gravity="right"
                 android:gravity="right"
                 android:fontFamily="@font/proxima_nova_semibold"
-                android:textSize="@dimen/_18sdp"
+                android:textSize="8dp"
                 tools:text="Men"/>
         </LinearLayout>
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="@dimen/_1sdp"
-            app:cardElevation="@dimen/_1sdp"
+            app:cardCornerRadius="1dp"
+            app:cardElevation="1dp"
             app:cardUseCompatPadding="true">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -107,17 +105,17 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingStart="@dimen/_16sdp"
-                    android:paddingEnd="@dimen/_8sdp"
-                    android:paddingTop="@dimen/_8sdp"
-                    android:paddingBottom="@dimen/_8sdp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
                     android:orientation="horizontal">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:fontFamily="@font/proxima_soft_regular"
-                        android:textSize="@dimen/_16sdp"
+                        android:textSize="@dimen/_16dp"
                         android:text="@string/men"/>
                     <Switch
                         android:id="@+id/sex_preference_men_switch"
@@ -134,7 +132,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingStart="@dimen/_16sdp"
+                    android:paddingStart="@dimen/_16dp"
                     android:paddingEnd="@dimen/_8sdp"
                     android:paddingTop="@dimen/_8sdp"
                     android:paddingBottom="@dimen/_8sdp"
@@ -144,7 +142,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:fontFamily="@font/proxima_soft_regular"
-                        android:textSize="@dimen/_16sdp"
+                        android:textSize="@dimen/_16dp"
                         android:text="@string/women"/>
                     <Switch
                         android:id="@+id/sex_preference_women_switch"
@@ -192,17 +190,14 @@
                 android:layout_marginTop="@dimen/_16sdp"
                 android:layout_marginBottom="@dimen/_16sdp"
                 android:orientation="vertical">
-                <com.eternalsrv.ui.widget.SettingsSeekbar
+                <com.lahoriagency.cikolive.Classes.SettingsSeekbar
                     android:id="@+id/settings_distance_seekbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/_16sdp"
                     android:paddingBottom="@dimen/_16sdp"
                     app:bar_color="@color/settings_background"
-                    app:bar_highlight_color_mode="solid"
                     app:bar_highlight_color="@color/primary_blue"
-                    app:thumb_color="@color/primary_blue_light"
-                    app:thumb_color_pressed="@color/primary_blue"
                     app:corner_radius="5"
                     app:min_value="2"
                     app:min_start_value="50"
@@ -249,17 +244,15 @@
                 android:layout_marginTop="@dimen/_16sdp"
                 android:layout_marginBottom="@dimen/_16sdp"
                 android:orientation="vertical">
-                <com.eternalsrv.ui.widget.SettingsRangeSeekbar
+                <com.lahoriagency.cikolive.Classes.SettingsRangeSeekbar
                     android:id="@+id/settings_age_range_seekbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/_16sdp"
                     android:paddingBottom="@dimen/_16sdp"
                     app:bar_color="@color/settings_background"
-                    app:bar_highlight_color_mode="solid"
                     app:bar_highlight_color="@color/primary_blue"
                     app:left_thumb_color="@color/primary_blue_light"
-                    app:left_thumb_color_pressed="@color/primary_blue"
                     app:right_thumb_color="@color/primary_blue_light"
                     app:right_thumb_color_pressed="@color/primary_blue"
                     app:corner_radius="5"
@@ -290,6 +283,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/_12sdp"
+                    android:padding="20dp"
+                    android:background="@drawable/rect6h"
                     android:paddingBottom="@dimen/_12sdp"
                     android:layout_gravity="center"
                     android:text="@string/logout"/>
@@ -317,6 +312,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/_12sdp"
+                    android:padding="20dp"
+                    android:background="@drawable/rect6h"
                     android:paddingBottom="@dimen/_12sdp"
                     android:layout_gravity="center"
                     android:text="Start test"/>

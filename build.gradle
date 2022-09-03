@@ -59,6 +59,9 @@ buildscript {
             url "https://github.com/QuickBlox/quickblox-android-sdk-releases/raw/master/"
         }
         /*maven {
+            url  'http://dl.bintray.com/techquest/maven-repo'
+        }*/
+        /*maven {
             url 'https://dl.bintray.com/kotlin/kotlin-dev'
             content {
                 includeGroup('org.jetbrains.dokka')
@@ -103,8 +106,11 @@ allprojects {
             url "https://github.com/QuickBlox/quickblox-android-sdk-releases/raw/master/"
         }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-        maven { url 'http://dl.bintray.com/amulyakhare/maven'
+        /*maven { url 'http://dl.bintray.com/amulyakhare/maven'
         }
+        maven {
+            url  'http://dl.bintray.com/techquest/maven-repo'
+        }*/
         /*maven {
             url "https://mqttchat.jfrog.io/artifactory/libs-release-local"
             credentials {

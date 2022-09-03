@@ -46,7 +46,7 @@ import com.quickblox.videochat.webrtc.view.QBRTCVideoTrack;
 import org.webrtc.CameraVideoCapturer;
 import org.webrtc.RendererCommon;
 import org.webrtc.SurfaceViewRenderer;
-import org.webrtc.VideoRenderer;
+
 import org.webrtc.VideoSink;
 
 import java.io.Serializable;
@@ -140,7 +140,7 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
 
         releaseViewHolders();
         removeListeners();
-        releaseViews();
+        //releaseViews();
 
         SharedPrefsHelper.getInstance().save(IS_CURRENT_CAMERA_FRONT, isCurrentCameraFront);
         super.onPause();
@@ -339,7 +339,7 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
         opponentViewHolders.clear();
     }
 
-    private void releaseViews() {
+    /*private void releaseViews() {
         if (conversationFragmentCallback.getCurrentSessionState() != BaseSession.QBRTCSessionState.QB_RTC_SESSION_CLOSED) {
             Map<Integer, QBRTCVideoTrack> videoTrackMap = ((CallActivity) requireActivity()).getVideoTrackMap();
             for (QBRTCVideoTrack item : videoTrackMap.values()) {
@@ -357,7 +357,7 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
         if (!isPeerToPeerCall) {
             releaseOpponentsViews();
         }
-    }
+    }*/
 
     @Override
     public void onCallStopped() {
@@ -487,6 +487,16 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
         replaceUsersInAdapter(position);
         updateViewHolders(position);
         swapUsersFullscreenToPreview(userId);
+    }
+
+    @Override
+    public void onToggleButtonItemClick(Integer userID, boolean isChecked) {
+
+    }
+
+    @Override
+    public void onOpponentViewItemClick(Integer userID) {
+
     }
 
     private void replaceUsersInAdapter(int position) {

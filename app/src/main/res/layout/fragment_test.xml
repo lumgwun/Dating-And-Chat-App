@@ -231,7 +231,9 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="@integer/sideSpace"></RelativeLayout>
+                    android:layout_weight="@integer/sideSpace">
+
+                </RelativeLayout>
             </LinearLayout>
 
             <TextView
@@ -256,7 +258,9 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="@integer/sideSpace"></RelativeLayout>
+                    android:layout_weight="@integer/sideSpace">
+
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -276,7 +280,9 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="@integer/sideSpace"></RelativeLayout>
+                    android:layout_weight="@integer/sideSpace">
+
+                </RelativeLayout>
             </LinearLayout>
 
             <TextView

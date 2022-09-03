@@ -45,6 +45,7 @@ import com.quickblox.videochat.webrtc.QBRTCAudioTrack;
 import com.quickblox.videochat.webrtc.QBRTCCameraVideoCapturer;
 import com.quickblox.videochat.webrtc.QBRTCClient;
 import com.quickblox.videochat.webrtc.QBRTCConfig;
+import com.quickblox.videochat.webrtc.QBRTCMediaConfig;
 import com.quickblox.videochat.webrtc.QBRTCScreenCapturer;
 import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
@@ -61,9 +62,10 @@ import com.quickblox.videochat.webrtc.view.QBRTCVideoTrack;
 import org.jivesoftware.smack.AbstractConnectionListener;
 import org.jivesoftware.smack.ConnectionListener;
 import org.webrtc.CameraVideoCapturer;
-import org.webrtc.VideoRenderer;
+
 import org.webrtc.VideoSink;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -114,13 +116,13 @@ public class CallService extends Service {
     private static final String ICE_FAILED_REASON = "ICE failed";
 
 
-    private AudioTrackListener audioTrackListener;
-    private ConferenceSessionListener conferenceSessionListener;
+    //private AudioTrackListener audioTrackListener;
+    //private ConferenceSessionListener conferenceSessionListener;
     private final ArrayList<CurrentCallStateCallback> currentCallStateCallbackList = new ArrayList<>();
     private ArrayList<Integer> opponentsIDsList = new ArrayList<>();
     private Map<Integer, Boolean> onlineParticipants = new HashMap<>();
     private OnlineParticipantsChangeListener onlineParticipantsChangeListener;
-    private OnlineParticipantsCheckerCountdown onlineParticipantsCheckerCountdown;
+    //private OnlineParticipantsCheckerCountdown onlineParticipantsCheckerCountdown;
     private UsersConnectDisconnectCallback usersConnectDisconnectCallback;
     private AppRTCAudioManager audioManager;
     private String roomID;
@@ -135,8 +137,35 @@ public class CallService extends Service {
 
 
 
+    private AudioTrackListener audioTrackListener;
+    private ConferenceSessionListener conferenceSessionListener;
+    private OnlineParticipantsCheckerCountdown onlineParticipantsCheckerCountdown;
+    public static void start(Context context, String roomID, String roomTitle, String dialogID, List<Integer> occupants, boolean listenerRole) {
+        Intent intent = new Intent(context, CallService.class);
+        intent.putExtra(Consts.EXTRA_ROOM_ID, roomID);
+        intent.putExtra(Consts.EXTRA_ROOM_TITLE, roomTitle);
+        intent.putExtra(Consts.EXTRA_DIALOG_ID, dialogID);
+        intent.putExtra(Consts.EXTRA_DIALOG_OCCUPANTS, (Serializable) occupants);
+        intent.putExtra(Consts.EXTRA_AS_LISTENER, listenerRole);
+
+        context.startService(intent);
+    }
+
+
+    public ReconnectionState getReconnectionState() {
+        return reconnectionState;
+    }
+
+    public void setReconnectionState(ReconnectionState reconnectionState) {
+        this.reconnectionState = reconnectionState;
+    }
+
+
+
     public CallService() {
     }
+
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -147,6 +176,9 @@ public class CallService extends Service {
     public static void start(Context context) {
         Intent intent = new Intent(context, CallService.class);
         context.startService(intent);
+
+
+
     }
 
     public static void stop(Context context) {
@@ -171,6 +203,9 @@ public class CallService extends Service {
         }
         Ringtone ringtone = RingtoneManager.getRingtone(context, notification);
         ringtone.play();
+        initConferenceClient();
+        initListeners();
+        initAudioManager();
         super.onCreate();
     }
 
@@ -178,6 +213,21 @@ public class CallService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Notification notification = initNotification();
         startForeground(SERVICE_ID, notification);
+
+        startForeground(SERVICE_ID, notification);
+        if (intent != null) {
+            roomID = intent.getStringExtra(Consts.EXTRA_ROOM_ID);
+            roomTitle = intent.getStringExtra(Consts.EXTRA_ROOM_TITLE);
+            dialogID = intent.getStringExtra(Consts.EXTRA_DIALOG_ID);
+            opponentsIDsList = (ArrayList<Integer>) intent.getSerializableExtra(Consts.EXTRA_DIALOG_OCCUPANTS);
+            asListenerRole = intent.getBooleanExtra(Consts.EXTRA_AS_LISTENER, false);
+
+            if (!isListenerRole() && !roomID.equals(dialogID)) {
+                onlineParticipantsCheckerCountdown = new OnlineParticipantsCheckerCountdown(Long.MAX_VALUE, 3000);
+                onlineParticipantsCheckerCountdown.start();
+            }
+        }
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -198,7 +248,16 @@ public class CallService extends Service {
         if (notificationManager != null) {
             notificationManager.cancelAll();
         }
+        if (onlineParticipantsCheckerCountdown != null && !isListenerRole()) {
+            onlineParticipantsCheckerCountdown.cancel();
+        }
+        removeVideoTrackRenders();
+        releaseAudioManager();
+
+        stopForeground(true);
+
     }
+
 
 
     private Notification initNotification() {
@@ -258,6 +317,19 @@ public class CallService extends Service {
         }
         return channelID;
     }
+    public void setOnlineParticipantsChangeListener(OnlineParticipantsChangeListener onlineParticipantsChangeListener) {
+        this.onlineParticipantsChangeListener = onlineParticipantsChangeListener;
+    }
+
+    public void subscribeReconnectionListener(ReconnectionListener reconnectionListener) {
+        reconnectionListeners.add(reconnectionListener);
+    }
+
+    public void unsubscribeReconnectionListener(ReconnectionListener reconnectionListener) {
+        reconnectionListeners.remove(reconnectionListener);
+    }
+
+
 
     private String getCallTime() {
         String time = "";
@@ -317,8 +389,19 @@ public class CallService extends Service {
 
         sessionEventsListener = new SessionEventsListener();
         addSessionEventsListener(sessionEventsListener);
-    }
 
+        sessionStateListener = new SessionStateListener();
+        addSessionStateListener(sessionStateListener);
+
+        videoTrackListener = new VideoTrackListener();
+        addVideoTrackListener(videoTrackListener);
+
+        audioTrackListener = new AudioTrackListener();
+        addAudioTrackListener(audioTrackListener);
+
+        conferenceSessionListener = new ConferenceSessionListener();
+        addConferenceSessionListener(conferenceSessionListener);
+    }
     public void initAudioManager() {
         appRTCAudioManager = AppRTCAudioManager.create(this,listener);
 
@@ -329,7 +412,7 @@ public class CallService extends Service {
             }
         });
 
-        /*appRTCAudioManager.setBluetoothAudioDeviceStateListener(new AppRTCAudioManager.BluetoothAudioDeviceStateListener() {
+        appRTCAudioManager.setBluetoothAudioDeviceStateListener(new AppRTCAudioManager.BluetoothAudioDeviceStateListener() {
             @Override
             public void onStateChanged(boolean connected) {
                 ToastUtils.shortToast("Bluetooth " + (connected ? "Connected" : "Disconnected"));
@@ -345,25 +428,559 @@ public class CallService extends Service {
 
         if (currentSessionExist() && currentSession.getConferenceType() == QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO) {
             appRTCAudioManager.selectAudioDevice(AppRTCAudioManager.AudioDevice.EARPIECE);
-        }*/
+        }
+        if (audioManager == null) {
+            audioManager = AppRTCAudioManager.create(this);
+            audioManager.selectAudioDevice(AppRTCAudioManager.AudioDevice.SPEAKER_PHONE);
+            previousDeviceEarPiece = false;
+            Log.d(TAG, "AppRTCAudioManager.AudioDevice.SPEAKER_PHONE");
+
+            audioManager.setOnWiredHeadsetStateListener((plugged, hasMicrophone) -> {
+
+                if (!plugged) {
+                    if (previousDeviceEarPiece) {
+                        setAudioDeviceDelayed(AppRTCAudioManager.AudioDevice.EARPIECE);
+                    } else {
+                        setAudioDeviceDelayed(AppRTCAudioManager.AudioDevice.SPEAKER_PHONE);
+                    }
+                }
+            });
+            audioManager.start((audioDevice, set) ->
+                    Log.d(TAG, "Audio Device Switched to " + audioDevice)
+            );
+        }
     }
 
-    public void releaseAudioManager() {
-        appRTCAudioManager.close();
+
+    private void setAudioDeviceDelayed(final AppRTCAudioManager.AudioDevice audioDevice) {
+        new Handler().postDelayed(() -> audioManager.selectAudioDevice(audioDevice), 500);
     }
 
-    public boolean currentSessionExist() {
-        return currentSession != null;
+    private void releaseAudioManager() {
+        if (audioManager != null) {
+            audioManager.stop();
+        }
+    }
+
+    public void leaveCurrentSession() {
+        currentSessionC.leave();
+        releaseCurrentSession();
     }
 
     private void releaseCurrentSession() {
         Log.d(TAG, "Release current session");
         removeSessionStateListener(sessionStateListener);
+        removeVideoTrackListener(videoTrackListener);
+        removeAudioTrackListener(audioTrackListener);
+        removeConferenceSessionListener(conferenceSessionListener);
+        Log.d(TAG, "Release current session");
         removeSignalingListener(signalingListener);
         removeSessionEventsListener(sessionEventsListener);
-        removeVideoTrackListener(videoTrackListener);
         currentSession = null;
+        CallService.stop(this);
     }
+
+    private void removeVideoTrackListener(VideoTrackListener videoTrackListener) {
+
+    }
+
+
+    private void addConferenceSessionListener(ConferenceSessionListener listener) {
+        if (currentSession != null) {
+            currentSessionC.addConferenceSessionListener(listener);
+        }
+    }
+
+    private void removeConferenceSessionListener(ConferenceSessionListener listener) {
+        if (currentSession != null) {
+            currentSessionC.removeConferenceSessionListener(listener);
+        }
+    }
+
+
+
+    public boolean currentSessionExist() {
+        return currentSession != null;
+    }
+
+    public ArrayList<Integer> getOpponentsIDsList() {
+        return opponentsIDsList;
+    }
+
+    public ArrayList<Integer> getActivePublishers() {
+        return new ArrayList<>(currentSessionC.getActivePublishers());
+    }
+
+    public void getOnlineParticipants(ConferenceEntityCallback<Map<Integer, Boolean>> callback) {
+        if (currentSession != null) {
+            currentSessionC.getOnlineParticipants(new ConferenceEntityCallback<Map<Integer, Boolean>>() {
+                @Override
+                public void onSuccess(Map<Integer, Boolean> integerBooleanMap) {
+                    onlineParticipants = integerBooleanMap;
+                    callback.onSuccess(integerBooleanMap);
+                }
+
+                @Override
+                public void onError(WsException e) {
+                    callback.onError(e);
+                }
+            });
+        }
+    }
+
+    public String getRoomID() {
+        return roomID;
+    }
+
+    public String getRoomTitle() {
+        return roomTitle;
+    }
+
+    public boolean isListenerRole() {
+        return asListenerRole;
+    }
+
+
+    public void setAudioEnabled(boolean enabled) {
+        if (currentSession != null && currentSession.getMediaStreamManager() != null
+                && currentSession.getMediaStreamManager().getLocalAudioTrack() != null) {
+            currentSession.getMediaStreamManager().getLocalAudioTrack().setEnabled(enabled);
+        }
+        if (currentSession != null) {
+            currentSession.getMediaStreamManager().getLocalAudioTrack().setEnabled(enabled);
+        }
+    }
+
+    public boolean isAudioEnabledForUser(Integer userID) {
+        if (currentSession.getMediaStreamManager() != null) {
+            boolean isAudioEnabled = true;
+            try {
+                isAudioEnabled = currentSession.getMediaStreamManager().getAudioTrack(userID).enabled();
+            } catch (Exception e) {
+                if (e.getMessage() != null) {
+                    Log.d(TAG, e.getMessage());
+                }
+            }
+            return isAudioEnabled;
+        } else {
+            return false;
+        }
+    }
+
+    public void setAudioEnabledForUser(Integer userID, boolean isAudioEnabled) {
+        currentSession.getMediaStreamManager().getAudioTrack(userID).setEnabled(isAudioEnabled);
+    }
+
+
+    public boolean isSharingScreenState() {
+        return sharingScreenState;
+    }
+
+
+    private void removeVideoTrackRenders() {
+        Log.d(TAG, "removeVideoTrackRenders");
+        if (!videoTrackMap.isEmpty()) {
+            for (Map.Entry<Integer, QBRTCVideoTrack> entry : videoTrackMap.entrySet()) {
+                Integer userId = (Integer) entry.getKey();
+                QBRTCVideoTrack videoTrack = (QBRTCVideoTrack) entry.getValue();
+                Integer currentUserID = currentSessionC.getCurrentUserID();
+                boolean remoteVideoTrack = !userId.equals(currentUserID);
+                if (remoteVideoTrack) {
+                    VideoSink renderer = videoTrack.getRenderer();
+                    if (renderer != null) {
+                        videoTrack.removeRenderer(renderer);
+                    }
+                }
+            }
+        }
+    }
+
+    public void startScreenSharing(Intent data) {
+        sharingScreenState = true;
+        if (data != null && currentSession != null) {
+            currentSession.getMediaStreamManager().setVideoCapturer(new QBRTCScreenCapturer(data, null));
+            setVideoEnabled(true);
+        }
+        sharingScreenState = true;
+        if (currentSession != null) {
+            currentSession.getMediaStreamManager().setVideoCapturer(new QBRTCScreenCapturer(data, null));
+        }
+    }
+
+    public void stopScreenSharing() {
+        sharingScreenState = false;
+        if (currentSession != null) {
+            try {
+                currentSession.getMediaStreamManager().setVideoCapturer(new QBRTCCameraVideoCapturer(this, null));
+            } catch (QBRTCCameraVideoCapturer.QBRTCCameraCapturerException e) {
+                Log.i(TAG, "Error: device doesn't have camera");
+            }
+        }
+        sharingScreenState = false;
+        if (currentSession != null) {
+            try {
+                currentSession.getMediaStreamManager().setVideoCapturer(new QBRTCCameraVideoCapturer(this, null));
+            } catch (QBRTCCameraVideoCapturer.QBRTCCameraCapturerException e) {
+                Log.i(TAG, "Error: device doesn't have camera");
+            }
+        }
+    }
+    public void joinConference() {
+        QBConferenceRole conferenceRole = asListenerRole ? QBConferenceRole.LISTENER : QBConferenceRole.PUBLISHER;
+
+        currentSessionC.joinDialog(roomID, conferenceRole, new ConferenceEntityCallback<ArrayList<Integer>>() {
+            @Override
+            public void onSuccess(ArrayList<Integer> publishers) {
+                // empty
+            }
+
+            @Override
+            public void onError(WsException exception) {
+                Log.d(TAG, "onError joinDialog exception= " + exception);
+            }
+        });
+    }
+
+    private void notifyCallStateListenersCallStarted() {
+        for (CurrentCallStateCallback callback : currentCallStateCallbackList) {
+            callback.onCallStarted();
+        }
+    }
+
+    public void setUsersConnectDisconnectCallback(UsersConnectDisconnectCallback callback) {
+        this.usersConnectDisconnectCallback = callback;
+    }
+
+    public void removeUsersConnectDisconnectCallback() {
+        this.usersConnectDisconnectCallback = null;
+    }
+
+    public String getDialogID() {
+        return dialogID;
+    }
+
+    public void setDialogID(String dialogID) {
+        this.dialogID = dialogID;
+    }
+
+    //////////////////////////////////////////
+    //    Call Service Binder
+    //////////////////////////////////////////
+
+    public class CallServiceBinder extends Binder {
+        public CallService getService() {
+            return CallService.this;
+        }
+    }
+
+    //////////////////////////////////////////
+    //    Conference Session Callbacks
+    //////////////////////////////////////////
+
+    private class ConferenceSessionListener implements ConferenceSessionCallbacks {
+        @Override
+        public void onPublishersReceived(ArrayList<Integer> publishersList) {
+            currentSessionC.subscribeToPublisher(publishersList.get(0));
+        }
+
+        @Override
+        public void onPublisherLeft(Integer userID) {
+            Log.d(TAG, "OnPublisherLeft userID" + userID);
+        }
+
+        @Override
+        public void onMediaReceived(String type, boolean success) {
+            Log.d(TAG, "OnMediaReceived type " + type + ", success" + success);
+        }
+
+        @Override
+        public void onSlowLinkReceived(boolean uplink, int nacks) {
+            Log.d(TAG, "OnSlowLinkReceived uplink " + uplink + ", nacks" + nacks);
+        }
+
+        @Override
+        public void onError(WsException exception) {
+            Log.d(TAG, "OnError exception= " + exception.getMessage());
+            if (exception.getMessage().equals(ICE_FAILED_REASON)) {
+                releaseCurrentSession();
+            }
+        }
+
+        @Override
+        public void onSessionClosed(ConferenceSession session) {
+            if (session.equals(currentSession) && reconnectionState == ReconnectionState.IN_PROGRESS) {
+                new ReconnectionTimer().reconnect();
+            }
+        }
+    }
+
+    private class ReconnectionTimer {
+        private Timer timer = new Timer();
+
+        private long lastDelay = 0;
+        private long delay = 1000;
+        private long newDelay = 0;
+
+        void reconnect() {
+            if (newDelay >= SECONDS_13) {
+                reconnectionState = ReconnectionState.FAILED;
+                for (ReconnectionListener reconnectionListener : reconnectionListeners) {
+                    reconnectionListener.onChangedState(reconnectionState);
+                }
+                leaveCurrentSession();
+                return;
+            }
+            newDelay = lastDelay + delay;
+            lastDelay = delay;
+            delay = newDelay;
+
+            timer.cancel();
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    ConferenceClient client = ConferenceClient.getInstance(getApplicationContext());
+                    QBRTCTypes.QBConferenceType conferenceType = QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO;
+                    client.createSession(currentSessionC.getCurrentUserID(), conferenceType, new ConferenceEntityCallback<ConferenceSession>() {
+                        @Override
+                        public void onSuccess(ConferenceSession conferenceSession) {
+                            WebRtcSessionManager.getInstance(context).getCurrentSessionC();
+                            WebRtcSessionManager.getInstance(context).setCurrentSession(currentSession);
+                            currentSessionC = conferenceSession;
+                            initListeners();
+                            timer.purge();
+                            timer.cancel();
+                            timer = null;
+                            reconnectionState = ReconnectionState.COMPLETED;
+                            for (ReconnectionListener reconnectionListener : reconnectionListeners) {
+                                new Handler(Looper.getMainLooper()).post(() -> {
+                                    reconnectionListener.onChangedState(reconnectionState);
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onError(WsException exception) {
+                            reconnect();
+                        }
+                    });
+                }
+            }, newDelay);
+        }
+    }
+
+    //////////////////////////////////////////
+    //    Session State Callback
+    //////////////////////////////////////////
+
+    private class SessionStateListener implements QBRTCSessionStateCallback<ConferenceSession> {
+        @Override
+        public void onStateChanged(ConferenceSession conferenceSession, BaseSession.QBRTCSessionState qbrtcSessionState) {
+            // empty
+        }
+
+        @Override
+        public void onConnectedToUser(ConferenceSession conferenceSession, Integer userID) {
+            Log.d(TAG, "onConnectedToUser userID= " + userID + " sessionID= " + conferenceSession.getSessionID());
+            notifyCallStateListenersCallStarted();
+            if (usersConnectDisconnectCallback != null) {
+                usersConnectDisconnectCallback.onUserConnected(userID);
+            }
+            if (userID.equals(currentSessionC.getCurrentUserID()) && reconnectionState == ReconnectionState.IN_PROGRESS) {
+                reconnectionState = ReconnectionState.COMPLETED;
+                for (ReconnectionListener reconnectionListener : reconnectionListeners) {
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        reconnectionListener.onChangedState(reconnectionState);
+                    });
+                }
+            }
+        }
+
+        @Override
+        public void onDisconnectedFromUser(ConferenceSession conferenceSession, Integer userID) {
+            if (userID.equals(currentSessionC.getCurrentUserID()) || conferenceSession.getConferenceRole() == QBConferenceRole.LISTENER) {
+                reconnectionState = ReconnectionState.IN_PROGRESS;
+                for (ReconnectionListener reconnectionListener : reconnectionListeners) {
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        reconnectionListener.onChangedState(reconnectionState);
+                    });
+                }
+                currentSessionC.leave();
+            }
+        }
+
+        @Override
+        public void onConnectionClosedForUser(ConferenceSession conferenceSession, Integer userID) {
+            Log.d(TAG, "QBRTCSessionStateCallbackImpl onConnectionClosedForUser userID=" + userID);
+            removeVideoTrack(userID);
+            if (usersConnectDisconnectCallback != null) {
+                usersConnectDisconnectCallback.onUserDisconnected(userID);
+            }
+        }
+    }
+
+    //////////////////////////////////////////
+    //    Camera Events Handler
+    //////////////////////////////////////////
+
+    /*private class SessionStateListener implements QBRTCSessionStateCallback<QBRTCSession> {
+        @Override
+        public void onStateChanged(QBRTCSession qbrtcSession, BaseSession.QBRTCSessionState qbrtcSessionState) {
+
+        }
+
+        @Override
+        public void onConnectedToUser(QBRTCSession qbrtcSession, Integer integer) {
+            stopRingtone();
+            isCallState = true;
+            Log.d(TAG, "onConnectedToUser() is started");
+            startCallTimer();
+        }
+
+        @Override
+        public void onDisconnectedFromUser(QBRTCSession qbrtcSession, Integer userID) {
+            Log.d(TAG, "Disconnected from user: " + userID);
+        }
+
+        @Override
+        public void onConnectionClosedForUser(QBRTCSession qbrtcSession, Integer userID) {
+            if (userID != null) {
+                Log.d(TAG, "Connection closed for user: " + userID);
+                ToastUtils.shortToast("The user: " + userID + " has left the call");
+                removeVideoTrack(userID);
+            }
+        }
+    }*/
+    private class CameraEventsListener implements CameraVideoCapturer.CameraEventsHandler {
+        @Override
+        public void onCameraError(String s) {
+            // empty
+        }
+
+        @Override
+        public void onCameraDisconnected() {
+            // empty
+        }
+
+        @Override
+        public void onCameraFreezed(String s) {
+          ToastUtils.shortToast("Camera Freezed");
+            hangUpCurrentSession(new HashMap<>());
+            if (currentSession != null) {
+                try {
+                    currentSession.getMediaStreamManager().getVideoCapturer().stopCapture();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        int videoWidth = QBRTCMediaConfig.VideoQuality.VGA_VIDEO.width;
+                        int videoHeight = QBRTCMediaConfig.VideoQuality.VGA_VIDEO.height;
+                        if (currentSession != null && currentSession.getMediaStreamManager() != null
+                                && currentSession.getMediaStreamManager().getVideoCapturer() != null) {
+                            currentSession.getMediaStreamManager().getVideoCapturer().startCapture(videoWidth, videoHeight, 30);
+                        }
+                    }
+                }, 3000);
+            }
+        }
+
+        @Override
+        public void onCameraOpening(String s) {
+            ToastUtils.shortToast("Camera Opening");
+        }
+
+        @Override
+        public void onFirstFrameAvailable() {
+            ToastUtils.shortToast("Camera onFirstFrameAvailable");
+        }
+
+        @Override
+        public void onCameraClosed() {
+            ToastUtils.shortToast("Camera Closed");
+        }
+    }
+
+
+
+    private class VideoTrackListener implements QBRTCClientVideoTracksCallbacks<ConferenceSession> {
+        @Override
+        public void onLocalVideoTrackReceive(ConferenceSession qbrtcSession, QBRTCVideoTrack videoTrack) {
+            Log.d(TAG, "onLocalVideoTrackReceive()");
+            if (videoTrack != null) {
+                int userID = currentSessionC.getCurrentUserID();
+                removeVideoTrack(userID);
+                addVideoTrack(userID, videoTrack);
+            }
+        }
+
+        @Override
+        public void onRemoteVideoTrackReceive(ConferenceSession session, QBRTCVideoTrack videoTrack, Integer userID) {
+            Log.d(TAG, "onRemoteVideoTrackReceive for Opponent= " + userID);
+            if (videoTrack != null && userID != null) {
+                addVideoTrack(userID, videoTrack);
+            }
+        }
+    }
+
+
+
+
+
+
+    //////////////////////////////////////////
+    //    Video Tracks Callbacks
+    //////////////////////////////////////////
+
+
+
+    private class AudioTrackListener implements QBRTCClientAudioTracksCallback<ConferenceSession> {
+        @Override
+        public void onLocalAudioTrackReceive(ConferenceSession conferenceSession, QBRTCAudioTrack qbrtcAudioTrack) {
+            Log.d(TAG, "onLocalAudioTrackReceive()");
+            boolean isMicEnabled = ((App) getApplicationContext()).getSharedPrefsHelper().get(Consts.PREF_MIC_ENABLED, true);
+            currentSession.getMediaStreamManager().getLocalAudioTrack().setEnabled(isMicEnabled);
+        }
+
+        @Override
+        public void onRemoteAudioTrackReceive(ConferenceSession conferenceSession, QBRTCAudioTrack qbrtcAudioTrack, Integer userID) {
+            Log.d(TAG, "onRemoteAudioTrackReceive for Opponent= " + userID);
+        }
+    }
+
+    private class OnlineParticipantsCheckerCountdown extends CountDownTimer {
+
+        OnlineParticipantsCheckerCountdown(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            getOnlineParticipants(new ConferenceEntityCallback<Map<Integer, Boolean>>() {
+                @Override
+                public void onSuccess(Map<Integer, Boolean> integerBooleanMap) {
+                    if (onlineParticipantsChangeListener != null) {
+                        onlineParticipantsChangeListener.onParticipantsCountChanged(onlineParticipants);
+                    }
+                    onlineParticipants = integerBooleanMap;
+                }
+
+                @Override
+                public void onError(WsException exception) {
+                    if (exception != null) {
+                        Log.d(TAG, "Error Getting Online Participants - " + exception.getMessage());
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onFinish() {
+            start();
+        }
+    }
+
 
     //Listeners
     public void addConnectionListener(ConnectionListener connectionListener) {
@@ -390,12 +1007,15 @@ public class CallService extends Service {
         if (currentSession != null) {
             currentSession.addVideoTrackCallbacksListener(callback);
         }
+
     }
+
 
     public void removeVideoTrackListener(QBRTCClientVideoTracksCallbacks<QBRTCSession> callback) {
         if (currentSession != null) {
             currentSession.removeVideoTrackCallbacksListener(callback);
         }
+
     }
 
     public void addSignalingListener(QBRTCSignalingCallback callback) {
@@ -447,29 +1067,7 @@ public class CallService extends Service {
         return result;
     }
 
-    public void setAudioEnabled(boolean enabled) {
-        if (currentSession != null) {
-            currentSession.getMediaStreamManager().getLocalAudioTrack().setEnabled(enabled);
-        }
-    }
 
-    public void startScreenSharing(Intent data) {
-        sharingScreenState = true;
-        if (currentSession != null) {
-            currentSession.getMediaStreamManager().setVideoCapturer(new QBRTCScreenCapturer(data, null));
-        }
-    }
-
-    public void stopScreenSharing() {
-        sharingScreenState = false;
-        if (currentSession != null) {
-            try {
-                currentSession.getMediaStreamManager().setVideoCapturer(new QBRTCCameraVideoCapturer(this, null));
-            } catch (QBRTCCameraVideoCapturer.QBRTCCameraCapturerException e) {
-                Log.i(TAG, "Error: device doesn't have camera");
-            }
-        }
-    }
 
     public Integer getCallerId() {
         if (currentSession != null) {
@@ -553,9 +1151,6 @@ public class CallService extends Service {
         }
     }
 
-    public boolean isSharingScreenState() {
-        return sharingScreenState;
-    }
 
     public boolean isCallMode() {
         return isCallState;
@@ -573,11 +1168,12 @@ public class CallService extends Service {
         return videoTrackMap.get(userId);
     }
 
+
     private void removeVideoTrack(int userId) {
         QBRTCVideoTrack videoTrack = getVideoTrack(userId);
         if (videoTrack != null) {
-            VideoSink renderer = (VideoSink) videoTrack.getRenderer();
-            videoTrack.removeRenderer((VideoRenderer) renderer);
+            VideoSink renderer = videoTrack.getRenderer();
+            videoTrack.removeRenderer(renderer);
         }
         videoTrackMap.remove(userId);
     }
@@ -643,11 +1239,7 @@ public class CallService extends Service {
         }
     }
 
-    public class CallServiceBinder extends Binder {
-        public CallService getService() {
-            return CallService.this;
-        }
-    }
+
 
     private class ConnectionListenerImpl extends AbstractConnectionListener {
         @Override
@@ -751,34 +1343,7 @@ public class CallService extends Service {
         }
     }
 
-    private class SessionStateListener implements QBRTCSessionStateCallback<QBRTCSession> {
-        @Override
-        public void onStateChanged(QBRTCSession qbrtcSession, BaseSession.QBRTCSessionState qbrtcSessionState) {
 
-        }
-
-        @Override
-        public void onConnectedToUser(QBRTCSession qbrtcSession, Integer integer) {
-            stopRingtone();
-            isCallState = true;
-            Log.d(TAG, "onConnectedToUser() is started");
-            startCallTimer();
-        }
-
-        @Override
-        public void onDisconnectedFromUser(QBRTCSession qbrtcSession, Integer userID) {
-            Log.d(TAG, "Disconnected from user: " + userID);
-        }
-
-        @Override
-        public void onConnectionClosedForUser(QBRTCSession qbrtcSession, Integer userID) {
-            if (userID != null) {
-                Log.d(TAG, "Connection closed for user: " + userID);
-                ToastUtils.shortToast("The user: " + userID + " has left the call");
-                removeVideoTrack(userID);
-            }
-        }
-    }
 
     private class QBRTCSignalingListener implements QBRTCSignalingCallback {
         @Override
@@ -800,78 +1365,11 @@ public class CallService extends Service {
         }
     }
 
-    private class CameraEventsListener implements CameraVideoCapturer.CameraEventsHandler {
-        @Override
-        public void onCameraError(String s) {
-            ToastUtils.shortToast("Camera Error: " + s);
-        }
-
-        @Override
-        public void onCameraDisconnected() {
-            ToastUtils.shortToast("Camera Disconnected");
-        }
-
-        @Override
-        public void onCameraFreezed(String s) {
-            ToastUtils.shortToast("Camera Freezed");
-            hangUpCurrentSession(new HashMap<>());
-        }
-
-        @Override
-        public void onCameraOpening(String s) {
-            ToastUtils.shortToast("Camera Opening");
-        }
-
-        @Override
-        public void onFirstFrameAvailable() {
-            ToastUtils.shortToast("Camera onFirstFrameAvailable");
-        }
-
-        @Override
-        public void onCameraClosed() {
-            ToastUtils.shortToast("Camera Closed");
-        }
-    }
-
-    private class VideoTrackListener implements QBRTCClientVideoTracksCallbacks<QBRTCSession> {
-        @Override
-        public void onLocalVideoTrackReceive(QBRTCSession session, QBRTCVideoTrack videoTrack) {
-            if (videoTrack != null) {
-                int userID = QBChatService.getInstance().getUser().getId();
-                removeVideoTrack(userID);
-                addVideoTrack(userID, videoTrack);
-            }
-            Log.d(TAG, "onLocalVideoTrackReceive() run");
-        }
-
-        @Override
-        public void onRemoteVideoTrackReceive(QBRTCSession session, QBRTCVideoTrack videoTrack, Integer userID) {
-            if (videoTrack != null && userID != null) {
-                addVideoTrack(userID, videoTrack);
-            }
-            Log.d(TAG, "onRemoteVideoTrackReceive for Opponent= " + userID);
-        }
-    }
-
     public interface CallTimerListener {
         void onCallTimeUpdate(String time);
     }
-    public void joinConference() {
-        QBConferenceRole conferenceRole = asListenerRole ? QBConferenceRole.LISTENER : QBConferenceRole.PUBLISHER;
 
-        currentSessionC.joinDialog(roomID, conferenceRole, new ConferenceEntityCallback<ArrayList<Integer>>() {
-            @Override
-            public void onSuccess(ArrayList<Integer> publishers) {
-                // empty
-            }
-
-            @Override
-            public void onError(WsException exception) {
-                Log.d(TAG, "onError joinDialog exception= " + exception);
-            }
-        });
-    }
-    private class ConferenceSessionListener implements ConferenceSessionCallbacks {
+    /*private class ConferenceSessionListener implements ConferenceSessionCallbacks {
         @Override
         public void onPublishersReceived(ArrayList<Integer> publishersList) {
             currentSessionC.subscribeToPublisher(publishersList.get(0));
@@ -959,32 +1457,16 @@ public class CallService extends Service {
                 }
             }, newDelay);
         }
-    }
-    public void leaveCurrentSession() {
-        currentSessionC.leave();
-        releaseCurrentSession();
-    }
+    }*/
+
     private void initConferenceClient() {
         conferenceClient = ConferenceClient.getInstance(this);
         conferenceClient.setCameraErrorHandler(new CameraEventsListener());
         QBRTCConfig.setDebugEnabled(true);
-    }
-
-    private void releaseCurrentSession() {
-        Log.d(TAG, "Release current session");
-        removeSessionStateListener(sessionStateListener);
-        removeVideoTrackListener(videoTrackListener);
-        removeAudioTrackListener(audioTrackListener);
-        removeConferenceSessionListener(conferenceSessionListener);
-        CallService.stop(this);
-    }
 
 
-    private void removeVideoTrackListener(QBRTCClientVideoTracksCallbacks callback) {
-        if (currentSession != null) {
-            currentSession.removeVideoTrackCallbacksListener(callback);
-        }
     }
+
 
     private void addAudioTrackListener(QBRTCClientAudioTracksCallback callback) {
         if (currentSession != null) {
@@ -1009,7 +1491,7 @@ public class CallService extends Service {
     //////////////////////////////////////////
 
 
-    private class AudioTrackListener implements QBRTCClientAudioTracksCallback<ConferenceSession> {
+    /*private class AudioTrackListener implements QBRTCClientAudioTracksCallback<ConferenceSession> {
         @Override
         public void onLocalAudioTrackReceive(ConferenceSession conferenceSession, QBRTCAudioTrack qbrtcAudioTrack) {
             Log.d(TAG, "onLocalAudioTrackReceive()");
@@ -1053,10 +1535,19 @@ public class CallService extends Service {
         public void onFinish() {
             start();
         }
-    }
+    }*/
 
-    public interface CurrentCallStateCallback {
+    public interface CurrentCallStateCallback extends CallActivity.CurrentCallStateCallback {
         void onCallStarted();
+
+        @Override
+        void onCallStopped();
+
+        @Override
+        void onOpponentsListUpdated(ArrayList<QBUser> newUsers);
+
+        @Override
+        void onCallTimeUpdate(String time);
     }
 
     public interface UsersConnectDisconnectCallback {
@@ -1079,6 +1570,7 @@ public class CallService extends Service {
         FAILED,
         DEFAULT
     }
+
 
 
 }

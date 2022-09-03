@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_chat_message_container"
-    style="@style/MessageContainerStyle"
     tools:gravity="right"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
     tools:ignore="RtlHardcoded">
 
     <RelativeLayout
@@ -72,8 +73,7 @@
                 android:textSize="17sp"
                 tools:text="24" />
 
-            <net.qiujuer.genius.ui.widget.ImageView
-
+            <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:id="@+id/imgO"
@@ -95,7 +95,7 @@
             android:textColor="@color/gray"
             android:textSize="15sp"
             tools:text="Paris,France" />
-        <net.qiujuer.genius.ui.widget.TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/text_info"
             android:textColor="@color/black"
             android:layout_alignParentEnd="true"

@@ -6,8 +6,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.retry.dimdim.fragments.ExploreLiveStreamsFragment;
-import com.retry.dimdim.fragments.ExploreProfilesFragment;
+import com.lahoriagency.cikolive.Fragments.ExploreLiveStreamsFragment;
+import com.lahoriagency.cikolive.Fragments.ExploreProfilesFragment;
+
 
 public class ViewPagerExploreAdapter extends FragmentStateAdapter {
 

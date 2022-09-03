@@ -106,7 +106,7 @@ public class ForwardToActivity extends BaseActivity implements DialogsManager.Ma
         }
     }
 
-    private void reloginToChat() {
+    void reloginToChat() {
         showProgressDialog(R.string.dlg_loading);
         QBUser qbUser = ChatHelper.getCurrentUser();
         if (qbUser != null) {
@@ -265,7 +265,7 @@ public class ForwardToActivity extends BaseActivity implements DialogsManager.Ma
         refreshLayout.setRefreshing(false);
     }
 
-    private void showProgressDialog(int dlg_relogin) {
+    void showProgressDialog(int dlg_relogin) {
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(true);//you can cancel it by pressing back button
         progressDialog.setMessage("signing up wait ...");

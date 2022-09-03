@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -18,6 +18,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.lahoriagency.cikolive.Classes.Consts;
 import com.lahoriagency.cikolive.Classes.KeyboardUtils;
@@ -137,10 +139,6 @@ public class MessagesActivity extends BaseActivity implements TextWatcher {
                 : getResources().getString(R.string.subtitle_disabled);
     }
 
-    private void setActionbarSubTitle(String subTitle) {
-        if (actionBar != null)
-            actionBar.setSubtitle(subTitle);
-    }
 
     private void initUI() {
         progressBar = findViewById(R.id.progress_bar);

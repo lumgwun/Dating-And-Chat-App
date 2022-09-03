@@ -791,6 +791,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
+    @Override
+    public void showMatchDialog(SavedProfile savedProfile, boolean fromQueue) {
+
+    }
+
+    @Override
+    public void showMatchDialog(com.lahoriagency.cikolive.Classes.QBUser qbUser, boolean fromQueue) {
+
+    }
+
     private void showAndFillMatchDialog(UserProfileInfo userProfileInfo) {
         QBUserCustomData userCustomData = new Gson().fromJson(SharedPrefsHelper.getInstance().getQbUser().getCustomData(), QBUserCustomData.class);
         matchDialogFragment.setImageLeftLink(userCustomData.getProfilePhotoData().get(0).getLink());
@@ -823,7 +833,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void showMatchDialogIfAny() {
         if (!matchDialogQueue.isEmpty()) {
-            showMatchDialog(null, true);
+            showMatchDialog((com.lahoriagency.cikolive.Classes.QBUser) null, true);
         }
     }
 

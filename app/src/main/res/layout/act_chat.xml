@@ -615,6 +615,8 @@
 
         </LinearLayout>
 
+        <include layout="@layout/chat_act_bottom_layout"/>
+
     </RelativeLayout>
 
 </RelativeLayout>

@@ -10,9 +10,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.databinding.DataBindingUtil;
+
 import androidx.navigation.ui.AppBarConfiguration;
 
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
@@ -23,7 +24,7 @@ import com.lahoriagency.cikolive.Classes.PreferencesManager;
 import com.lahoriagency.cikolive.Classes.QBResRequestExecutor;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
-import com.lahoriagency.cikolive.databinding.DialogByDiamondsBinding;
+
 import com.quickblox.users.model.QBUser;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -32,7 +33,7 @@ public class ChattingActivity extends BaseActivity {
 
     private AppBarConfiguration appBarConfiguration;
     Dialog dialog;
-    DialogByDiamondsBinding dialogByDiamondsBinding;
+
     BitmapTransformation bitmapTransformation;
     private QBUser cloudUser;
     private String userName,password;
@@ -94,7 +95,7 @@ public class ChattingActivity extends BaseActivity {
             dialog.show();
         });
 
-        btnVideoCall.setOnClickListener(view -> startActivity(new Intent(this, UserCallingActivity.class)));
+        btnVideoCall.setOnClickListener(view -> startActivity(new Intent(this, CallActivity.class)));
 
 
     }
@@ -113,9 +114,10 @@ public class ChattingActivity extends BaseActivity {
     private void createDialog() {
 
         View v = LayoutInflater.from(this).inflate(R.layout.dialog_by_diamonds_, null);
-        dialogByDiamondsBinding = DataBindingUtil.bind(v);
         dialog = new Dialog(this);
         dialog.setContentView(v);
+        LinearLayout btnCancel = dialog.findViewById(R.id.btn_cancelBuy);
+        TextView btnBuy = dialog.findViewById(R.id.btn_buyDiamond);
 
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         layoutParams.copyFrom(dialog.getWindow().getAttributes());
@@ -126,8 +128,8 @@ public class ChattingActivity extends BaseActivity {
         dialog.getWindow().setAttributes(layoutParams);
         dialog.getWindow().getAttributes().windowAnimations = R.style.animationdialog;
 
-        dialogByDiamondsBinding.btnCancel.setOnClickListener(view1 -> dialog.dismiss());
-        dialogByDiamondsBinding.btnBuy.setOnClickListener(view1 -> {
+        btnCancel.setOnClickListener(view1 -> dialog.dismiss());
+        btnBuy.setOnClickListener(view1 -> {
             dialog.dismiss();
             startActivity(new Intent(this, PurchaseDiamondActivity.class));
         });

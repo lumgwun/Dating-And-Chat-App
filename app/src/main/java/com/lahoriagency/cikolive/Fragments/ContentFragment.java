@@ -25,6 +25,7 @@ import com.lahoriagency.cikolive.Classes.QBGetChatDialogById;
 import com.lahoriagency.cikolive.Classes.QbDialogHolder;
 import com.lahoriagency.cikolive.Classes.QbUsersHolder;
 import com.lahoriagency.cikolive.Classes.RevealAnimationSetting;
+import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.UserProfileInfo;
 import com.lahoriagency.cikolive.Interfaces.GcmConsts;
 import com.lahoriagency.cikolive.R;
@@ -232,5 +233,15 @@ public class ContentFragment extends Fragment implements SwipeFragment.OnMatchCr
     @Override
     public void showMatchDialog(UserProfileInfo userProfileInfo, boolean fromQueue) {
         onMatchCreatedListener.showMatchDialog(userProfileInfo, fromQueue);
+    }
+
+    @Override
+    public void showMatchDialog(SavedProfile savedProfile, boolean fromQueue) {
+
+    }
+
+    @Override
+    public void showMatchDialog(com.lahoriagency.cikolive.Classes.QBUser qbUser, boolean fromQueue) {
+
     }
 }

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+@SuppressWarnings("deprecation")
 public class DialogsAdapter extends BaseAdapter {
     private static final String MAX_MESSAGES_TEXT = "99+";
     private static final int MAX_MESSAGES = 99;
@@ -32,6 +33,7 @@ public class DialogsAdapter extends BaseAdapter {
     private List<QBChatDialog> dialogs;
     private boolean isSelectMode = false;
     private List<QBChatDialog> selectedItems = new ArrayList<>();
+    private boolean hasStableIds;
 
     public DialogsAdapter(Context context, List<QBChatDialog> dialogs) {
         this.context = context;
@@ -119,9 +121,7 @@ public class DialogsAdapter extends BaseAdapter {
         return dialogs != null ? dialogs.size() : 0;
     }
 
-    private boolean isItemSelected(Integer position) {
-        return !selectedItems.isEmpty() && selectedItems.contains(getItem(position));
-    }
+
 
     private int getUnreadMsgCount(QBChatDialog chatDialog) {
         Integer unreadMessageCount = chatDialog.getUnreadMessageCount();
@@ -131,11 +131,6 @@ public class DialogsAdapter extends BaseAdapter {
         return unreadMessageCount;
     }
 
-    private boolean isLastMessageAttachment(QBChatDialog dialog) {
-        String lastMessage = dialog.getLastMessage();
-        Integer lastMessageSenderId = dialog.getLastMessageUserId();
-        return TextUtils.isEmpty(lastMessage) && lastMessageSenderId != null;
-    }
 
     private String prepareTextLastMessage(QBChatDialog chatDialog) {
         if (isLastMessageAttachment(chatDialog)) {
@@ -145,16 +140,6 @@ public class DialogsAdapter extends BaseAdapter {
         }
     }
 
-    public void prepareToSelect() {
-        isSelectMode = true;
-        notifyDataSetChanged();
-    }
-
-    public void clearSelection() {
-        isSelectMode = false;
-        selectedItems.clear();
-        notifyDataSetChanged();
-    }
 
     public void updateList(List<QBChatDialog> dialogs) {
         this.dialogs = dialogs;
@@ -181,6 +166,31 @@ public class DialogsAdapter extends BaseAdapter {
     public List<QBChatDialog> getSelectedItems() {
         return selectedItems;
     }
+    private boolean isItemSelected(Integer position) {
+        return !selectedItems.isEmpty() && selectedItems.contains(getItem(position));
+
+    }
+
+
+
+    private boolean isLastMessageAttachment(QBChatDialog dialog) {
+        String lastMessage = dialog.getLastMessage();
+        Integer lastMessageSenderId = dialog.getLastMessageUserId();
+        return TextUtils.isEmpty(lastMessage) && lastMessageSenderId != null;
+    }
+
+
+    public void prepareToSelect() {
+        isSelectMode = true;
+        notifyDataSetChanged();
+    }
+
+    public void clearSelection() {
+        isSelectMode = false;
+        selectedItems.clear();
+        notifyDataSetChanged();
+    }
+
 
     private String getDialogLastMessageTime(long seconds) {
         long timeInMillis = seconds * 1000;
@@ -205,6 +215,14 @@ public class DialogsAdapter extends BaseAdapter {
         } else {
             return lastYearFormat.format(new Date(timeInMillis));
         }
+    }
+
+    public void setHasStableIds(boolean hasStableIds) {
+        this.hasStableIds = hasStableIds;
+    }
+
+    public boolean getHasStableIds() {
+        return hasStableIds;
     }
 
     private static class ViewHolder {

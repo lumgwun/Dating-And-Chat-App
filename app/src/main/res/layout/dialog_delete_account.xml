@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <data>
-
-    </data>
-
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -105,12 +106,13 @@
 
 
             <LinearLayout
-                android:id="@+id/btn_yes"
+                android:id="@+id/btn_delete_yes"
                 android:layout_width="220dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/bg_gradiant_5"
+                android:padding="20dp"
+                android:background="@drawable/rect6d"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal"
                 android:paddingVertical="10dp">
@@ -132,7 +134,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/btn_cancel"
+                android:id="@+id/btn_cancel_delete"
                 android:layout_width="wrap_content"
 
                 android:layout_height="wrap_content"
@@ -149,4 +151,7 @@
 
 
     </androidx.cardview.widget.CardView>
-</layout>
+
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

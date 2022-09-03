@@ -129,7 +129,7 @@ public class HostMainActivity extends AppCompatActivity {
                 Bundle bundle= new Bundle();
                 bundle.putParcelable("SavedProfile",savedProfile);
                 bundle.putParcelable("QBUser", (Parcelable) qbUser);
-                Intent intent = new Intent(HostMainActivity.this, DiamondHistoryActivity.class);
+                Intent intent = new Intent(HostMainActivity.this, DiamondHistoryAct.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtras(bundle);
                 startActivity(intent);

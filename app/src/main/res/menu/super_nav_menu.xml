@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:itemTextAppearance="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single"
+        android:menuCategory="system">
+        <item
+            android:id="@+id/nav_dashS"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="My Dashboard" />
+
+        <item
+            android:id="@+id/timeline_Super"
+            android:icon="@drawable/ic_admin_panel"
+            android:title="My Timeline" />
+
+
+        <item android:title="Transaction">
+            <menu>
+                <group android:checkableBehavior="single">
+
+                    <item
+                        android:id="@+id/nav_sPurchases"
+                        android:icon="@drawable/ic_admin_panel"
+                        android:title="Purchases" />
+
+
+                </group>
+            </menu>
+
+        </item>
+
+        <item android:title="Support">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_Super_support"
+                        android:icon="@drawable/ic_admin_panel"
+                        android:title="Support Tab" />
+                </group>
+            </menu>
+        </item>
+
+
+        <item android:title="Settings">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_Sett"
+                        android:icon="@drawable/ic_admin_panel"
+                        android:title="My Settings" />
+                </group>
+            </menu>
+        </item>
+
+
+        <item android:title="Sign">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_log"
+                        android:icon="@drawable/ic_admin_panel"
+                        android:title="Logout" />
+                </group>
+            </menu>
+        </item>
+
+    </group>
+
+</menu>

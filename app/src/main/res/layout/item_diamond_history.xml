@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-    </data>
-
-
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
     <LinearLayout
 
         android:layout_width="match_parent"
@@ -50,11 +50,11 @@
                 tools:text="1500" />
 
             <TextView
-                android:id="@+id/tv_type"
+                android:id="@+id/tv_type_diamond"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:background="@drawable/bg_cornered_rect_5"
+                android:background="@drawable/rect6h"
                 android:backgroundTint="@color/gray_10"
                 android:ellipsize="end"
                 android:fontFamily="@font/gilroy_bold"
@@ -62,7 +62,7 @@
                 android:maxLines="1"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="7dp"
-                android:textColor="@color/gray"
+                android:textColor="@color/red_brown_dark"
                 android:textSize="13sp"
                 tools:text="LIVESTREAM" />
 
@@ -70,7 +70,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_Date"
+            android:id="@+id/tv_Date_Diamond"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
@@ -85,4 +85,4 @@
     </LinearLayout>
 
 
-</layout>
+</androidx.appcompat.widget.LinearLayoutCompat>

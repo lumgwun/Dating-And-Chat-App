@@ -59,7 +59,7 @@
                 android:layout_marginRight="16dp"
                 app:civ_border_width="@dimen/_2sdp"
                 app:civ_border_color="@color/white"
-                tools:src="@drawable/com_facebook_profile_picture_blank_portrait" />
+                tools:src="@drawable/ic_profile" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/match_dialog_image_right"
@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:text="Send message"
                 android:textColor="@color/cardview_light_background"
-                android:background="@drawable/button_rounded"
+                android:background="@drawable/rect6g"
                 />
 
             <Button
@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:text="Keep swiping"
                 android:textColor="@color/cardview_light_background"
-                android:background="@drawable/button_rounded"
+                android:background="@drawable/rect6h"
                 />
 
 

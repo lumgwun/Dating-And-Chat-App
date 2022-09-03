@@ -8,7 +8,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.circularreveal.CircularRevealRelativeLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +18,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.google.android.material.circularreveal.CircularRevealRelativeLayout;
 import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.quickblox.users.model.QBUser;

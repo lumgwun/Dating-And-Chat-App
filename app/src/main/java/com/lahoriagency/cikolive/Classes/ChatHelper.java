@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ChatHelper {
+    public static final int DIALOG_ITEMS_PER_PAGE = 15;
     private static final String TAG = ChatHelper.class.getSimpleName();
 
     public static final int CHAT_HISTORY_ITEMS_PER_PAGE = 50;

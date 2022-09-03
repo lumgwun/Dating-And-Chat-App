@@ -1,5 +1,7 @@
 package com.lahoriagency.cikolive.Interfaces;
 
+import android.Manifest;
+
 import com.lahoriagency.cikolive.Classes.ResourceUtils;
 import com.lahoriagency.cikolive.R;
 
@@ -21,4 +23,8 @@ public interface Consts {
     String EXTRA_DIALOG_OCCUPANTS = "dialog_occupants";
     String EXTRA_AS_LISTENER = "as_listener";
     String EXTRA_SETTINGS_TYPE = "extra_settings_type";
+
+
+
+    String[] PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
 }

@@ -1,67 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-    </data>
-
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="8dp"
+    android:elevation="8dp"
+    android:padding="20dp"
+    app:cardCornerRadius="8dp">
 
     <LinearLayout
-
         android:layout_width="match_parent"
-        android:layout_height="63dp"
-        android:layout_marginVertical="5dp"
-        android:background="@drawable/bg_cornered_rect_10"
-        android:backgroundTint="@color/black"
+        android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:paddingHorizontal="15dp"
-        android:paddingVertical="10dp"
+        android:orientation="horizontal">
 
-        >
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/img_dimond" />
+
+
+        <TextView
+            android:id="@+id/tv_get_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/gilroy_extra_bold"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            tools:text="1500" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_get_price"
+            android:layout_width="110dp"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:background="@drawable/bg_gradiant_500"
+            android:fontFamily="@font/gilroy_bold"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            tools:text="$ 5" />
 
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/img_dimond" />
-
-
-            <TextView
-                android:id="@+id/tv_count"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:fontFamily="@font/gilroy_extra_bold"
-                android:maxLines="1"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                tools:text="1500" />
-
-            <Button
-                android:id="@+id/btn_price"
-                android:layout_width="110dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/bg_gradiant_500"
-                android:fontFamily="@font/gilroy_bold"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                tools:text="$ 5" />
-
-
-        </LinearLayout>
 
     </LinearLayout>
 
 
-</layout>
+</androidx.cardview.widget.CardView>

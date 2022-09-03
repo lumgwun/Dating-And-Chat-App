@@ -3,15 +3,16 @@ package com.lahoriagency.cikolive.Adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.retry.dimdim.R;
-import com.retry.dimdim.databinding.ItemCommentBinding;
-import com.retry.dimdim.modals.Comments;
+import com.lahoriagency.cikolive.Classes.Comments;
+import com.lahoriagency.cikolive.R;
+import com.lahoriagency.cikolive.Utils.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,13 +46,20 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ItemHold
     }
 
     public class ItemHolder extends RecyclerView.ViewHolder {
+        private TextView tvComment,tvName,tvPalce,tvAge;
+        private ImageView imgGift,pic;
 
-        ItemCommentBinding binding;
 
         public ItemHolder(@NonNull View itemView) {
             super(itemView);
+            tvComment = itemView.findViewById(R.id.tv_comment_chatter);
+            tvName = itemView.findViewById(R.id.tv_name_of_Chatter);
+            tvPalce = itemView.findViewById(R.id.tv_palce_chatter);
+            tvAge = itemView.findViewById(R.id.t_age_of_chatter);
+            imgGift = itemView.findViewById(R.id.img_gift_chatter);
+            pic = itemView.findViewById(R.id.imgChatter);
 
-            binding = DataBindingUtil.bind(itemView);
+
         }
 
         public void setItems(int position) {
@@ -60,19 +68,19 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ItemHold
 
 
             if (model.getId() == 1) {
-                binding.tvComment.setVisibility(View.VISIBLE);
-                binding.tvComment.setText(String.valueOf(model.getComment()));
+                tvComment.setVisibility(View.VISIBLE);
+                tvComment.setText(String.valueOf(model.getComment()));
 
             } else if (model.getId() == 2) {
-                binding.imgGift.setVisibility(View.VISIBLE);
-                Glide.with(itemView.getContext()).load(model.getGift()).into(binding.imgGift);
+                imgGift.setVisibility(View.VISIBLE);
+                Glide.with(itemView.getContext()).load(model.getGift()).into(imgGift);
 
             }
 
-            Glide.with(itemView.getContext()).load(model.getImage()).into(binding.img);
-            binding.tvName.setText(model.getName());
-            binding.tvPalce.setText(model.getPlace());
-            binding.tvAge.setText(String.valueOf(model.getAge()));
+            Glide.with(itemView.getContext()).load(model.getImage()).into(pic);
+            tvName.setText(model.getName());
+            tvPalce.setText(model.getPlace());
+            tvAge.setText(String.valueOf(model.getAge()));
 
 
         }

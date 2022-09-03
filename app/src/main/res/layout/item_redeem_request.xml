@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-    </data>
-
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
     <LinearLayout
 
         android:layout_width="match_parent"
@@ -93,12 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-
-
-            >
-
-
+            android:orientation="horizontal">
             <TextView
 
                 android:layout_width="wrap_content"
@@ -135,12 +130,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-
-
-            >
-
-
+            android:orientation="horizontal">
             <TextView
 
                 android:layout_width="wrap_content"
@@ -173,4 +163,4 @@
     </LinearLayout>
 
 
-</layout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

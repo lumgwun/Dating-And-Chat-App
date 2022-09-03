@@ -3,14 +3,15 @@ package com.lahoriagency.cikolive.Adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.retry.dimdim.R;
-import com.retry.dimdim.databinding.ItemDiamondHistoryBinding;
-import com.retry.dimdim.modals.DiamondHistory;
+
+import com.lahoriagency.cikolive.Classes.DiamondHistory;
+import com.lahoriagency.cikolive.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,22 +45,25 @@ public class DiamondHistoryAdapter extends RecyclerView.Adapter<DiamondHistoryAd
     }
 
     public class ItemHolder extends RecyclerView.ViewHolder {
+        private LinearLayout lout;
+        private TextView tvDate,tvType,tvDiamondCount;
 
-        ItemDiamondHistoryBinding binding;
 
         public ItemHolder(@NonNull View itemView) {
             super(itemView);
+            tvDate = itemView.findViewById(R.id.tv_Date_Diamond);
+            tvType = itemView.findViewById(R.id.tv_type_diamond);
+            tvDiamondCount = itemView.findViewById(R.id.tv_diamond_count);
 
-            binding = DataBindingUtil.bind(itemView);
         }
 
         public void setItems(int position) {
             DiamondHistory model = list.get(position);
 
 
-            binding.tvDiamondCount.setText(String.valueOf(model.getCount()));
-            binding.tvDate.setText(model.getDate());
-            binding.tvType.setText(model.getFrom());
+            tvDiamondCount.setText(String.valueOf(model.getCount()));
+            tvDate.setText(model.getDate());
+            tvType.setText(model.getFrom());
 
         }
 

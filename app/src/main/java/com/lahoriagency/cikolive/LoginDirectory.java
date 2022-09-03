@@ -45,6 +45,6 @@ public class LoginDirectory extends AppCompatActivity {
         gender = sharedPref.getString("PROFILE_GENDER", "");
         address = sharedPref.getString("PROFILE_ADDRESS", "");
         pictureLink = Uri.parse(sharedPref.getString("PICTURE_URI", ""));
-        dbRole=dbHelper.getProfileRoleByUserNameAndPassword(userName,password);
+        //dbRole=dbHelper.getProfileRoleByUserNameAndPassword(userName,password);
     }
 }

@@ -5,14 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.retry.dimdim.R;
-import com.retry.dimdim.adapters.ExploreProfileAdapter;
-import com.retry.dimdim.databinding.FragmentExploreLiveStreamsBinding;
-import com.retry.dimdim.modals.ModelItem;
-import com.retry.dimdim.utils.SampleData;
+
+import com.lahoriagency.cikolive.Adapters.ExploreProfileAdapter;
+import com.lahoriagency.cikolive.Classes.ModelItem;
+import com.lahoriagency.cikolive.R;
+import com.lahoriagency.cikolive.Utils.SampleData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,18 +21,23 @@ import java.util.List;
 
 public class ExploreLiveStreamsFragment extends Fragment {
 
-    FragmentExploreLiveStreamsBinding binding;
     ExploreProfileAdapter profileAdapter;
     List<ModelItem> proList = new ArrayList<>();
+    private RecyclerView rvProfiles;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_explore_live_streams, container, false);
+        View rootView =  inflater.inflate(R.layout.fragment_explore_live_streams, container, false);
+
+        rvProfiles = rootView.findViewById(R.id.rv_profilesAll);
         makeList();
         init();
-        return binding.getRoot();
+
+        return rootView;
+
+
+
     }
 
 
@@ -94,7 +99,7 @@ public class ExploreLiveStreamsFragment extends Fragment {
 
     public void init() {
         profileAdapter = new ExploreProfileAdapter(2);
-        binding.rvProfiles.setAdapter(profileAdapter);
+        rvProfiles.setAdapter(profileAdapter);
         proList.addAll(Collections.unmodifiableList(proList));
         profileAdapter.updateItems(proList);
     }

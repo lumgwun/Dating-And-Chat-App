@@ -1,8 +1,10 @@
 package com.lahoriagency.cikolive;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +12,7 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,11 +35,13 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
 
 @SuppressWarnings("deprecation")
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity implements Runnable, View.OnClickListener {
 
     Runnable runnable;
     Handler handler;
     SessionManager sessionManager;
+    AnimationDrawable loadingAnimation;
+    ImageView loadingBar;
     private static final String TAG = SplashActivity.class.getSimpleName();
 
     private static final int SPLASH_DELAY = 1500;
@@ -48,11 +53,24 @@ public class SplashActivity extends BaseActivity {
     private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1764;
 
     private SharedPrefsHelper sharedPrefsHelper;
+    @Override
+    public void onClick(View v) {
+        handler.removeCallbacks(this);
+        run();
+    }
 
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_splash);
+
+        loadingBar = (ImageView) findViewById(R.id.logoSplash);
+        loadingBar.setBackgroundResource(R.xml.loading);
+        loadingAnimation = (AnimationDrawable) loadingBar.getBackground();
+        findViewById(R.id.splash_root).setOnClickListener(this);
+
+
         tintStatusBar(ContextCompat.getColor(this, R.color.white));
         tintStatusBar(getColor(R.color.app_color));
         init();
@@ -72,6 +90,11 @@ public class SplashActivity extends BaseActivity {
         }
 
     }
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        loadingAnimation.start();
+        super.onWindowFocusChanged(hasFocus);
+    }
     private void runNextScreen() {
         if (sharedPrefsHelper.hasQbUser()) {
             LoginService.start(SplashActivity.this, sharedPrefsHelper.getQbUser());
@@ -81,6 +104,7 @@ public class SplashActivity extends BaseActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    loadingAnimation.stop();
                     SignInActivity.start(SplashActivity.this);
                     finish();
                 }
@@ -286,6 +310,27 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
 
+
+    }
+
+    @Override
+    public void run() {
+        loadingAnimation.stop();
+        if (sharedPrefsHelper.hasQbUser()) {
+            LoginService.start(SplashActivity.this, sharedPrefsHelper.getQbUser());
+            OpponentsActivity.start(SplashActivity.this);
+            restoreChatSession();
+        } else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    loadingAnimation.stop();
+                    SignInActivity.start(SplashActivity.this);
+                    finish();
+                }
+            }, SPLASH_DELAY);
+        }
+        this.finish();
 
     }
 }

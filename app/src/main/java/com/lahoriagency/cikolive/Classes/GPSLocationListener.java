@@ -23,7 +23,7 @@ public class GPSLocationListener implements LocationListener {
         if(myPreferences.getFbId() != null && myPreferences.getUserId() != null) {
             LocationUpdatedRequest locationUpdatedRequest = new LocationUpdatedRequest(myPreferences.getUserId(),
                     longitude, latitude);
-            BaseAsyncTask<LocationUpdatedRequest> updateLocation = new BaseAsyncTask<>(ServerMethodsConsts.LOCATION, locationUpdatedRequest);
+            BaseAsyncTask22<LocationUpdatedRequest> updateLocation = new BaseAsyncTask22<>(ServerMethodsConsts.LOCATION, locationUpdatedRequest);
             updateLocation.setHttpMethod("POST");
             updateLocation.execute();
         }

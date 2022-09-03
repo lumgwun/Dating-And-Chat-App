@@ -7,20 +7,24 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.retry.dimdim.R;
-import com.retry.dimdim.activities.BaseActivity;
-import com.retry.dimdim.adapters.CityNameAdapter;
-import com.retry.dimdim.databinding.BottomsheetCityBinding;
-import com.retry.dimdim.modals.CityName;
+import com.lahoriagency.cikolive.Adapters.CityNameAdapter;
+import com.lahoriagency.cikolive.BaseActivity;
+import com.lahoriagency.cikolive.Classes.CityName;
+import com.lahoriagency.cikolive.R;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +38,6 @@ public class CityBottomSheet extends BottomSheetDialogFragment {
         return onItemClick;
     }
 
-    BottomsheetCityBinding binding;
 
     public void setOnItemClick(CityNameAdapter.OnItemClick onItemClick) {
         this.onItemClick = onItemClick;
@@ -43,6 +46,11 @@ public class CityBottomSheet extends BottomSheetDialogFragment {
     List<CityName> searchList = new ArrayList<>();
     CityNameAdapter cityNameAdapter;
     String keyWord;
+    private RecyclerView rvCity;
+    private ImageView btnClose2,btnClose1,btnSearch1;
+    private EditText etSearch;
+    private TextView tv_languages;
+    private RelativeLayout lout1,lout2;
 
     @Override
     public void onResume() {
@@ -56,33 +64,41 @@ public class CityBottomSheet extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = LayoutInflater.from(getActivity()).inflate(R.layout.bottomsheet_city, container, false);
+        View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.bottomsheet_city, container, false);
 
-        binding = DataBindingUtil.bind(v);
-        binding.getRoot().setNestedScrollingEnabled(true);
-
+        tv_languages = rootView.findViewById(R.id.tv_languages);
+        rvCity = rootView.findViewById(R.id.rv_cityB);
+        lout1 = rootView.findViewById(R.id.lout_1);
+        lout2 = rootView.findViewById(R.id.lout_2);
+        etSearch = rootView.findViewById(R.id.et_search);
+        btnSearch1 = rootView.findViewById(R.id.btn_search1);
+        btnClose2 = rootView.findViewById(R.id.btn_close2);
+        btnClose1 = rootView.findViewById(R.id.btn_close1);
+        rootView.setNestedScrollingEnabled(true);
         init();
         listeners();
 
+        return rootView;
 
-        return binding.getRoot();
+
+
     }
 
 
     private void init() {
 
         baseActivity = new BaseActivity();
-        binding.lout1.setVisibility(View.VISIBLE);
-        binding.lout2.setVisibility(View.GONE);
+        lout1.setVisibility(View.VISIBLE);
+        lout2.setVisibility(View.GONE);
         cityNameAdapter = new CityNameAdapter();
-        binding.rvCity.setAdapter(cityNameAdapter);
+        rvCity.setAdapter(cityNameAdapter);
 
     }
 
     private void listeners() {
 
 
-        binding.etSearch.addTextChangedListener(new TextWatcher() {
+        etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 //
@@ -107,22 +123,21 @@ public class CityBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
-        binding.btnSearch1.setOnClickListener(v -> {
+        btnSearch1.setOnClickListener(v -> {
 
 
-            binding.lout1.setVisibility(View.GONE);
-            binding.lout2.setVisibility(View.VISIBLE);
+            lout1.setVisibility(View.GONE);
+            lout2.setVisibility(View.VISIBLE);
 
 
         });
-        binding.btnClose2.setOnClickListener(v -> {
-
-            binding.lout1.setVisibility(View.VISIBLE);
-            binding.lout2.setVisibility(View.GONE);
+        btnClose2.setOnClickListener(v -> {
+            lout1.setVisibility(View.VISIBLE);
+            lout2.setVisibility(View.GONE);
 
         });
 
-        binding.btnClose1.setOnClickListener(v -> dismiss());
+        btnClose1.setOnClickListener(v -> dismiss());
         cityNameAdapter.setOnItemClick(name -> onItemClick.onClick(name));
 
     }

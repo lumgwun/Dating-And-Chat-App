@@ -13,7 +13,7 @@
 
         <ImageView
             android:id="@+id/image_caller_avatar"
-            style="@style/CallerAvatar" />
+            style="@style/Widget.AppCompat.ImageButton" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -77,12 +77,17 @@
 
         <ImageButton
             android:id="@+id/image_button_reject_call"
-            style="@style/EndCallImageButton" />
+            android:background="@drawable/rect6h"
+            android:layout_height="40dp"
+            android:src="@drawable/cancel_foreground"
+            android:layout_width="wrap_content" />
 
         <ImageButton
             android:id="@+id/image_button_accept_call"
-            style="@style/TakeCallImageButton"
             android:layout_marginStart="@dimen/income_call_buttons_margin"
+            android:background="@drawable/rect6h"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
             android:layout_toEndOf="@id/image_button_reject_call"
             android:src="@drawable/ic_call_fg"
             tools:ignore="RtlCompat" />

@@ -3,8 +3,8 @@ package com.lahoriagency.cikolive.Classes;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.widget.ImageView;
 
-import net.qiujuer.genius.ui.widget.ImageView;
 
 import java.io.InputStream;
 

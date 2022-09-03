@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-    </data>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="900dp"
-        android:background="@drawable/bg_for_bottomsheet"
+        android:background="@drawable/shape_layer1d"
         android:backgroundTint="@color/white">
 
         <LinearLayout
@@ -61,7 +61,7 @@
                         android:layout_height="20dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/icn_search"
+                        android:src="@drawable/quantum_ic_search_grey600_24"
                         app:tint="@color/black" />
                 </RelativeLayout>
 
@@ -83,7 +83,6 @@
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="20dp"
                         android:layout_toStartOf="@id/btn_close2"
-
                         android:background="@drawable/bg_cornered_rect_10"
                         android:backgroundTint="@color/gray_10"
                         android:fontFamily="@font/gilroy_medium"
@@ -108,7 +107,6 @@
                         android:src="@drawable/ic_close"
                         app:tint="@color/black" />
 
-
                 </RelativeLayout>
 
             </RelativeLayout>
@@ -126,7 +124,7 @@
                 android:background="@color/white">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_city"
+                    android:id="@+id/rv_cityB"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
@@ -144,4 +142,6 @@
 
 
     </RelativeLayout>
-</layout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

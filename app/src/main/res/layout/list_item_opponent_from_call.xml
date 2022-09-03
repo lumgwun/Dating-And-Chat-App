@@ -1,8 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/rect_h"
+    android:id="@+id/con_FrameLa"
+    android:scrollbarStyle="outsideInset"
+    android:scrollbarDefaultDelayBeforeFade="@integer/material_motion_duration_short_2"
+    android:isScrollContainer="true"
     android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/con_Layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:visibility="visible"
+        android:layout_gravity="center">
+
+        <com.quickblox.conference.view.QBConferenceSurfaceView
+            android:id="@+id/con_oppView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true" />
+
+        <ToggleButton
+            android:id="@+id/opponent_toggle_mic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="4dp"
+            android:scaleX="0.6"
+            android:scaleY="0.6"
+            android:background="@drawable/call_mic_toggle_small"
+            android:checked="true"
+            android:textOff=""
+            android:textOn=""
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/con_oppName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:textSize="15sp"
+            android:paddingTop="3dp"
+            tools:text="Alexparvus"
+            android:background="@color/black_transparent_50"
+            android:gravity="center_vertical|center_horizontal"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/white"
+            android:textStyle="normal" />
+
+        <ImageView
+            android:id="@+id/iv_muted_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="50dp"
+            android:src="@drawable/ic_muted_opp_ind"/>
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar_c"
+        style="@style/MatchWidth"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/innerLayout"

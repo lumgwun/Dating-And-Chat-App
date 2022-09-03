@@ -6,10 +6,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.retry.dimdim.fragments.ChatsFragment;
-import com.retry.dimdim.fragments.ExploreFragment;
-import com.retry.dimdim.fragments.MatchFragment;
-import com.retry.dimdim.fragments.ProfileFragment;
+import com.lahoriagency.cikolive.Fragments.ExploreFragment;
+import com.lahoriagency.cikolive.Fragments.MatchFragment;
+import com.lahoriagency.cikolive.Fragments.ProfileFragment;
+
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
 
@@ -27,7 +27,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
             case 1:
                 return new MatchFragment();
             case 2:
-                return new ChatsFragment();
+                //return new ChatsFragment();
             case 3:
                 return new ProfileFragment();
             default:

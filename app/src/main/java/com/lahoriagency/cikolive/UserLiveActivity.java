@@ -36,6 +36,7 @@ public class UserLiveActivity extends AppCompatActivity {
     private EditText editTextComment;
     private ArrayList<Comments> commentsArrayList;
     private  Comments comments;
+    BaseActivity baseActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +65,13 @@ public class UserLiveActivity extends AppCompatActivity {
         editTextComment = findViewById(R.id.et_massage);
         tv_diamond_you_have = findViewById(R.id.tv_diamond_you_have);
         tv_time = findViewById(R.id.tv_time);
-        transparentStatusBar();
+        //transparentStatusBar();
         makeListOfComments();
         layoutCompatD.setOnClickListener(view -> {
             loutBottom.setVisibility(View.GONE);
             lout_rv.setVisibility(View.GONE);
             if (!diamondShopBottomSheet.isAdded()) {
-                diamondShopBottomSheet.show(getSupportFragmentManager(), diamondShopBottomSheet.getClass().getSimpleName());
+                diamondShopBottomSheet.show();
 
             }
         });
@@ -100,7 +101,7 @@ public class UserLiveActivity extends AppCompatActivity {
         Log.i("TAG", "init: " + commentsArrayList.size());
 
 
-        diamondShopBottomSheet = new DiamondShopBottomSheet();
+        diamondShopBottomSheet = new DiamondShopBottomSheet(getBaseContext());
         giftBottomSheet = new GiftBottomSheet();
         giftBottomSheet.setOnDismiss(() -> {
             loutBottom.setVisibility(View.VISIBLE);
@@ -113,6 +114,13 @@ public class UserLiveActivity extends AppCompatActivity {
 
         });
 
+
+    }
+
+    private void makeListOfComments() {
+        commentsArrayList= new ArrayList<>();
+        commentsAdapter = new CommentAdapter();
+        recyclerView.setAdapter(commentsAdapter);
 
     }
 
