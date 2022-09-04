@@ -4,8 +4,9 @@ import android.database.Observable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.quickblox.users.model.QBUser;
+
 import java.io.Serializable;
-import java.math.BigInteger;
 
 
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_ID;
@@ -22,8 +23,13 @@ public class Transaction extends Observable implements Parcelable, Serializable 
     private String tranApprovalDate;
     private String tranType;
     private String tranMethodOfPayment;
+    private String tranCurrency;
+    private int tranNoOfDiamond;
+    private int tranQbUserID;
+    private QBUser tranxQbUser;
+    private SavedProfile tranxSavedProfile;
 
-    public static final String TRANSACTIONS_TABLE = "transactions";
+    public static final String TRANSACTIONS_TABLE = "transactionsD";
     public static final String TRANSACTION_ID = "transaction_id";
     public static final String TRANSACTION_SENDING_ACCT = "transaction_sending_acct";
     public static final String TRANSACTION_DEST_ACCT = "transaction_dest_acct";
@@ -38,11 +44,13 @@ public class Transaction extends Observable implements Parcelable, Serializable 
     public static final String TRANSACTION_METHOD_OF_PAYMENT = "transaction_method_of_payment";
     public static final String TRANSACTION_SAVEDPROF_ID = "transaction_Prof_ID";
     public static final String TRANSACTION_QBUSER_ID = "transaction_QBUser_ID";
+    public static final String TRANSACTION_NO_OF_DIAMOND = "transaction_Diamond";
+    public static final String TRANSACTION_CURRENCY = "transaction_Currency";
 
     public static final String CREATE_TRANSACTIONS_TABLE = "CREATE TABLE IF NOT EXISTS " + TRANSACTIONS_TABLE + " (" + TRANSACTION_ID + " INTEGER, " + TRANSACTION_SAVEDPROF_ID + " INTEGER , " +
             TRANSACTION_QBUSER_ID + " INTEGER , "  + TRANSACTION_DATE + " TEXT, " + TRANSACTION_SENDING_ACCT + " TEXT, " +
             TRANSACTION_DEST_ACCT + " TEXT, " + TRANSACTION_PAYEE + " TEXT, " + TRANSACTION_PAYER + " TEXT, " + TRANSACTION_AMOUNT + " REAL, " +
-            TRANSACTIONS_TYPE + " TEXT, " + TRANSACTION_METHOD_OF_PAYMENT + " TEXT, "+ TRANSACTION_APPROVER + TRANSACTION_APPROVAL_DATE + " TEXT, "+  TRANSACTION_STATUS + " TEXT, " + "PRIMARY KEY(" +TRANSACTION_ID + "), " +"FOREIGN KEY(" + TRANSACTION_SAVEDPROF_ID + ") REFERENCES " + SAVED_PROFILE_TABLE + "(" + SAVED_PROFILE_ID + "))";
+            TRANSACTIONS_TYPE + " TEXT, " + TRANSACTION_METHOD_OF_PAYMENT + " TEXT, "+ TRANSACTION_APPROVER + TRANSACTION_APPROVAL_DATE + " TEXT, "+ TRANSACTION_STATUS + " TEXT, " + TRANSACTION_NO_OF_DIAMOND + " INTEGER, " + TRANSACTION_CURRENCY + " TEXT, " + "PRIMARY KEY(" +TRANSACTION_ID + "), " +"FOREIGN KEY(" + TRANSACTION_SAVEDPROF_ID + ") REFERENCES " + SAVED_PROFILE_TABLE + "(" + SAVED_PROFILE_ID + "))";
 
 
 
@@ -53,7 +61,16 @@ public class Transaction extends Observable implements Parcelable, Serializable 
         super();
 
     }
-    protected Transaction(Parcel in) {
+    public Transaction(int tranSenderSavedProfID,int tranQbUserID,String tranMethodOfPayment, int tranNoOfDiamond,  double tranAmount,String tranCurrency,String tranDate) {
+        this.tranAmount = tranAmount;
+        this.tranSenderSavedProfID = tranSenderSavedProfID;
+        this.tranDate = tranDate;
+        this.tranQbUserID=tranQbUserID;
+        this.tranMethodOfPayment = tranMethodOfPayment;
+        this.tranCurrency = tranCurrency;
+        this.tranNoOfDiamond=tranNoOfDiamond;
+    }
+    public Transaction(Parcel in) {
         tranID = in.readInt();
         tranSenderSavedProfID = in.readInt();
         tranReceiverSavedProfID = in.readInt();
@@ -175,5 +192,45 @@ public class Transaction extends Observable implements Parcelable, Serializable 
         parcel.writeString(tranApprovalDate);
         parcel.writeString(tranType);
         parcel.writeString(tranMethodOfPayment);
+    }
+
+    public int getTranNoOfDiamond() {
+        return tranNoOfDiamond;
+    }
+
+    public void setTranNoOfDiamond(int tranNoOfDiamond) {
+        this.tranNoOfDiamond = tranNoOfDiamond;
+    }
+
+    public String getTranCurrency() {
+        return tranCurrency;
+    }
+
+    public void setTranCurrency(String tranCurrency) {
+        this.tranCurrency = tranCurrency;
+    }
+
+    public int getTranQbUserID() {
+        return tranQbUserID;
+    }
+
+    public void setTranQbUserID(int tranQbUserID) {
+        this.tranQbUserID = tranQbUserID;
+    }
+
+    public QBUser getTranxQbUser() {
+        return tranxQbUser;
+    }
+
+    public void setTranxQbUser(QBUser tranxQbUser) {
+        this.tranxQbUser = tranxQbUser;
+    }
+
+    public SavedProfile getTranxSavedProfile() {
+        return tranxSavedProfile;
+    }
+
+    public void setTranxSavedProfile(SavedProfile tranxSavedProfile) {
+        this.tranxSavedProfile = tranxSavedProfile;
     }
 }

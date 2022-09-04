@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@drawable/shape_progressbar_circle"
     android:layout_height="wrap_content"
+    android:visibility="gone"
     style="@style/Widget.Design.BottomSheet.Modal"
     xmlns:tools="http://schemas.android.com/tools">
     <LinearLayout

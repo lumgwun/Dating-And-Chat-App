@@ -3,12 +3,14 @@ package com.lahoriagency.cikolive;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -20,10 +22,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
+import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
 import com.lahoriagency.cikolive.Classes.Consts;
 import com.lahoriagency.cikolive.Classes.LoginService;
 import com.lahoriagency.cikolive.Classes.PermissionsChecker;
+import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.ToastUtils;
 import com.lahoriagency.cikolive.Utils.Const;
@@ -34,6 +38,8 @@ import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
 
+import static com.lahoriagency.cikolive.Utils.Const.PREF_NAME;
+
 @SuppressWarnings("deprecation")
 public class SplashActivity extends BaseActivity implements Runnable, View.OnClickListener {
 
@@ -42,6 +48,7 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
     SessionManager sessionManager;
     AnimationDrawable loadingAnimation;
     ImageView loadingBar;
+    private SavedProfile savedProfile;
     private static final String TAG = SplashActivity.class.getSimpleName();
 
     private static final int SPLASH_DELAY = 1500;
@@ -53,6 +60,10 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
     private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1764;
 
     private SharedPrefsHelper sharedPrefsHelper;
+    private SharedPreferences userPreferences;
+    private int profileID;
+    private Gson gson,gson1;
+    private String json,json1;
     @Override
     public void onClick(View v) {
         handler.removeCallbacks(this);
@@ -64,16 +75,13 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_splash);
-
+        savedProfile=new SavedProfile();
         loadingBar = (ImageView) findViewById(R.id.logoSplash);
         loadingBar.setBackgroundResource(R.xml.loading);
         loadingAnimation = (AnimationDrawable) loadingBar.getBackground();
         findViewById(R.id.splash_root).setOnClickListener(this);
-
-
         tintStatusBar(ContextCompat.getColor(this, R.color.white));
         tintStatusBar(getColor(R.color.app_color));
-        init();
         fillVersion();
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -87,6 +95,7 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
 
         if (checkOverlayPermissions()) {
             runNextScreen();
+
         }
 
     }
@@ -96,11 +105,37 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
         super.onWindowFocusChanged(hasFocus);
     }
     private void runNextScreen() {
+        userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        gson = new Gson();
+        json = userPreferences.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
         if (sharedPrefsHelper.hasQbUser()) {
             LoginService.start(SplashActivity.this, sharedPrefsHelper.getQbUser());
-            OpponentsActivity.start(SplashActivity.this);
-            restoreChatSession();
-        } else {
+            Bundle userBundle=new Bundle();
+            userBundle.putParcelable("SavedProfile",savedProfile);
+            userBundle.putParcelable("QBUser", (Parcelable) sharedPrefsHelper.getQbUser());
+            Intent helpIntent = new Intent(SplashActivity.this, MainActivity.class);
+            overridePendingTransition(R.anim.slide_in_right,
+                    R.anim.slide_out_left);
+            helpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            helpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(helpIntent);
+            //MainActivity.start(SplashActivity.this);
+
+        }
+        if(savedProfile !=null){
+            Bundle userBundle=new Bundle();
+            userBundle.putParcelable("SavedProfile",savedProfile);
+            userBundle.putParcelable("QBUser", (Parcelable) sharedPrefsHelper.getQbUser());
+            Intent helpIntent = new Intent(SplashActivity.this, MainActivity.class);
+            overridePendingTransition(R.anim.slide_in_right,
+                    R.anim.slide_out_left);
+            helpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            helpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(helpIntent);
+
+
+        } else{
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -109,6 +144,8 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
                     finish();
                 }
             }, SPLASH_DELAY);
+
+
         }
     }
 
@@ -229,108 +266,18 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
     }
 
 
-    private void init() {
-
-        sessionManager = new SessionManager(this);
-        runnable = () -> {
-
-            if (Boolean.TRUE.equals(sessionManager.getBooleanValue(Const.IS_LOGGED_IN))) {
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
 
 
-            } else {
-                startActivity(new Intent(SplashActivity.this, CreateProfileActivity.class));
-            }
-            finish();
-        };
-
-        handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(runnable, 1000);
-
-
-
-    }
-    private void restoreChatSession() {
-        if (ChatHelper.getInstance().isLogged()) {
-            DialogsActivity.start(this);
-            finish();
-        } else {
-            QBUser currentUser = getUserFromSession();
-            if (currentUser == null) {
-                SignInActivity.start(this);
-                finish();
-            } else {
-                loginToChat(currentUser);
-            }
-        }
-    }
-
-    private QBUser getUserFromSession() {
-        QBUser user = SharedPrefsHelper.getInstance().getQbUser();
-        QBSessionManager qbSessionManager = QBSessionManager.getInstance();
-        if (qbSessionManager.getSessionParameters() == null || user == null) {
-            ChatHelper.getInstance().destroy();
-            return null;
-        }
-        Integer userId = qbSessionManager.getSessionParameters().getUserId();
-        user.setId(userId);
-        return user;
-    }
-
-    private void loginToChat(final QBUser user) {
-        showProgressDialog(R.string.dlg_restoring_chat_session);
-
-        ChatHelper.getInstance().loginToChat(user, new QBEntityCallback<Void>() {
-            @Override
-            public void onSuccess(Void result, Bundle bundle) {
-                Log.v(TAG, "Chat login onSuccess()");
-                hideProgressDialog();
-                DialogsActivity.start(SplashActivity.this);
-                finish();
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-                if (e.getMessage().equals("You have already logged in chat")) {
-                    loginToChat(user);
-                } else {
-                    hideProgressDialog();
-                    Log.w(TAG, "Chat login onError(): " + e);
-                    showErrorSnackbar(R.string.error_recreate_session, e,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    loginToChat(user);
-                                }
-                            });
-                }
-            }
-        });
-    }
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
 
 
     }
+
 
     @Override
     public void run() {
-        loadingAnimation.stop();
-        if (sharedPrefsHelper.hasQbUser()) {
-            LoginService.start(SplashActivity.this, sharedPrefsHelper.getQbUser());
-            OpponentsActivity.start(SplashActivity.this);
-            restoreChatSession();
-        } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    loadingAnimation.stop();
-                    SignInActivity.start(SplashActivity.this);
-                    finish();
-                }
-            }, SPLASH_DELAY);
-        }
-        this.finish();
 
     }
 }

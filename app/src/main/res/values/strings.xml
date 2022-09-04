@@ -578,5 +578,7 @@
     <string name="manage_group_update_users_error">error</string>
     <string name="manage_group_chat_subtitle">Subtittle</string>
     <string name="login_hint">incorrect password</string>
+    <string name="default_notification_channel_id">32456</string>
+    <string name="msg_token_fmt">Firebase token</string>
 
 </resources>

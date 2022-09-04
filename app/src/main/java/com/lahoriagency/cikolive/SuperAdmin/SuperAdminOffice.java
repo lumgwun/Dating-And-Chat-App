@@ -12,14 +12,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 import com.lahoriagency.cikolive.Adapters.RedeemRequestAdapter;
@@ -41,6 +45,8 @@ import com.rom4ek.arcnavigationview.ArcNavigationView;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 
 @SuppressWarnings("deprecation")
@@ -99,6 +105,21 @@ public class SuperAdminOffice extends AppCompatActivity implements NavigationVie
         toggle.syncState();
         getSupportActionBar().setElevation(0);
         getSupportActionBar().setTitle("Super Admin BackOffice");
+
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        String token = task.getResult();
+
+                    }
+                });
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,7 +156,7 @@ public class SuperAdminOffice extends AppCompatActivity implements NavigationVie
 
                             case R.id.cPurchases:
 
-                                Intent chat = new Intent(SuperAdminOffice.this, PurchasesAct.class);
+                                Intent chat = new Intent(SuperAdminOffice.this, TranXActList.class);
                                 overridePendingTransition(R.anim.slide_in_right,
                                         R.anim.slide_out_left);
                                 chat.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -214,7 +235,7 @@ public class SuperAdminOffice extends AppCompatActivity implements NavigationVie
                 return true;
             case R.id.nav_sPurchases:
                 //toolbar.setTitle("All Customer Packs");
-                Intent purchaseIntent = new Intent(SuperAdminOffice.this, PurchasesAct.class);
+                Intent purchaseIntent = new Intent(SuperAdminOffice.this, TranXActList.class);
                 purchaseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(purchaseIntent);
                 return true;

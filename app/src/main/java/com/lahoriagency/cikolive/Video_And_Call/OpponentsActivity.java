@@ -216,7 +216,7 @@ public class OpponentsActivity extends BaseActivity {
                 return true;
 
             case R.id.settings:
-                Intent myIntent = new Intent(OpponentsActivity.this, SuperAdminOffice.class);
+                Intent myIntent = new Intent(OpponentsActivity.this, SettingsActivity.class);
                 overridePendingTransition(R.anim.slide_in_right,
                         R.anim.slide_out_left);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

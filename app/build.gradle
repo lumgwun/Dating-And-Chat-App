@@ -161,7 +161,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.5.1'
     //implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation files('libs/deviceprint-release-2.2.0.aar')
+    //implementation files('libs/deviceprint-release-2.2.0.aar')
 
     implementation 'com.quickblox:quickblox-android-sdk-core:3.9.0'
 

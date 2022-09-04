@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SuperAdmin.UpdateDiamondAct">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".activities.CreateProfileActivity">
+
+        <LinearLayout
+            android:id="@+id/topBar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/app_color"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp">
+
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/bg_cornered_rect_500"
+                android:backgroundTint="@color/white_50"
+                android:padding="11dp"
+                android:rotation="90"
+                android:src="@drawable/ic_down_arrow"
+                app:tint="@color/black" />
+
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/gilroy_black"
+                android:letterSpacing=".08"
+                android:text="Transaction Updating"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:fontFamily="@font/gilroy_extra_bold"
+            android:maxLines="1"
+            android:id="@+id/updateTXID"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:text="Transaction ID: 09876"
+            android:textAllCaps="true"
+            android:textColor="@color/gray_dark"
+            android:textSize="17sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:id="@+id/updateUsersIDs"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:fontFamily="@font/gilroy_extra_bold"
+            android:maxLines="1"
+            android:text="User IDs: 234/9087"
+            android:textAllCaps="true"
+            android:textColor="@color/gray_dark"
+            android:textSize="17sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:fontFamily="@font/gilroy_extra_bold"
+            android:maxLines="1"
+            android:id="@+id/updateUAmt"
+            android:text="Amt Paid: USD 20"
+            android:textAllCaps="true"
+            android:textColor="@color/gray_dark"
+            android:textSize="17sp" />
+
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="15dp"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/update_diamond"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rect6d"
+                    android:backgroundTint="@color/bg_chats"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:hint="No of Diamonds"
+                    android:imeOptions="actionNext"
+                    android:padding="30dp"
+                    android:textColor="@color/gray_light"
+                    android:textColorHint="@color/black"
+                    android:textSize="14sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center_horizontal"
+                        android:fontFamily="@font/gilroy_extra_bold"
+                        android:maxLines="1"
+                        android:text="Other details"
+                        android:textAllCaps="true"
+                        android:textColor="@color/gray_dark"
+                        android:textSize="17sp" />
+
+
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/et_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rect_white"
+                    android:backgroundTint="@color/black"
+                    android:fontFamily="@font/gilroy_regular"
+                    android:hint="Other details"
+                    android:padding="30dp"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="12dp"
+                    android:textColor="@color/gray_light"
+                    android:textColorHint="@color/gray_light_pro"
+                    android:textSize="14sp" />
+
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_submit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="30dp"
+                    android:onClick="doTXUpdate"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/bg_gradiant_10"
+                    android:fontFamily="@font/gilroy_bold"
+                    android:text="@string/submit"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

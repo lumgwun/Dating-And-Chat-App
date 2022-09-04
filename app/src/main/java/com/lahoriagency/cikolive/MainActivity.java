@@ -17,6 +17,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.StrictMode;
@@ -92,6 +93,7 @@ import com.lahoriagency.cikolive.Fragments.UserFragment;
 import com.lahoriagency.cikolive.Interfaces.OnChangeViewListener;
 import com.lahoriagency.cikolive.Interfaces.OnLoginChangeView;
 import com.lahoriagency.cikolive.Utils.SessionManager;
+import com.lahoriagency.cikolive.Video_And_Call.OpponentsActivity;
 import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
@@ -279,19 +281,41 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
             });
 
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    // FCM SDK (and your app) can post notifications.
+                } else {
+                    // TODO: Inform user that that your app will not show notifications.
+                }
+            });
+    private void askNotificationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NOTIFICATION_POLICY) ==
+                PackageManager.PERMISSION_GRANTED) {
+        } else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_NOTIFICATION_POLICY)) {
+
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_NOTIFICATION_POLICY);
+        }
+    }
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
+    }
+
     @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.activity_main);
         setTitle("Main Selection Arena");
         cloudUser= new QBUser();
+        currentUser= new QBUser();
         savedProfile= new SavedProfile();
         chipNavigationBar = findViewById(R.id.bottom_nav_barC);
-        //fbLoginFragment = new FBLoginFragment();
-        FragmentManager fm = getSupportFragmentManager();
+        //FragmentManager fm = getSupportFragmentManager();
         userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         currentUser = SharedPrefsHelper.getInstance().getQbUser();
         gson = new Gson();
@@ -300,86 +324,101 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         profileID = userPreferences.getInt("PROFILE_ID", 0);
         userName = userPreferences.getString("PROFILE_USERNAME", "");
         password = userPreferences.getString("PROFILE_PASSWORD", "");
-
-        locationListener = new GPSLocationListener();
-        locationDialog();
+        whereText = findViewById(R.id.whereText);
+        userExtras=getIntent().getExtras();
+        if(userExtras !=null){
+            userLocation=userExtras.getString("UserLocation");
+            cloudUser=userExtras.getParcelable("SavedProfile");
+        }
         matchDialogFragment = new MatchFragment();
         matchDialogFragment.setActionsListener(this);
 
         matchDialogQueue = new ArrayList<>();
         userExtras= new Bundle();
-        createLocationRequest();
-        whereText = findViewById(R.id.whereText);
-        userExtras=getIntent().getExtras();
-        if(userExtras !=null){
-            userLocation=userExtras.getString("UserLocation");
-        }
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setAltitudeRequired(false);
-        criteria.setBearingRequired(false);
-        criteria.setCostAllowed(true);
-        criteria.setPowerRequirement(Criteria.POWER_LOW);
-        setInitialLocation();
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        cancellationTokenSource = new CancellationTokenSource();
-        String provider = locationManager.getBestProvider(criteria, true);
-        if (provider != null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        //StrictMode.setThreadPolicy(policy);
 
-            }
-            locationManager.requestLocationUpdates(provider, 2 * 60 * 1000, 10, locationListenerNetwork);
-        }
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
+        try {
+            locationListener = new GPSLocationListener();
+            locationDialog();
+            createLocationRequest();
+
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            criteria.setAltitudeRequired(false);
+            criteria.setBearingRequired(false);
+            criteria.setCostAllowed(true);
+            criteria.setPowerRequirement(Criteria.POWER_LOW);
+            setInitialLocation();
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+            cancellationTokenSource = new CancellationTokenSource();
+            String provider = locationManager.getBestProvider(criteria, true);
+            if (provider != null) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
                 }
-                for (Location location : locationResult.getLocations()) {
-                    longitude = location.getLongitude();
-                    latitude = location.getLatitude();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(MainActivity.this, "Network Provider update", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-
-                    try {
-                        Geocoder newGeocoder = new Geocoder(MainActivity.this, Locale.ENGLISH);
-                        List<Address> newAddresses = newGeocoder.getFromLocation(latitude, longitude, 1);
-                        StringBuilder street = new StringBuilder();
-                        if (Geocoder.isPresent()) {
-
-                            Address newAddress = newAddresses.get(0);
-
-                            String localityString = newAddress.getLocality();
-                            whereText = findViewById(R.id.whereText);
-
-                            street.append(localityString).append("");
-
-                            whereText.setText(MessageFormat.format("Where you are:  {0}",  localityString));
-                            Toast.makeText(MainActivity.this, localityString,
-                                    Toast.LENGTH_SHORT).show();
-
-                        } else {
-                            whereText.setVisibility(View.GONE);
-                            //go
-                        }
-
-
-                    } catch (IndexOutOfBoundsException | IOException e) {
-
-                        Log.e("tag", e.getMessage());
+                locationManager.requestLocationUpdates(provider, 2 * 60 * 1000, 10, locationListenerNetwork);
+            }
+            locationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    if (locationResult == null) {
+                        return;
                     }
+                    for (Location location : locationResult.getLocations()) {
+                        longitude = location.getLongitude();
+                        latitude = location.getLatitude();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(MainActivity.this, "Network Provider update", Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
+
+                        try {
+                            Geocoder newGeocoder = new Geocoder(MainActivity.this, Locale.ENGLISH);
+                            List<Address> newAddresses = newGeocoder.getFromLocation(latitude, longitude, 1);
+                            StringBuilder street = new StringBuilder();
+                            if (Geocoder.isPresent()) {
+
+                                Address newAddress = newAddresses.get(0);
+
+                                String localityString = newAddress.getLocality();
+                                whereText = findViewById(R.id.whereText);
+
+                                street.append(localityString).append("");
+
+                                whereText.setText(MessageFormat.format("Where you are:  {0}",  localityString));
+                                Toast.makeText(MainActivity.this, localityString,
+                                        Toast.LENGTH_SHORT).show();
+
+                            } else {
+                                whereText.setVisibility(View.GONE);
+                                //go
+                            }
+
+
+                        } catch (IndexOutOfBoundsException | IOException e) {
+
+                            Log.e("tag", e.getMessage());
+                        }
+
+                    }
                 }
-            }
-        };
+            };
+
+
+        } catch (Exception e ) {
+            e.printStackTrace();
+        }
+
+        //fbLoginFragment = new FBLoginFragment();
+
+
 
         BottomNavigationView bottomNavigationView=findViewById(R.id.main_navigation);
 
@@ -490,9 +529,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onPause() {
         super.onPause();
-        /*SharedPreferences sharedPreferences =
-                settingsFragment.getPreferenceScreen().getSharedPreferences();
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);*/
+        userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        userPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     private void startLogin(boolean logFromSession) {

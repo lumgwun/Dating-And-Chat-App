@@ -8,9 +8,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.PersistableBundle;
 import android.os.SystemClock;
 import android.os.Vibrator;
@@ -45,6 +48,7 @@ import androidx.recyclerview.widget.SnapHelper;
 import com.github.clans.fab.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 import com.lahoriagency.cikolive.Adapters.ChatAdapter;
 import com.lahoriagency.cikolive.Adapters.ChatAdapter33;
 import com.lahoriagency.cikolive.Adapters.ChatsAdapter;
@@ -55,6 +59,8 @@ import com.lahoriagency.cikolive.Classes.ChatsItem;
 import com.lahoriagency.cikolive.Classes.CircularProgressIndicator;
 import com.lahoriagency.cikolive.Classes.DialogsManager;
 import com.lahoriagency.cikolive.Classes.ImagePickHelper;
+import com.lahoriagency.cikolive.Classes.LoginService;
+import com.lahoriagency.cikolive.Classes.ModelItem;
 import com.lahoriagency.cikolive.Classes.PreferencesManager;
 import com.lahoriagency.cikolive.Classes.QBResRequestExecutor;
 import com.lahoriagency.cikolive.Classes.QbChatDialogMessageListenerImp;
@@ -71,6 +77,10 @@ import com.lahoriagency.cikolive.Interfaces.AttachClickListener;
 import com.lahoriagency.cikolive.Interfaces.MessageLongClickListener;
 import com.lahoriagency.cikolive.Interfaces.OnImagePickedListener;
 import com.lahoriagency.cikolive.Interfaces.PaginationHistoryListener;
+import com.lahoriagency.cikolive.Utils.Const;
+import com.lahoriagency.cikolive.Utils.SessionManager;
+import com.lahoriagency.cikolive.Video_And_Call.OpponentsActivity;
+import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBMessageStatusesManager;
 import com.quickblox.chat.QBSystemMessagesManager;
@@ -107,7 +117,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 
 @SuppressWarnings("deprecation")
-public class ChatAct extends BaseActivity implements OnImagePickedListener , QBMessageStatusListener, DialogsManager.ManagingDialogsCallbacks {
+public class ChatAct extends BaseActivity implements OnImagePickedListener , Runnable, View.OnClickListener,QBMessageStatusListener, DialogsManager.ManagingDialogsCallbacks {
     private static boolean isNewDialog;
     private static int code=908;
     List<ChatsItem> chatsList = new ArrayList<>();
@@ -207,14 +217,24 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , QBM
 
     public static final long CHANGE_CONFERENCE_ROOM_DELAY = 10000;
     public static final int MAX_CONFERENCE_OPPONENTS_ALLOWED = 12;
-
+    ChipNavigationBar chipNavigationBar;
+    Runnable runnable;
+    Handler handler;
+    SessionManager sessionManager;
+    AnimationDrawable loadingAnimation;
+    private static final int SPLASH_DELAY = 1500;
+    private ModelItem modelItem;
     private SystemMessagesListener systemMessagesListener = new SystemMessagesListener();
-
 
     public static void startForResult(AppCompatActivity activity, int code, QBChatDialog dialogId) {
         Intent intent = new Intent(activity, ChattingActivity.class);
         intent.putExtra(ChatAct.EXTRA_DIALOG_ID, dialogId);
         activity.startActivityForResult(intent, code);
+    }
+    @Override
+    public void onClick(View v) {
+        handler.removeCallbacks(this);
+        run();
     }
 
     public static void startForResult(AppCompatActivity activity, int code, QBChatDialog dialogId, boolean isNewDialog) {
@@ -254,11 +274,72 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , QBM
         setTitle("Chats Activity");
         userExtras= new Bundle();
         cloudUser= new QBUser();
+        modelItem= new ModelItem();
         savedProfile= new SavedProfile();
+        FloatingActionButton diaFab = findViewById(R.id.fab_dialog);
+        chipNavigationBar = findViewById(R.id.bottom_nav_barC);
+        chipNavigationBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        chipNavigationBar.setOnItemSelectedListener
+                (new ChipNavigationBar.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(int i) {
+                        //Fragment fragment = null;
+                        switch (i){
+                            case R.id.chatHome:
+                                Intent myIntent = new Intent(ChatAct.this, ChatAct.class);
+                                overridePendingTransition(R.anim.slide_in_right,
+                                        R.anim.slide_out_left);
+                                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(myIntent);
+
+                            case R.id.chat_Timelines:
+
+                                Intent chat = new Intent(ChatAct.this, MyTimeLinesAct.class);
+                                overridePendingTransition(R.anim.slide_in_right,
+                                        R.anim.slide_out_left);
+                                chat.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                chat.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(chat);
+
+
+                            case R.id.cOpponents:
+
+                                Intent shop = new Intent(ChatAct.this, OpponentsActivity.class);
+                                overridePendingTransition(R.anim.slide_in_right,
+                                        R.anim.slide_out_left);
+                                shop.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                shop.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(shop);
+
+
+                            case R.id.chat_settings:
+                                Intent helpIntent = new Intent(ChatAct.this, SettingsActivity.class);
+                                overridePendingTransition(R.anim.slide_in_right,
+                                        R.anim.slide_out_left);
+                                helpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                helpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(helpIntent);
+                        }
+                    }
+                });
+
+
         SharedPrefsHelper.getInstance().delete(IS_IN_BACKGROUND);
         Log.v(TAG, "onCreate ChatActivity on Thread ID = " + Thread.currentThread().getId());
         userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         gson = new Gson();
+        diaFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogsActivity.start(ChatAct.this);
+            }
+        });
         //fm.beginTransaction().add(R.id.main_content, fbLoginFragment).commit();
         profileID = userPreferences.getInt("PROFILE_ID", 0);
         userName = userPreferences.getString("PROFILE_USERNAME", "");
@@ -271,6 +352,9 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , QBM
         }else {
             currentUser = SharedPrefsHelper.getInstance().getQbUser();
         }
+        if(savedProfile !=null){
+            modelItem=savedProfile.getModelItem();
+        }
 
         if (ChatHelper.getCurrentUser() != null) {
             currentUser = ChatHelper.getCurrentUser();
@@ -281,6 +365,8 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , QBM
 
         if (!ChatHelper.getInstance().isLogged()) {
             reloginToChat();
+        }else {
+            restoreChatSession();
         }
 
         qbChatDialog = (QBChatDialog) getIntent().getSerializableExtra(EXTRA_DIALOG_ID);
@@ -300,6 +386,104 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , QBM
         initMessagesRecyclerView();
         initChatConnectionListener();
         initChat();
+        init();
+    }
+    private void init() {
+
+        sessionManager = new SessionManager(this);
+        runnable = () -> {
+
+            if (Boolean.TRUE.equals(sessionManager.getBooleanValue(Const.IS_LOGGED_IN))) {
+                startActivity(new Intent(ChatAct.this, MainActivity.class));
+
+
+            } else {
+                startActivity(new Intent(ChatAct.this, CreateProfileActivity.class));
+            }
+            finish();
+        };
+
+        handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(runnable, 1000);
+
+
+
+    }
+    @Override
+    public void run() {
+        loadingAnimation.stop();
+        if (sharedPrefsHelper.hasQbUser()) {
+            LoginService.start(ChatAct.this, sharedPrefsHelper.getQbUser());
+            OpponentsActivity.start(ChatAct.this);
+            restoreChatSession();
+        } else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    loadingAnimation.stop();
+                    SignInActivity.start(ChatAct.this);
+                    finish();
+                }
+            }, SPLASH_DELAY);
+        }
+        this.finish();
+
+    }
+    private void restoreChatSession() {
+        if (ChatHelper.getInstance().isLogged()) {
+            DialogsActivity.start(this);
+            finish();
+        } else {
+            QBUser currentUser = getUserFromSession();
+            if (currentUser == null) {
+                SignInActivity.start(this);
+                finish();
+            } else {
+                loginToChat(currentUser);
+            }
+        }
+    }
+    private QBUser getUserFromSession() {
+        QBUser user = SharedPrefsHelper.getInstance().getQbUser();
+        QBSessionManager qbSessionManager = QBSessionManager.getInstance();
+        if (qbSessionManager.getSessionParameters() == null || user == null) {
+            ChatHelper.getInstance().destroy();
+            return null;
+        }
+        Integer userId = qbSessionManager.getSessionParameters().getUserId();
+        user.setId(userId);
+        return user;
+    }
+
+    private void loginToChat(final QBUser user) {
+        showProgressDialog(R.string.dlg_restoring_chat_session);
+
+        ChatHelper.getInstance().loginToChat(user, new QBEntityCallback<Void>() {
+            @Override
+            public void onSuccess(Void result, Bundle bundle) {
+                Log.v(TAG, "Chat login onSuccess()");
+                hideProgressDialog();
+                DialogsActivity.start(ChatAct.this);
+                finish();
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                if (e.getMessage().equals("You have already logged in chat")) {
+                    loginToChat(user);
+                } else {
+                    hideProgressDialog();
+                    Log.w(TAG, "Chat login onError(): " + e);
+                    showErrorSnackbar(R.string.error_recreate_session, e,
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    loginToChat(user);
+                                }
+                            });
+                }
+            }
+        });
     }
 
     @Override
