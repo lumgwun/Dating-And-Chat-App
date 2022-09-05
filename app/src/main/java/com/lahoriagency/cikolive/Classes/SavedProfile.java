@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import com.quickblox.users.model.QBUser;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import static com.lahoriagency.cikolive.Classes.QBUser.QBUSER_ID;
 import static com.lahoriagency.cikolive.Classes.QBUser.QBUSER_TABLE;
@@ -71,9 +72,27 @@ public class SavedProfile implements Parcelable, Serializable {
     private UserProfileInfo userProfileInfo;
     private UserProfileInfoModel userProfileInfoModel;
     private QBUserCustomData qbUserCustomData;
+    private ArrayList<PurchaseDiamond> purchaseDiamonds;
+    private ArrayList<RedeemRequest> redeemRequests;
+    private ArrayList<DiamondHistory> diamondHistories;
 
     public SavedProfile() {
         super();
+    }
+    public void addRedeemRequest(int id, String date, int type, int diamondCount, String amount) {
+        redeemRequests = new ArrayList<>();
+        RedeemRequest redeemRequest = new RedeemRequest(id,date, type, diamondCount,amount);
+        redeemRequests.add(redeemRequest);
+    }
+    public void addPurchasedDiamond(int count, String price) {
+        purchaseDiamonds = new ArrayList<>();
+        PurchaseDiamond purchaseDiamond = new PurchaseDiamond(count,price);
+        purchaseDiamonds.add(purchaseDiamond);
+    }
+    public void addDiamondHistory(String from, String date,int count) {
+        diamondHistories = new ArrayList<>();
+        DiamondHistory diamondHistory = new DiamondHistory(from,date,count);
+        diamondHistories.add(diamondHistory);
     }
     @Override
     public int hashCode() {
@@ -365,5 +384,29 @@ public class SavedProfile implements Parcelable, Serializable {
 
     public void setModelItem(ModelItem modelItem) {
         this.modelItem = modelItem;
+    }
+
+    public ArrayList<PurchaseDiamond> getPurchaseDiamonds() {
+        return purchaseDiamonds;
+    }
+
+    public void setPurchaseDiamonds(ArrayList<PurchaseDiamond> purchaseDiamonds) {
+        this.purchaseDiamonds = purchaseDiamonds;
+    }
+
+    public ArrayList<RedeemRequest> getRedeemRequests() {
+        return redeemRequests;
+    }
+
+    public void setRedeemRequests(ArrayList<RedeemRequest> redeemRequests) {
+        this.redeemRequests = redeemRequests;
+    }
+
+    public ArrayList<DiamondHistory> getDiamondHistories() {
+        return diamondHistories;
+    }
+
+    public void setDiamondHistories(ArrayList<DiamondHistory> diamondHistories) {
+        this.diamondHistories = diamondHistories;
     }
 }

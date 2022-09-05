@@ -165,10 +165,11 @@ dependencies {
 
     implementation 'com.quickblox:quickblox-android-sdk-core:3.9.0'
 
-    //implementation "com.quickblox:quickblox-android-sdk-chat:3.9.1"
-    implementation "com.quickblox:quickblox-android-sdk-content:3.9.1"
-    implementation "com.quickblox:quickblox-android-sdk-messages:3.9.1"
-    implementation "com.quickblox:quickblox-android-sdk-customobjects:3.9.1"
+    //implementation "com.quickblox:quickblox-android-sdk-chat:$rootProject.qbSdkVersion"
+    implementation "com.quickblox:quickblox-android-sdk-content:3.10.1"
+    implementation "com.quickblox:quickblox-android-sdk-messages:3.10.1"
+    implementation "com.quickblox:quickblox-android-sdk-customobjects:3.10.1"
+    implementation "com.quickblox:quickblox-android-sdk-chat:3.10.1"
     //implementation 'org.webrtc:google-webrtc:1.0.32006'
 
     implementation "com.quickblox:quickblox-android-sdk-videochat-webrtc:3.3.3"

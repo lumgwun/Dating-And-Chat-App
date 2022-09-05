@@ -20,49 +20,49 @@
             android:id="@+id/id_l1"
             android:padding="10dp"
             android:orientation="vertical"
-            android:background="@drawable/rect6h"
+            android:background="@drawable/bg_cornered_rect_10"
             android:layout_height="wrap_content">
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:id="@+id/img_account4"
+                    android:id="@+id/img_accou4"
                     android:layout_width="58dp"
-                    android:layout_height="55dp"
+                    android:layout_height="20dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_notification_foreground"
                     android:contentDescription="Image" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:text=" Fanancial"
-                    android:id="@+id/timelineType"
-                    android:layout_marginEnd="20dp"
-                    android:padding="15dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="20dp"
-                    android:textColor="@color/red_brown_dark"
-                    android:layout_height="wrap_content"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
+            <TextView
+                android:layout_width="match_parent"
+                android:text=" From"
+                android:id="@+id/dh_from"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/red_brown_dark"
+                android:layout_height="wrap_content"/>
+
 
             <TextView
                 android:layout_width="match_parent"
-                android:text=" You just paid USD50 for Diamond"
-                android:id="@+id/timeline_Details"
-                android:layout_marginEnd="20dp"
+                android:text=" 300"
+                android:id="@+id/dh_cOUNt"
+                android:layout_marginEnd="5dp"
                 android:textStyle="bold"
                 android:layout_marginStart="8dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:textColor="@color/red_brown_dark"
                 android:layout_height="wrap_content"/>
             <TextView
                 android:layout_width="match_parent"
                 android:text=" 20/09/2022 09:23 Pm"
-                android:id="@+id/time_timeline"
-                android:layout_marginEnd="20dp"
+                android:id="@+id/dh_Date"
+                android:layout_marginEnd="5dp"
                 android:textStyle="bold"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="20dp"

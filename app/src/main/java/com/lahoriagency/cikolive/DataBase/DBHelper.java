@@ -18,6 +18,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import static com.lahoriagency.cikolive.Classes.DiamondHistory.CREATE_DIAMOND_HISTORY_TABLE;
+import static com.lahoriagency.cikolive.Classes.DiamondHistory.DH_TABLE;
 import static com.lahoriagency.cikolive.Classes.ModelItem.CREATE_MODEL_TYPE_TABLE;
 import static com.lahoriagency.cikolive.Classes.ModelItem.MODEL_ACTOR_IMAGE;
 import static com.lahoriagency.cikolive.Classes.ModelItem.MODEL_ACTOR_NAME;
@@ -30,6 +32,8 @@ import static com.lahoriagency.cikolive.Classes.ModelItem.MODEL_LOCATION;
 import static com.lahoriagency.cikolive.Classes.ModelItem.MODEL_PROF_ID;
 import static com.lahoriagency.cikolive.Classes.QBUser.CREATE_QB_USER_TABLE;
 import static com.lahoriagency.cikolive.Classes.QBUser.QBUSER_TABLE;
+import static com.lahoriagency.cikolive.Classes.RedeemRequest.CREATE_REDEEM_REQUEST_TABLE;
+import static com.lahoriagency.cikolive.Classes.RedeemRequest.REDEEM_REQUEST_TABLE;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.CREATE_SAVED_PROFILES_TABLE;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_AGE;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_COUNTRY;
@@ -44,6 +48,8 @@ import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_PHONE
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_PHOTO;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_REFERRER;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_TABLE;
+import static com.lahoriagency.cikolive.Classes.TimeLine.CREATE_ACCOUNT_TIMELINE_TABLE;
+import static com.lahoriagency.cikolive.Classes.TimeLine.TIMELINE_TABLE;
 import static com.lahoriagency.cikolive.Classes.Transaction.CREATE_TRANSACTIONS_TABLE;
 import static com.lahoriagency.cikolive.Classes.Transaction.TRANSACTIONS_TABLE;
 import static com.lahoriagency.cikolive.Classes.UserProfileInfo.CREATE_USER_PROF_INFO_TABLE;
@@ -136,6 +142,10 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TRANSACTIONS_TABLE);
         db.execSQL(CREATE_USER_PROF_INFO_TABLE);
         db.execSQL(CREATE_QB_USER_TABLE);
+        db.execSQL(CREATE_ACCOUNT_TIMELINE_TABLE);
+        db.execSQL(CREATE_DIAMOND_HISTORY_TABLE);
+        db.execSQL(CREATE_REDEEM_REQUEST_TABLE);
+
 
 
     }
@@ -149,6 +159,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(" DROP TABLE IF EXISTS "+ TRANSACTIONS_TABLE);
         db.execSQL(" DROP TABLE IF EXISTS "+ QBUSER_TABLE);
         db.execSQL(" DROP TABLE IF EXISTS "+ USER_PROF_INFO_TABLE);
+        db.execSQL(" DROP TABLE IF EXISTS "+ TIMELINE_TABLE);
+        db.execSQL(" DROP TABLE IF EXISTS "+ DH_TABLE);
+        db.execSQL(" DROP TABLE IF EXISTS "+ REDEEM_REQUEST_TABLE);
 
         onCreate(db);
     }

@@ -761,7 +761,7 @@ public class SignInActivity extends BaseActivity {
         LoginService.start(this, qbUser, pendingIntent);
     }
     private String getCurrentDeviceId(Context deviceID) {
-        return Utils.generateDeviceId(deviceID);
+        return Utils.generateDeviceId();
     }
 
 

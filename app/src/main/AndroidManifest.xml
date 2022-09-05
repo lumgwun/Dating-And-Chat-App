@@ -122,10 +122,7 @@
             android:name=".FindMatchActivity"
             android:label="@string/title_activity_find_match"
             android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
-        <activity
-            android:name=".DiamondHistoryAct"
-            android:label="@string/title_activity_diamond_history"
-            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
+
         <activity
             android:name=".CreateProfileActivity"
             android:label="@string/title_activity_create_profile"
@@ -146,10 +143,14 @@
         <activity android:name=".NotificationAct" />
         <activity android:name=".SavedProfileActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".SplashActivity" />
-        <activity android:name=".BaseActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name=".DiamondHistoryAct"
+            android:label="@string/title_activity_diamond_history"
+            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
+        <activity android:name=".BaseActivity" />
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".SplashActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

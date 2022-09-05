@@ -4,6 +4,13 @@ public class PurchaseDiamond {
 
     private int count;
     private String price;
+    public PurchaseDiamond() {
+        super();
+    }
+    public PurchaseDiamond(int count, String price) {
+        this.count=count;
+        this.price=price;
+    }
 
     public int getCount() {
         return count;

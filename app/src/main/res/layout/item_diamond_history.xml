@@ -37,7 +37,7 @@
 
 
             <TextView
-                android:id="@+id/tv_diamond_count"
+                android:id="@+id/tv_diamond_countww"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
 
@@ -50,7 +50,7 @@
                 tools:text="1500" />
 
             <TextView
-                android:id="@+id/tv_type_diamond"
+                android:id="@+id/txt_type_diamond"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
@@ -70,7 +70,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_Date_Diamond"
+            android:id="@+id/tv_Date_DiamondH"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 

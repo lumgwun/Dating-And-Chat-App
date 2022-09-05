@@ -258,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private boolean isMainActivity;
     private SavedProfile savedProfile;
     private String userName,password;
+    private String userSurname,userFirstName;
 
     private MatchFragment matchDialogFragment;
     private List<UserProfileInfo> matchDialogQueue;
@@ -316,14 +317,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         savedProfile= new SavedProfile();
         chipNavigationBar = findViewById(R.id.bottom_nav_barC);
         //FragmentManager fm = getSupportFragmentManager();
-        userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+
         currentUser = SharedPrefsHelper.getInstance().getQbUser();
         gson = new Gson();
         //fm.beginTransaction().add(R.id.main_content, fbLoginFragment).commit();
         loadPermissions(Manifest.permission.ACCESS_FINE_LOCATION, REQUEST_FINE_LOCATION);
-        profileID = userPreferences.getInt("PROFILE_ID", 0);
+        userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        profileID = userPreferences.getInt("SAVED_PROFILE_ID", 0);
+        userName = userPreferences.getString("SAVED_PROFILE_EMAIL", "");
+        password = userPreferences.getString("SAVED_PROFILE_PASSWORD", "");
+        profileName = userPreferences.getString("SAVED_PROFILE_NAME", "");
+
+
         userName = userPreferences.getString("PROFILE_USERNAME", "");
         password = userPreferences.getString("PROFILE_PASSWORD", "");
+
         whereText = findViewById(R.id.whereText);
         userExtras=getIntent().getExtras();
         if(userExtras !=null){

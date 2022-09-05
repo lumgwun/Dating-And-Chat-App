@@ -61,14 +61,12 @@ import org.jetbrains.annotations.NotNull;
 
 import eightbitlab.com.blurview.BlurAlgorithm;
 import eightbitlab.com.blurview.BlurView;
-import eightbitlab.com.blurview.RenderScriptBlur;
 
 public class BaseActivity extends AppCompatActivity {
     private static final String TAG = BaseActivity.class.getSimpleName();
     private static String DUMMY_VALUE = "dummy_value";
     protected ActionBar actionBar;
     private BlurAlgorithm blurAlgorithm;
-
     private ProgressDialog progressDialog = null;
     public final List<String> listOfImages = new ArrayList<>();
     public final List<Notification> listOfNotification = new ArrayList<>();
@@ -557,29 +555,29 @@ public class BaseActivity extends AppCompatActivity {
         RedeemRequest model3 = new RedeemRequest();
         RedeemRequest model4 = new RedeemRequest();
 
-        model1.setId("RED45HJP89");
-        model1.setDiamondCount(10000);
-        model1.setDate("5 Feb 2021");
-        model1.setType(0);
+        model1.setRr_Id(987);
+        model1.setRr_Count(10000);
+        model1.setRr_Date("5 Feb 2021");
+        model1.setRr_Type(0);
 
 
-        model2.setId("RED45HJP88");
-        model2.setDiamondCount(6000);
-        model2.setDate("1 Sep 2021");
-        model2.setType(1);
-        model2.setAmount("$2550");
+        model2.setRr_Id(654);
+        model2.setRr_Count(6000);
+        model2.setRr_Date("1 Sep 2021");
+        model2.setRr_Type(1);
+        model2.setRr_Amount("$2550");
 
-        model3.setId("RED45HJP87");
-        model3.setDiamondCount(7400);
-        model3.setDate("5 Oct 2021");
-        model3.setType(1);
-        model3.setAmount("$250");
+        model3.setRr_Id(6432);
+        model3.setRr_Count(7400);
+        model3.setRr_Date("5 Oct 2021");
+        model3.setRr_Type(1);
+        model3.setRr_Amount("$250");
 
-        model4.setId("RED45HJP86");
-        model4.setDiamondCount(8000);
-        model4.setDate("25 Sep 2021");
-        model4.setType(1);
-        model4.setAmount("$2650");
+        model4.setRr_Id(7654);
+        model4.setRr_Count(8000);
+        model4.setRr_Date("25 Sep 2021");
+        model4.setRr_Type(1);
+        model4.setRr_Amount("$2650");
 
 
         listOfRedeems.add(model1);
@@ -599,33 +597,33 @@ public class BaseActivity extends AppCompatActivity {
         DiamondHistory model6 = new DiamondHistory();
 
 
-        model1.setCount(500);
-        model1.setDate("25 Sep 2021");
-        model1.setFrom("LIVESTREAM");
+        model1.setdH_Count(500);
+        model1.setdH_Date("25 Sep 2021");
+        model1.setdH_From("LIVESTREAM");
 
 
-        model2.setCount(50);
-        model2.setDate("15 Sep 2021");
-        model2.setFrom(getString(R.string.chatting));
+        model2.setdH_Count(50);
+        model2.setdH_Date("15 Sep 2021");
+        model2.setdH_From(getString(R.string.chatting));
 
 
-        model3.setCount(5);
-        model3.setDate("5 Sep 2021");
-        model3.setFrom("VIDEO CALL");
+        model3.setdH_Count(5);
+        model3.setdH_Date("5 Sep 2021");
+        model3.setdH_From("VIDEO CALL");
 
 
-        model4.setCount(50);
-        model4.setDate("5 Oct 2021");
-        model4.setFrom("LIVESTREAM");
+        model4.setdH_Count(50);
+        model4.setdH_Date("5 Oct 2021");
+        model4.setdH_From("LIVESTREAM");
 
 
-        model5.setCount(40);
-        model5.setDate("5 Fab 2021");
-        model5.setFrom(getString(R.string.chatting));
+        model5.setdH_Count(40);
+        model5.setdH_Date("5 Fab 2021");
+        model5.setdH_From(getString(R.string.chatting));
 
-        model6.setCount(10);
-        model6.setDate("5 Sep 2021");
-        model6.setFrom(getString(R.string.chatting));
+        model6.setdH_Count(10);
+        model6.setdH_Date("5 Sep 2021");
+        model6.setdH_From(getString(R.string.chatting));
 
 
         listOfDiamondHistory.add(model1);
