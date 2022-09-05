@@ -30,7 +30,7 @@ public class App extends Application {
     public static final String TAG = App.class.getSimpleName();
 
     private static App instance;
-    public static final String USER_DEFAULT_PASSWORD = "@SuperBlox";
+    public static final String USER_DEFAULT_PASSWORD = "quickblox";
     public static final int CHAT_PORT = 5223;
     public static final int SOCKET_TIMEOUT = 300;
     public static final boolean KEEP_ALIVE = true;
@@ -188,6 +188,9 @@ public class App extends Application {
             throw new AssertionError(getString(R.string.error_chat_credentails_empty));
         }
     }
+
+
+
 
     private void initCredentials() {
 

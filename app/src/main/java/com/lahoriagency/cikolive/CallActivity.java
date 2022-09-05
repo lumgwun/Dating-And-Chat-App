@@ -86,8 +86,6 @@ import java.util.Set;
 
 import static com.lahoriagency.cikolive.Classes.CallService.ONE_OPPONENT;
 import static com.lahoriagency.cikolive.Classes.CallService.ReconnectionState.COMPLETED;
-import static com.lahoriagency.cikolive.Classes.CallService.ReconnectionState.FAILED;
-import static com.lahoriagency.cikolive.Classes.CallService.ReconnectionState.IN_PROGRESS;
 import static com.quickblox.videochat.webrtc.BaseSession.QBRTCSessionState.QB_RTC_SESSION_PENDING;
 
 
