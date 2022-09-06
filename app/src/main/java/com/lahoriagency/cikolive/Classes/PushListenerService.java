@@ -15,8 +15,8 @@ public class PushListenerService extends QBFcmPushListenerService {
     private static final int NOTIFICATION_ID = 1;
 
     protected void showNotification(String message) {
-        NotificationUtils.showNotification(App.getInstance(), SplashActivity.class,
-                App.getInstance().getString(R.string.notification_title), message,
+        NotificationUtils.showNotification(AppChat.getInstance(), SplashActivity.class,
+                AppChat.getInstance().getString(R.string.notification_title), message,
                 R.drawable.logo_yellow, NOTIFICATION_ID);
     }
 

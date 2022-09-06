@@ -29,7 +29,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.lahoriagency.cikolive.Classes.App;
+import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
 import com.lahoriagency.cikolive.Classes.CityName;
 import com.lahoriagency.cikolive.Classes.Comments;
@@ -84,15 +84,15 @@ public class BaseActivity extends AppCompatActivity {
     private Snackbar snackbar;
 
     protected SharedPrefsHelper getSharedPrefsHelper() {
-        return ((App) getApplicationContext()).getSharedPrefsHelper();
+        return ((AppChat) getApplicationContext()).getSharedPrefsHelper();
     }
 
     protected ChatHelper getChatHelper() {
-        return ((App) getApplicationContext()).getChatHelper();
+        return ((AppChat) getApplicationContext()).getChatHelper();
     }
 
     protected DialogsManager getDialogsManager() {
-        return ((App) getApplicationContext()).getDialogsManager();
+        return ((AppChat) getApplicationContext()).getDialogsManager();
     }
 
 
@@ -132,7 +132,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         actionBar = getSupportActionBar();
-        requestExecutor = App.getInstance().getQbResRequestExecutor();
+        requestExecutor = AppChat.getInstance().getQbResRequestExecutor();
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
         blurAlgorithm= new BlurAlgorithm() {
             @Override

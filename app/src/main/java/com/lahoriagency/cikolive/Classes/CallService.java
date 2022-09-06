@@ -29,7 +29,7 @@ import com.lahoriagency.cikolive.CallActivity;
 import com.lahoriagency.cikolive.Fragments.AudioConversationFragment;
 import com.lahoriagency.cikolive.Fragments.VideoConversationFragment;
 import com.lahoriagency.cikolive.R;
-import com.lahoriagency.cikolive.Video_And_Call.BaseConversationFragment;
+import com.lahoriagency.cikolive.Conference.BaseConversationFragment;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.conference.ConferenceClient;
 import com.quickblox.conference.ConferenceSession;
@@ -939,7 +939,7 @@ public class CallService extends Service {
         @Override
         public void onLocalAudioTrackReceive(ConferenceSession conferenceSession, QBRTCAudioTrack qbrtcAudioTrack) {
             Log.d(TAG, "onLocalAudioTrackReceive()");
-            boolean isMicEnabled = ((App) getApplicationContext()).getSharedPrefsHelper().get(Consts.PREF_MIC_ENABLED, true);
+            boolean isMicEnabled = ((AppChat) getApplicationContext()).getSharedPrefsHelper().get(Consts.PREF_MIC_ENABLED, true);
             currentSession.getMediaStreamManager().getLocalAudioTrack().setEnabled(isMicEnabled);
         }
 

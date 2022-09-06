@@ -102,7 +102,7 @@ public class AttachmentPreviewAdapter extends BaseListAdapter<File> {
         }
 
         final File attachmentFile = getItem(position);
-        Glide.with(App.getInstance())
+        Glide.with(AppChat.getInstance())
                 .load(attachmentFile)
                 .override(ResourceUtils.getDimen(R.dimen.chat_attachment_preview_size),
                         ResourceUtils.getDimen(R.dimen.chat_attachment_preview_size))

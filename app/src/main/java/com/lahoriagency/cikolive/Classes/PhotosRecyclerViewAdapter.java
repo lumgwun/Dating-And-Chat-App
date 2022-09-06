@@ -44,7 +44,7 @@ public class PhotosRecyclerViewAdapter extends RecyclerView.Adapter<PhotosRecycl
     public PhotosRecyclerViewAdapter(Activity activity, OnStartDragListener dragStartListener) {
         parentActivity = activity;
         mDragStartListener = dragStartListener;
-        imageLoader = App.getImageLoader();
+        imageLoader = AppChat.getImageLoader();
         QBUser user = SharedPrefsHelper.getInstance().getQbUser();
         QBUserCustomData customData;
         if (user.getCustomData() != null) {

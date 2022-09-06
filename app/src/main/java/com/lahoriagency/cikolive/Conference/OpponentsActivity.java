@@ -1,4 +1,4 @@
-package com.lahoriagency.cikolive.Video_And_Call;
+package com.lahoriagency.cikolive.Conference;
 
 import android.app.ActivityManager;
 import android.app.NotificationManager;
@@ -34,7 +34,6 @@ import com.lahoriagency.cikolive.Classes.WebRtcSessionManager;
 import com.lahoriagency.cikolive.R;
 import com.lahoriagency.cikolive.SettingsActivity;
 import com.lahoriagency.cikolive.SignInActivity;
-import com.lahoriagency.cikolive.SuperAdmin.SuperAdminOffice;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;

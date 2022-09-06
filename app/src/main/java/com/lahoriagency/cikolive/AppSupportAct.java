@@ -1,6 +1,5 @@
 package com.lahoriagency.cikolive;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.content.BroadcastReceiver;
@@ -25,8 +24,6 @@ import com.lahoriagency.cikolive.Classes.Consts;
 import com.lahoriagency.cikolive.Classes.KeyboardUtils;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.ToastUtils;
-import com.lahoriagency.cikolive.SuperAdmin.SuperAdminOffice;
-import com.lahoriagency.cikolive.Video_And_Call.OpponentsActivity;
 import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.auth.session.QBSettings;
 import com.quickblox.core.QBEntityCallback;

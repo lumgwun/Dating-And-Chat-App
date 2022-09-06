@@ -2,7 +2,7 @@ package com.lahoriagency.cikolive.Classes;
 
 import android.util.Log;
 
-import com.lahoriagency.cikolive.Interfaces.QBDialogsHolder;
+import com.lahoriagency.cikolive.Conference.QBDialogsHolder;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialogType;

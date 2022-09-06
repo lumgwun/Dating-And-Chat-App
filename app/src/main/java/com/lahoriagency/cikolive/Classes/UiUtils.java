@@ -15,7 +15,6 @@ import com.lahoriagency.cikolive.R;
 import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.PublicKey;
-import java.security.Security;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
 import java.util.HashMap;
@@ -91,8 +90,8 @@ public class UiUtils {
     public static int getCircleColor(@IntRange(from = RANDOM_COLOR_START_RANGE, to = RANDOM_COLOR_END_RANGE)
                                              int colorPosition) {
         String colorIdName = String.format("random_color_%d", colorPosition + 1);
-        int colorId = App.getInstance().getResources()
-                .getIdentifier(colorIdName, "color", App.getInstance().getPackageName());
+        int colorId = AppChat.getInstance().getResources()
+                .getIdentifier(colorIdName, "color", AppChat.getInstance().getPackageName());
 
         return ResourceUtils.getColor(colorId);
     }

@@ -35,7 +35,7 @@ public class SharedPrefsHelper {
 
     public SharedPrefsHelper() {
         instance = this;
-        sharedPreferences = App.getInstance().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = AppChat.getInstance().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
     }
 
     public void delete(String key) {

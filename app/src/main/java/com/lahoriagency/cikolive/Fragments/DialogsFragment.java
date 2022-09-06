@@ -24,11 +24,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lahoriagency.cikolive.Adapters.DialogAdapter44;
-import com.lahoriagency.cikolive.Adapters.DialogsAdapter;
 import com.lahoriagency.cikolive.Adapters.HorizontalListDialogsRecyclerViewAdapter;
 import com.lahoriagency.cikolive.ChatAct;
-import com.lahoriagency.cikolive.Classes.App;
-import com.lahoriagency.cikolive.Classes.BaseAsyncTask;
+import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
 import com.lahoriagency.cikolive.Classes.DialogsManager;
@@ -148,7 +146,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     }
 
     private void initHorizontalRecyclerView(View viewRoot){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(App.getAppContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(AppChat.getAppContext(), LinearLayoutManager.HORIZONTAL, false);
         horizontalDialogsRecyclerView = viewRoot.findViewById(R.id.list_dialogs_profile_recyclerview);
         horizontalDialogsRecyclerView.setLayoutManager(layoutManager);
         horizontalDialogsAdapter = new HorizontalListDialogsRecyclerViewAdapter(getActivity(), new ArrayList<>(QbDialogHolder.getInstance().getDialogs().values()) );
@@ -204,7 +202,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
         dialogsAdapter.setHasStableIds(true);
         dialogsRecyclerView.setAdapter(dialogsAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(App.getAppContext(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(AppChat.getAppContext(), LinearLayoutManager.VERTICAL, false);
         dialogsRecyclerView.setLayoutManager(layoutManager);
         ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(dialogsAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
@@ -303,7 +301,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             @Override
             public void onError(QBResponseException e) {
                 setOnRefreshListener.setRefreshing(false);
-                Toast.makeText(App.getAppContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AppChat.getAppContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -320,7 +318,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     }
 
     private void getUserDialogInfo(String userIds) {
-        UserProfileInfoRequest userDialogInfoModel = new UserProfileInfoRequest(App.getPreferences().getUserId(), userIds);
+        UserProfileInfoRequest userDialogInfoModel = new UserProfileInfoRequest(AppChat.getPreferences().getUserId(), userIds);
         GetUsersProfileInfo baseAsyncTask = new GetUsersProfileInfo(ServerMethodsConsts.USERSPROFILEINFO, userDialogInfoModel);
         baseAsyncTask.setHttpMethod("POST");
         baseAsyncTask.execute();
@@ -330,14 +328,14 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     public void onResume() {
         super.onResume();
         googlePlayServicesHelper.checkPlayServicesAvailable();
-        LocalBroadcastManager.getInstance(App.getAppContext()).registerReceiver(pushBroadcastReceiver,
+        LocalBroadcastManager.getInstance(AppChat.getAppContext()).registerReceiver(pushBroadcastReceiver,
                 new IntentFilter(GcmConsts.ACTION_NEW_GCM_EVENT));
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(App.getAppContext()).unregisterReceiver(pushBroadcastReceiver);
+        LocalBroadcastManager.getInstance(AppChat.getAppContext()).unregisterReceiver(pushBroadcastReceiver);
     }
 
     @Override
@@ -449,7 +447,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            UserProfileInfoReply userProfileInfoReply = App.getGson().fromJson(result, UserProfileInfoReply.class);
+            UserProfileInfoReply userProfileInfoReply = AppChat.getGson().fromJson(result, UserProfileInfoReply.class);
             if (userProfileInfoReply.isStatusOkay()) {
                 for (UserProfileInfoModel model : userProfileInfoReply.getUsersProfileInfo()) {
                     UserProfileInfo profileInfo = new UserProfileInfo(model);

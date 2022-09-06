@@ -21,7 +21,7 @@ import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.lahoriagency.cikolive.Classes.App;
+import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.MyPreferences;
 import com.lahoriagency.cikolive.Classes.PreferencesManager;
 import com.lahoriagency.cikolive.Interfaces.OnLoginChangeView;
@@ -51,8 +51,8 @@ public class FacebookAct extends AppCompatActivity {
         txtHashKey = findViewById(R.id.tv_hashKey);
         FacebookSdk.sdkInitialize(FacebookAct.this);
         callbackManager = CallbackManager.Factory.create();
-        preferencesManager = App.getPreferencesManager();
-        myPreferences = App.getPreferences();
+        preferencesManager = AppChat.getPreferencesManager();
+        myPreferences = AppChat.getPreferences();
         dOfacebookLogin();
 
     }

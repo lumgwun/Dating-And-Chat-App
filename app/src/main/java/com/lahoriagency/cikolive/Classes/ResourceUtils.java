@@ -10,19 +10,19 @@ import androidx.annotation.StringRes;
 
 public class ResourceUtils {
     public static String getString(@StringRes int stringId) {
-        return App.getInstance().getString(stringId);
+        return AppChat.getInstance().getString(stringId);
     }
 
     public static Drawable getDrawable(@DrawableRes int drawableId) {
-        return App.getInstance().getResources().getDrawable(drawableId);
+        return AppChat.getInstance().getResources().getDrawable(drawableId);
     }
 
     public static int getColor(@ColorRes int colorId) {
-        return App.getInstance().getResources().getColor(colorId);
+        return AppChat.getInstance().getResources().getColor(colorId);
     }
 
     public static int getDimen(@DimenRes int dimenId) {
-        return (int) App.getInstance().getResources().getDimension(dimenId);
+        return (int) AppChat.getInstance().getResources().getDimension(dimenId);
     }
 
     public static int dpToPx(int dp) {

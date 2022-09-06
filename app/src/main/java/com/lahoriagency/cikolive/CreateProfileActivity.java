@@ -39,7 +39,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -90,7 +89,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
 import com.lahoriagency.cikolive.Adapters.AddImageAdapter;
-import com.lahoriagency.cikolive.Classes.App;
+import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.Consts;
 import com.lahoriagency.cikolive.Classes.QBResRequestExecutor;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
@@ -726,7 +725,7 @@ public class CreateProfileActivity extends BaseActivity {
             qbUser = new QBUser();
             qbUser.setLogin(userLogin);
             qbUser.setFullName(userFullName);
-            qbUser.setPassword(App.USER_DEFAULT_PASSWORD);
+            qbUser.setPassword(AppChat.USER_DEFAULT_PASSWORD);
         }
         return qbUser;
     }

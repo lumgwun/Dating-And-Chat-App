@@ -20,7 +20,7 @@ import androidx.cardview.widget.CardView;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarChangeListener;
 import com.facebook.login.LoginManager;
-import com.lahoriagency.cikolive.Classes.App;
+import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
 import com.lahoriagency.cikolive.Classes.MyPreferences;
@@ -36,7 +36,7 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.messages.services.SubscribeService;
 import com.quickblox.users.QBUsers;
 
-import static com.lahoriagency.cikolive.Classes.App.TAG;
+import static com.lahoriagency.cikolive.Classes.AppChat.TAG;
 
 @SuppressWarnings("deprecation")
 public class SettingsActivity extends AppCompatActivity {
@@ -63,8 +63,8 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_settings);
-        preferencesManager = App.getPreferencesManager();
-        myPreferences = App.getPreferences();
+        preferencesManager = AppChat.getPreferencesManager();
+        myPreferences = AppChat.getPreferences();
         menSwitch = findViewById(R.id.sex_preference_men_switch);
         womenSwitch = findViewById(R.id.sex_preference_women_switch);
         sexPreferenceTextView = findViewById(R.id.sex_preference_textview);
@@ -227,7 +227,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void QBuserLogout() {
         // TODO LOGOUT
         ChatHelper.getInstance().destroy();
-        SubscribeService.unSubscribeFromPushes(App.getAppContext());
+        SubscribeService.unSubscribeFromPushes(AppChat.getAppContext());
         SharedPrefsHelper.getInstance().removeQbUser();
         QbDialogHolder.getInstance().clear();
 

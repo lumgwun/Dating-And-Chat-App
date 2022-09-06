@@ -1,4 +1,4 @@
-package com.lahoriagency.cikolive.Interfaces;
+package com.lahoriagency.cikolive.Conference;
 
 import com.quickblox.users.model.QBUser;
 

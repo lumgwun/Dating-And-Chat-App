@@ -17,8 +17,8 @@ import com.quickblox.core.exception.QBResponseException;
 import java.util.List;
 
 public class ErrorUtils {
-    private static final String NO_CONNECTION_ERROR = App.getInstance().getString(R.string.no_connection_error);
-    private static final String NO_RESPONSE_TIMEOUT = App.getInstance().getString(R.string.no_responce_timeout);
+    private static final String NO_CONNECTION_ERROR = AppChat.getInstance().getString(R.string.no_connection_error);
+    private static final String NO_RESPONSE_TIMEOUT = AppChat.getInstance().getString(R.string.no_responce_timeout);
     private static Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
     private ErrorUtils() {
@@ -61,7 +61,7 @@ public class ErrorUtils {
 
     public static Snackbar showSnackbar(View view, @StringRes int errorMessage, String error,
                                         @StringRes int actionLabel, View.OnClickListener clickListener) {
-        String errorMessageString = App.getInstance().getString(errorMessage);
+        String errorMessageString = AppChat.getInstance().getString(errorMessage);
         String message = String.format("%s: %s", errorMessageString, error);
         return showSnackbar(view, message, actionLabel, clickListener);
     }

@@ -76,7 +76,7 @@ public class GetFilepathFromUriTask extends BaseAsyncTask<Intent, Void, File> {
 
         boolean isUriSchemeContent = uri.getScheme() != null && uri.getScheme().equals(ContentResolver.SCHEME_CONTENT);
         if (TextUtils.isEmpty(fileExtension) && isUriSchemeContent) {
-            ContentResolver contentResolver = App.getInstance().getContentResolver();
+            ContentResolver contentResolver = AppChat.getInstance().getContentResolver();
             MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
             fileExtension = mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
         }
@@ -95,7 +95,7 @@ public class GetFilepathFromUriTask extends BaseAsyncTask<Intent, Void, File> {
     private File getFileFromCache(String fileName) {
         File foundFile = null;
 
-        File dir = new File(App.getInstance().getCacheDir().getAbsolutePath());
+        File dir = new File(AppChat.getInstance().getCacheDir().getAbsolutePath());
 
         if (dir.exists()) {
             for (File file : dir.listFiles()) {
@@ -110,9 +110,9 @@ public class GetFilepathFromUriTask extends BaseAsyncTask<Intent, Void, File> {
     }
 
     private File createAndWriteFileToCache(String fileName, Uri uri) throws Exception {
-        File resultFile = new File(App.getInstance().getCacheDir(), fileName);
+        File resultFile = new File(AppChat.getInstance().getCacheDir(), fileName);
 
-        ParcelFileDescriptor parcelFileDescriptor = App.getInstance().getContentResolver().openFileDescriptor(uri, "r");
+        ParcelFileDescriptor parcelFileDescriptor = AppChat.getInstance().getContentResolver().openFileDescriptor(uri, "r");
         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
 
         InputStream inputStream = new FileInputStream(fileDescriptor);

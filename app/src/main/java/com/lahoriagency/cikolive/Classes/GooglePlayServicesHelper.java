@@ -34,6 +34,6 @@ public class GooglePlayServicesHelper {
 
     private int getPlayServicesAvailabilityResultCode() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        return apiAvailability.isGooglePlayServicesAvailable(App.getInstance());
+        return apiAvailability.isGooglePlayServicesAvailable(AppChat.getInstance());
     }
 }

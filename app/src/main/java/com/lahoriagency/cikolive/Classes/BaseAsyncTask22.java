@@ -42,7 +42,7 @@ public class BaseAsyncTask22<T> extends AsyncTask<String, Void, String> {
                 OutputStream os = connection.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));
-                writer.write(App.getGson().toJson(requestParams));
+                writer.write(AppChat.getGson().toJson(requestParams));
                 writer.flush();
                 writer.close();
                 os.close();

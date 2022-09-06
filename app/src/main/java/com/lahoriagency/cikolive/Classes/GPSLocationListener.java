@@ -9,8 +9,8 @@ public class GPSLocationListener implements LocationListener {
     PreferencesManager preferencesManager;
     MyPreferences myPreferences;
     public GPSLocationListener() {
-        preferencesManager = App.getPreferencesManager();
-        myPreferences = App.getPreferences();
+        preferencesManager = AppChat.getPreferencesManager();
+        myPreferences = AppChat.getPreferences();
     }
 
     @Override

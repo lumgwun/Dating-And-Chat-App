@@ -96,8 +96,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".Video_And_Call.PermissionsActivity" />
-        <activity android:name=".Video_And_Call.OpponentsActivity" />
+        <activity android:name=".Conference.PermissionsActivity" />
+        <activity android:name=".Conference.OpponentsActivity" />
         <activity android:name=".CallActivity" />
         <activity android:name=".LoginDirectory" />
         <activity android:name=".ChatAct" />

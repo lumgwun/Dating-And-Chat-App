@@ -1,7 +1,6 @@
 package com.lahoriagency.cikolive.Adapters;
 
 import android.content.Context;
-import android.opengl.GLSurfaceView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,10 +16,10 @@ import android.widget.ToggleButton;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.lahoriagency.cikolive.Classes.App;
+import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.QBRTCSessionUtils;
 import com.lahoriagency.cikolive.R;
-import com.lahoriagency.cikolive.Video_And_Call.BaseConversationFragment;
+import com.lahoriagency.cikolive.Conference.BaseConversationFragment;
 import com.quickblox.conference.ConferenceSession;
 import com.quickblox.conference.view.QBConferenceSurfaceView;
 import com.quickblox.users.model.QBUser;
@@ -151,7 +150,7 @@ public class OpponentsFromCallAdapter extends RecyclerView.Adapter<OpponentsFrom
         holder.getOpponentView().setId(user.getId());
         holder.setUserId(userID);
         String username = TextUtils.isEmpty(user.getFullName()) ? user.getLogin() : user.getFullName();
-        QBUser currentUser = ((App) context.getApplicationContext()).getSharedPrefsHelper().getQbUser();
+        QBUser currentUser = ((AppChat) context.getApplicationContext()).getSharedPrefsHelper().getQbUser();
         if (Objects.equals(userID, currentUser.getId())) {
             holder.opponentName.setText(R.string.you);
         } else {

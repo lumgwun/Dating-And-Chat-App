@@ -16,11 +16,8 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.util.Log;
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.ParcelFileDescriptor;
-import android.provider.MediaStore;
+
 import androidx.fragment.app.Fragment;
 
 
@@ -38,19 +35,10 @@ import java.util.List;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
 
 import com.lahoriagency.cikolive.Interfaces.MimeType;
 import com.lahoriagency.cikolive.R;
 import com.quickblox.core.io.IOUtils;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class ImageUtils {
@@ -79,7 +67,7 @@ public class ImageUtils {
     private ImageUtils() {
     }
     public static String saveUriToFile(Uri uri) throws Exception {
-        ParcelFileDescriptor parcelFileDescriptor = App.getInstance().getContentResolver().openFileDescriptor(uri, "r");
+        ParcelFileDescriptor parcelFileDescriptor = AppChat.getInstance().getContentResolver().openFileDescriptor(uri, "r");
         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
 
         InputStream inputStream = new FileInputStream(fileDescriptor);
@@ -144,13 +132,13 @@ public class ImageUtils {
         // TODO Files: Uncomment to add sending all file types
         //chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(videoIntent));
 
-        ComponentName component = chooser.resolveActivity(App.getInstance().getPackageManager());
+        ComponentName component = chooser.resolveActivity(AppChat.getInstance().getPackageManager());
         if (component != null) {
             File mediaFile = getTemporaryCameraFile(fragment.getContext());
             pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getValidUri(mediaFile, fragment.getContext()));
             fragment.startActivityForResult(chooser, CAMERA_REQUEST_CODE);
         }
-        if (pictureIntent.resolveActivity(App.getInstance().getPackageManager()) == null) {
+        if (pictureIntent.resolveActivity(AppChat.getInstance().getPackageManager()) == null) {
             return;
         }
 
@@ -311,7 +299,7 @@ public class ImageUtils {
 
     private static File loadFileFromGoogleDocs(Uri uri, Context context) {
         File driveFile = null;
-        Cursor cursor = App.getInstance().getContentResolver().query(uri, null, null, null, null);
+        Cursor cursor = AppChat.getInstance().getContentResolver().query(uri, null, null, null, null);
         if (cursor != null) {
             int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             cursor.moveToFirst();

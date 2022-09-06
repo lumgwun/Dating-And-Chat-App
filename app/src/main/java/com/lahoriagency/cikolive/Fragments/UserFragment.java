@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
-import com.lahoriagency.cikolive.Classes.App;
+import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.ImageLoader;
 import com.lahoriagency.cikolive.Classes.MyPreferences;
 import com.lahoriagency.cikolive.Classes.QBUserCustomData;
@@ -31,7 +31,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UserFragment extends Fragment {
     public static final int REQUEST_SETTINGS_CODE = 231;
 
-    private final MyPreferences myPreferences = App.getPreferences();
+    private final MyPreferences myPreferences = AppChat.getPreferences();
 
     private ImageLoader imageLoader;
     private CircleImageView profilePhoto;
@@ -39,7 +39,7 @@ public class UserFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.imageLoader = App.getImageLoader();
+        this.imageLoader = AppChat.getImageLoader();
     }
     @Nullable
     @Override

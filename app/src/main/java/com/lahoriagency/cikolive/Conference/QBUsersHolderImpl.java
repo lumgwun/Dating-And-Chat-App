@@ -1,8 +1,8 @@
-package com.lahoriagency.cikolive.Classes;
+package com.lahoriagency.cikolive.Conference;
 
 import android.util.SparseArray;
 
-import com.lahoriagency.cikolive.Interfaces.QBUsersHolder;
+import com.lahoriagency.cikolive.Conference.QBUsersHolder;
 import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;

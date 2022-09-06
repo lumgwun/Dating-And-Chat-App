@@ -18,7 +18,7 @@ public class StorageUtils {
                 .append(File.separator)
                 .append("data")
                 .append(File.separator)
-                .append(App.getInstance().getPackageName())
+                .append(AppChat.getInstance().getPackageName())
                 .append(File.separator);
 
         return sb.toString();

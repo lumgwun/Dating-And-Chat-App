@@ -10,8 +10,8 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
-import com.lahoriagency.cikolive.Interfaces.QBDialogsHolder;
-import com.lahoriagency.cikolive.Interfaces.QBUsersHolder;
+import com.lahoriagency.cikolive.Conference.QBDialogsHolder;
+import com.lahoriagency.cikolive.Conference.QBUsersHolderImpl;
 import com.lahoriagency.cikolive.R;
 import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.auth.session.QBSessionParameters;
@@ -26,10 +26,10 @@ import static com.lahoriagency.cikolive.Utils.Const.PREF_NAME;
 
 ;
 
-public class App extends Application {
-    public static final String TAG = App.class.getSimpleName();
+public class AppChat extends Application {
+    public static final String TAG = AppChat.class.getSimpleName();
 
-    private static App instance;
+    private static AppChat instance;
     public static final String USER_DEFAULT_PASSWORD = "quickblox";
     public static final int CHAT_PORT = 5223;
     public static final int SOCKET_TIMEOUT = 300;
@@ -78,8 +78,8 @@ public class App extends Application {
         instance = this;
         ActivityLifecycle.init(this);
         //initQbConfigs();
-        App.context = getApplicationContext();
-        preferencesManager = new PreferencesManager(App.context);
+        AppChat.context = getApplicationContext();
+        preferencesManager = new PreferencesManager(AppChat.context);
         preferences = preferencesManager.getMyPreferences();
         imageLoader = new ImageLoader();
         initConferenceConfig();
@@ -288,7 +288,7 @@ public class App extends Application {
         qbConfigs = CoreConfigUtils.getCoreConfigsOrNull(getQbConfigFileName());
     }*/
 
-    public static synchronized App getInstance() {
+    public static synchronized AppChat getInstance() {
         return instance;
     }
 
@@ -306,7 +306,7 @@ public class App extends Application {
     }*/
 
     public static Context getAppContext() {
-        return App.context;
+        return AppChat.context;
     }
 
     public static ImageLoader getImageLoader() {

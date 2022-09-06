@@ -1,6 +1,5 @@
 package com.lahoriagency.cikolive.SuperAdmin;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import android.content.Context;
@@ -10,20 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-
 import com.lahoriagency.cikolive.BaseActivity;
-import com.lahoriagency.cikolive.Classes.App;
+import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.ToastUtils;
-import com.lahoriagency.cikolive.MessagesActivity;
-import com.lahoriagency.cikolive.Video_And_Call.OpponentsActivity;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 
@@ -85,7 +74,7 @@ public class SuperLoginAct extends BaseActivity {
     private void signIn() {
         showProgressDialog(R.string.dlg_sign_in);
         String login = editTextLogin.getText().toString().trim();
-        final QBUser qbUser = new QBUser(login, App.DEFAULT_USER_PASSWORD);
+        final QBUser qbUser = new QBUser(login, AppChat.DEFAULT_USER_PASSWORD);
         qbUser.setFullName(login);
 
         QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {

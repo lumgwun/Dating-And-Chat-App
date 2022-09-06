@@ -13,7 +13,7 @@ import com.lahoriagency.cikolive.Classes.CollectionsUtils;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.UiUtils;
 import com.lahoriagency.cikolive.R;
-import com.lahoriagency.cikolive.Video_And_Call.BaseConversationFragment;
+import com.lahoriagency.cikolive.Conference.BaseConversationFragment;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.AppRTCAudioManager;
 

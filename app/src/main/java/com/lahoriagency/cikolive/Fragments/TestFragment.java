@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.kofigyan.stateprogressbar.StateProgressBar;
-import com.lahoriagency.cikolive.Classes.App;
+import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
 import com.lahoriagency.cikolive.Classes.MyPreferences;
 import com.lahoriagency.cikolive.Classes.PersonalityTrait;
@@ -56,7 +56,7 @@ public class TestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_test, container, false);
-        myPreferences = App.getPreferences();
+        myPreferences = AppChat.getPreferences();
 
         range = 120;
         actualScreen = 0;

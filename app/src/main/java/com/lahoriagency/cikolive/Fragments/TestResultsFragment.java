@@ -14,13 +14,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.lahoriagency.cikolive.Classes.App;
+import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
 import com.lahoriagency.cikolive.Classes.MyPreferences;
 import com.lahoriagency.cikolive.Classes.PreferencesManager;
 import com.lahoriagency.cikolive.Classes.TestReply;
 import com.lahoriagency.cikolive.Interfaces.ServerMethodsConsts;
-import com.lahoriagency.cikolive.MainActivity;
 import com.lahoriagency.cikolive.R;
 
 public class TestResultsFragment extends Fragment {
@@ -42,8 +41,8 @@ public class TestResultsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_test_results, container, false);
 
-        preferencesManager = App.getPreferencesManager();
-        myPreferences = App.getPreferences();
+        preferencesManager = AppChat.getPreferencesManager();
+        myPreferences = AppChat.getPreferences();
 
         GetResults gR = new GetResults(ServerMethodsConsts.RESULTS + "/" + myPreferences.getUserId());
         gR.execute();
@@ -91,7 +90,7 @@ public class TestResultsFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             if (result != null) {
-                TestReply testReply = App.getGson().fromJson(result, TestReply.class);
+                TestReply testReply = AppChat.getGson().fromJson(result, TestReply.class);
                 myPreferences.setMbtiType(testReply.getType());
                 preferencesManager.savePreferences();
                 typeTResult.setText(testReply.getType());

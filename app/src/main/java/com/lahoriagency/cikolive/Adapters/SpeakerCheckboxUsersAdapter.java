@@ -9,7 +9,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lahoriagency.cikolive.Classes.App;
+import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.UiUtils;
 import com.lahoriagency.cikolive.R;
 import com.quickblox.users.model.QBUser;
@@ -33,7 +33,7 @@ public class SpeakerCheckboxUsersAdapter extends BaseAdapter {
         this.context = context;
         selectedUsers = new HashSet<>();
         this.audioEnabledMap = audioEnabledMap;
-        currentUser = ((App) context.getApplicationContext()).getChatHelper().getCurrentUser();
+        currentUser = ((AppChat) context.getApplicationContext()).getChatHelper().getCurrentUser();
         userList = users;
     }
 

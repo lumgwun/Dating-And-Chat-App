@@ -14,7 +14,7 @@ public class ToastUtils {
     }
 
     public static void shortToast(@StringRes int resource) {
-        show(App.getInstance().getString(resource), Toast.LENGTH_SHORT);
+        show(AppChat.getInstance().getString(resource), Toast.LENGTH_SHORT);
     }
 
     public static void longToast(String message) {
@@ -22,10 +22,10 @@ public class ToastUtils {
     }
 
     public static void longToast(@StringRes int resource) {
-        show(App.getInstance().getString(resource), Toast.LENGTH_LONG);
+        show(AppChat.getInstance().getString(resource), Toast.LENGTH_LONG);
     }
 
     private static void show(String message, int length) {
-        Toast.makeText(App.getInstance(), message, length).show();
+        Toast.makeText(AppChat.getInstance(), message, length).show();
     }
 }

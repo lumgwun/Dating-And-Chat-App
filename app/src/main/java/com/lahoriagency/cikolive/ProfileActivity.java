@@ -20,11 +20,9 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.ybq.parallaxviewpager.ParallaxViewPager;
 import com.lahoriagency.cikolive.Adapters.UserSwipeProfileAdapter;
-import com.lahoriagency.cikolive.Classes.App;
+import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.ImageLoader;
 import com.lahoriagency.cikolive.Classes.UserProfileInfo;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class ProfileActivity extends AppCompatActivity {
@@ -38,7 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_profile);
-        imageLoader = App.getImageLoader();
+        imageLoader = AppChat.getImageLoader();
 
         UserProfileInfo userProfileInfo = (UserProfileInfo) getIntent().getExtras().getParcelable(UserSwipeProfileAdapter.EXTRA_USER_PROFILE);
         swipeViewSource = getIntent().getExtras().getBoolean(UserSwipeProfileAdapter.EXTRA_SWIPE_VIEW_SOURCE);

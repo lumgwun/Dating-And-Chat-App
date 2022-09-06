@@ -60,7 +60,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.lahoriagency.cikolive.BottomSheets.WebBottomSheet;
-import com.lahoriagency.cikolive.Classes.App;
+import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
 import com.lahoriagency.cikolive.Classes.Consts;
@@ -84,7 +84,7 @@ import com.lahoriagency.cikolive.Interfaces.OnLoginChangeView;
 import com.lahoriagency.cikolive.Interfaces.ServerMethodsConsts;
 import com.lahoriagency.cikolive.Utils.Const;
 import com.lahoriagency.cikolive.Utils.SessionManager;
-import com.lahoriagency.cikolive.Video_And_Call.OpponentsActivity;
+import com.lahoriagency.cikolive.Conference.OpponentsActivity;
 import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.QBEntityCallbackImpl;
@@ -164,11 +164,11 @@ public class SignInActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_sign_in);
-        FacebookSdk.sdkInitialize(App.getAppContext());
+        FacebookSdk.sdkInitialize(AppChat.getAppContext());
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         callbackManager = CallbackManager.Factory.create();
-        preferencesManager = App.getPreferencesManager();
-        myPreferences = App.getPreferences();
+        preferencesManager = AppChat.getPreferencesManager();
+        myPreferences = AppChat.getPreferences();
 
 
         if(accessToken != null)
@@ -446,7 +446,7 @@ public class SignInActivity extends BaseActivity {
             qbUser = new QBUser();
             qbUser.setLogin(userLogin);
             qbUser.setFullName(userFullName);
-            qbUser.setPassword(App.USER_DEFAULT_PASSWORD);
+            qbUser.setPassword(AppChat.USER_DEFAULT_PASSWORD);
         }
         return qbUser;
     }
@@ -580,7 +580,7 @@ public class SignInActivity extends BaseActivity {
     private void handleLoginResponse(String response) {
         try {
             if (response != null) {
-                LoginReply loginReply = App.getGson().fromJson(response, LoginReply.class);
+                LoginReply loginReply = AppChat.getGson().fromJson(response, LoginReply.class);
                 if (loginReply.isStatusOkay() | loginReply.getStatus().equals("registered")) {
                     myPreferences.setUserId(loginReply.getUserId());
                     myPreferences.setFirstName(loginReply.getFirstName());
@@ -629,7 +629,7 @@ public class SignInActivity extends BaseActivity {
     private void signIn() {
         showProgressDialog(R.string.dlg_sign_in);
         String login = edtUser.getText().toString().trim();
-        final QBUser qbUser = new QBUser(login, App.DEFAULT_USER_PASSWORD);
+        final QBUser qbUser = new QBUser(login, AppChat.DEFAULT_USER_PASSWORD);
         qbUser.setFullName(login);
 
         QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
@@ -684,7 +684,7 @@ public class SignInActivity extends BaseActivity {
 
 
     private void loginToChat(final QBUser user) {
-        user.setPassword(App.USER_DEFAULT_PASSWORD);
+        user.setPassword(AppChat.USER_DEFAULT_PASSWORD);
         userForSave = user;
         startLoginService(user);
         ChatHelper.getInstance().loginToChat(user, new QBEntityCallback<Void>() {

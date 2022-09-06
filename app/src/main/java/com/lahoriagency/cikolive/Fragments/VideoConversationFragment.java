@@ -28,11 +28,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lahoriagency.cikolive.Adapters.OpponentsFromCallAdapter;
-import com.lahoriagency.cikolive.CallActivity;
 import com.lahoriagency.cikolive.Classes.CallService;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.R;
-import com.lahoriagency.cikolive.Video_And_Call.BaseConversationFragment;
+import com.lahoriagency.cikolive.Conference.BaseConversationFragment;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.BaseSession;
 import com.quickblox.videochat.webrtc.QBRTCSession;
@@ -46,8 +45,6 @@ import com.quickblox.videochat.webrtc.view.QBRTCVideoTrack;
 import org.webrtc.CameraVideoCapturer;
 import org.webrtc.RendererCommon;
 import org.webrtc.SurfaceViewRenderer;
-
-import org.webrtc.VideoSink;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -79,7 +79,7 @@ import com.lahoriagency.cikolive.Interfaces.OnImagePickedListener;
 import com.lahoriagency.cikolive.Interfaces.PaginationHistoryListener;
 import com.lahoriagency.cikolive.Utils.Const;
 import com.lahoriagency.cikolive.Utils.SessionManager;
-import com.lahoriagency.cikolive.Video_And_Call.OpponentsActivity;
+import com.lahoriagency.cikolive.Conference.OpponentsActivity;
 import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBMessageStatusesManager;

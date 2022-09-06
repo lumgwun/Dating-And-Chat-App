@@ -90,14 +90,14 @@ public class ChatHelper {
     private static QBChatService.ConfigurationBuilder buildChatConfigs() {
         QBChatService.ConfigurationBuilder configurationBuilder = new QBChatService.ConfigurationBuilder();
 
-        configurationBuilder.setSocketTimeout(App.SOCKET_TIMEOUT);
-        configurationBuilder.setUseTls(App.USE_TLS);
-        configurationBuilder.setKeepAlive(App.KEEP_ALIVE);
-        configurationBuilder.setAutojoinEnabled(App.AUTO_JOIN);
-        configurationBuilder.setAutoMarkDelivered(App.AUTO_MARK_DELIVERED);
-        configurationBuilder.setReconnectionAllowed(App.RECONNECTION_ALLOWED);
-        configurationBuilder.setAllowListenNetwork(App.ALLOW_LISTEN_NETWORK);
-        configurationBuilder.setPort(App.CHAT_PORT);
+        configurationBuilder.setSocketTimeout(AppChat.SOCKET_TIMEOUT);
+        configurationBuilder.setUseTls(AppChat.USE_TLS);
+        configurationBuilder.setKeepAlive(AppChat.KEEP_ALIVE);
+        configurationBuilder.setAutojoinEnabled(AppChat.AUTO_JOIN);
+        configurationBuilder.setAutoMarkDelivered(AppChat.AUTO_MARK_DELIVERED);
+        configurationBuilder.setReconnectionAllowed(AppChat.RECONNECTION_ALLOWED);
+        configurationBuilder.setAllowListenNetwork(AppChat.ALLOW_LISTEN_NETWORK);
+        configurationBuilder.setPort(AppChat.CHAT_PORT);
 
         return configurationBuilder;
     }

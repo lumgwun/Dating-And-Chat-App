@@ -30,14 +30,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lahoriagency.cikolive.Adapters.OpponentsFromCallAdapter;
-import com.lahoriagency.cikolive.Classes.App;
+import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.CallService;
 import com.lahoriagency.cikolive.Classes.NoChildClickableRecyclerView;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.WebRtcSessionManager;
 import com.lahoriagency.cikolive.Interfaces.Consts;
 import com.lahoriagency.cikolive.Interfaces.ConversationFragmentCallback;
-import com.lahoriagency.cikolive.Interfaces.QBUsersHolder;
 import com.lahoriagency.cikolive.Interfaces.ReconnectionCallback;
 import com.lahoriagency.cikolive.R;
 import com.quickblox.conference.ConferenceSession;
@@ -142,8 +141,8 @@ public class ConversationFragment extends BaseToolBarFragment implements CallSer
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (getActivity() != null && getActivity().getApplicationContext() != null) {
-            qbUsersHolder = ((App) getActivity().getApplicationContext()).getQBUsersHolder();
-            sharedPrefsHelper = ((App) getActivity().getApplicationContext()).getSharedPrefsHelper();
+            qbUsersHolder = ((AppChat) getActivity().getApplicationContext()).getQBUsersHolder();
+            sharedPrefsHelper = ((AppChat) getActivity().getApplicationContext()).getSharedPrefsHelper();
         }
         conversationFragmentCallback.addCurrentCallStateCallback(this);
     }

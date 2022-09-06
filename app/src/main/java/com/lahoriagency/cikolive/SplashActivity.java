@@ -9,7 +9,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Parcelable;
 import android.provider.Settings;
 import android.util.Log;
@@ -23,20 +22,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
-import com.lahoriagency.cikolive.Classes.ChatHelper;
 import com.lahoriagency.cikolive.Classes.Consts;
 import com.lahoriagency.cikolive.Classes.LoginService;
 import com.lahoriagency.cikolive.Classes.PermissionsChecker;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.ToastUtils;
-import com.lahoriagency.cikolive.Utils.Const;
 import com.lahoriagency.cikolive.Utils.SessionManager;
-import com.lahoriagency.cikolive.Video_And_Call.OpponentsActivity;
-import com.quickblox.auth.session.QBSessionManager;
-import com.quickblox.core.QBEntityCallback;
-import com.quickblox.core.exception.QBResponseException;
-import com.quickblox.users.model.QBUser;
 
 import static com.lahoriagency.cikolive.Utils.Const.PREF_NAME;
 

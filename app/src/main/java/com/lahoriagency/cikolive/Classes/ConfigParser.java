@@ -11,7 +11,7 @@ public class ConfigParser {
     private Context context;
 
     public ConfigParser() {
-        context = App.getInstance().getApplicationContext();
+        context = AppChat.getInstance().getApplicationContext();
     }
 
     public String getConfigsAsJsonString(String fileName) throws IOException {

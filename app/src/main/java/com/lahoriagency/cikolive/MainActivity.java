@@ -17,10 +17,8 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.os.StrictMode;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
@@ -42,7 +40,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.multidex.BuildConfig;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -72,7 +69,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 import com.lahoriagency.cikolive.Adapters.AddImageAdapter;
-import com.lahoriagency.cikolive.Classes.App;
+import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
 import com.lahoriagency.cikolive.Classes.GPSLocationListener;
 import com.lahoriagency.cikolive.Classes.LoginReply;
@@ -93,7 +90,6 @@ import com.lahoriagency.cikolive.Fragments.UserFragment;
 import com.lahoriagency.cikolive.Interfaces.OnChangeViewListener;
 import com.lahoriagency.cikolive.Interfaces.OnLoginChangeView;
 import com.lahoriagency.cikolive.Utils.SessionManager;
-import com.lahoriagency.cikolive.Video_And_Call.OpponentsActivity;
 import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
@@ -565,7 +561,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private void handleLoginResponse(String response) {
         try {
             if (response != null) {
-                LoginReply loginReply = App.getGson().fromJson(response, LoginReply.class);
+                LoginReply loginReply = AppChat.getGson().fromJson(response, LoginReply.class);
                 if (loginReply.isStatusOkay() | loginReply.getStatus().equals("registered")) {
                     myPreferences.setUserId(loginReply.getUserId());
                     myPreferences.setFirstName(loginReply.getFirstName());
@@ -627,7 +623,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onError(QBResponseException e) {
                 e.printStackTrace();
-                Toast.makeText(App.getAppContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(AppChat.getAppContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

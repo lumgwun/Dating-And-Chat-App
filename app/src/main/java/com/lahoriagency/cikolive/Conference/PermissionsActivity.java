@@ -1,4 +1,4 @@
-package com.lahoriagency.cikolive.Video_And_Call;
+package com.lahoriagency.cikolive.Conference;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
