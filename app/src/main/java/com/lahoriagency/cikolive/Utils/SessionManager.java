@@ -7,10 +7,11 @@ public class SessionManager {
     private SharedPreferences pref;
     private Context context;
     private SharedPreferences.Editor editor;
+    private static final String PREF_NAME = "Ciko";
 
     public SessionManager(Context con) {
         context = con;
-        pref = context.getSharedPreferences(Const.PREF_NAME, Context.MODE_PRIVATE);
+        pref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = pref.edit();
     }
 

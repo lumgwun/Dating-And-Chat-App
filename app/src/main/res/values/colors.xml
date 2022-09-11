@@ -139,5 +139,34 @@
     <color name="text_color_light_grey">#dedede</color>
     <color name="text_color_medium_dark_grey">#747474</color>
 
+    <color name="colorPrimary">#CA1521</color>
+
+    <color name="lightwhite">#FFDADADA</color>
+    <color name="textheading">#363535</color>
+
+    <color name="black_light">#1f1f1f</color>
+    <color name="brownish_gray">#6e6e6e</color>
+
+    <color name="warm_gray">#757575</color>
+    <color name="warm_gray_two">#9e9e9e</color>
+    <color name="warm_white">#e0e0e0</color>
+
+    <color name="background_chat_color">#f5f6f5</color>
+    <color name="chat_bubble_date_color">#80dedede</color>
+
+
+
+    <color name="random_color_1">#ff9500</color>
+    <color name="random_color_4">#4cd964</color>
+    <color name="random_color_5">#c3c1f2</color>
+    <color name="random_color_6">#a727a5</color>
+    <color name="random_color_8">#d0021b</color>
+    <color name="random_color_9">#166642</color>
+    <color name="random_color_10">#bdbdbd</color>
+
+    <color name="appThemeColor">#CA1521</color>
+
+    <color name="white_green">#A9FF80</color>
+
 
 </resources>

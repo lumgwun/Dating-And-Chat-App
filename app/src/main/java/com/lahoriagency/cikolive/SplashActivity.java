@@ -7,18 +7,22 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
@@ -28,12 +32,15 @@ import com.lahoriagency.cikolive.Classes.PermissionsChecker;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.ToastUtils;
+import com.lahoriagency.cikolive.NewPackage.ChatMainAct;
+import com.lahoriagency.cikolive.NewPackage.SignUpActivity;
 import com.lahoriagency.cikolive.Utils.SessionManager;
+import com.quickblox.users.model.QBUser;
 
-import static com.lahoriagency.cikolive.Utils.Const.PREF_NAME;
+
 
 @SuppressWarnings("deprecation")
-public class SplashActivity extends BaseActivity implements Runnable, View.OnClickListener {
+public class SplashActivity extends AppCompatActivity {
 
     Runnable runnable;
     Handler handler;
@@ -45,6 +52,8 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
 
     private static final int SPLASH_DELAY = 1500;
     private String message;
+    boolean overlayChecked;
+    boolean miOverlayChecked;
 
     private static final String OVERLAY_PERMISSION_CHECKED_KEY = "overlay_checked";
     private static final String MI_OVERLAY_PERMISSION_CHECKED_KEY = "mi_overlay_checked";
@@ -56,11 +65,13 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
     private int profileID;
     private Gson gson,gson1;
     private String json,json1;
-    @Override
+    private QBUser qbUser;
+    private static final String PREF_NAME = "Ciko";
+    /*@Override
     public void onClick(View v) {
         handler.removeCallbacks(this);
         run();
-    }
+    }*/
 
     @SuppressLint("ResourceType")
     @Override
@@ -68,10 +79,37 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_splash);
         savedProfile=new SavedProfile();
+        qbUser= new QBUser();
+        userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        gson = new Gson();
+        gson1= new Gson();
+        json = userPreferences.getString("LastSavedProfileUsed", "");
+        json1 = userPreferences.getString("LastQBUserUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        qbUser = gson.fromJson(json1, QBUser.class);
+        if (qbUser !=null) {
+            LoginService.start(SplashActivity.this, sharedPrefsHelper.getQbUser());
+            Bundle userBundle=new Bundle();
+            userBundle.putParcelable("SavedProfile",savedProfile);
+            userBundle.putParcelable("QBUser", (Parcelable) qbUser);
+            Intent helpIntent = new Intent(SplashActivity.this, SignUpActivity.class);
+            overridePendingTransition(R.anim.slide_in_right,
+                    R.anim.slide_out_left);
+            helpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            helpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(helpIntent);
+            //MainActivity.start(SplashActivity.this);
+
+        }
         loadingBar = (ImageView) findViewById(R.id.logoSplash);
         loadingBar.setBackgroundResource(R.xml.loading);
         loadingAnimation = (AnimationDrawable) loadingBar.getBackground();
-        findViewById(R.id.splash_root).setOnClickListener(this);
+        findViewById(R.id.splash_root).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         tintStatusBar(ContextCompat.getColor(this, R.color.white));
         tintStatusBar(getColor(R.color.app_color));
         fillVersion();
@@ -79,7 +117,7 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
         if (extras != null) {
             message = getIntent().getExtras().getString(Consts.EXTRA_FCM_MESSAGE);
         }
-        sharedPrefsHelper = SharedPrefsHelper.getInstance();
+
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
@@ -91,17 +129,44 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
         }
 
     }
+    public void tintStatusBar(int color) {
+
+
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(color);
+
+    }
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         loadingAnimation.start();
         super.onWindowFocusChanged(hasFocus);
     }
     private void runNextScreen() {
+        savedProfile = new SavedProfile();
+        qbUser = new QBUser();
         userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         gson = new Gson();
+        gson1 = new Gson();
         json = userPreferences.getString("LastSavedProfileUsed", "");
+        json1 = userPreferences.getString("LastQBUsereUsed", "");
         savedProfile = gson.fromJson(json, SavedProfile.class);
-        if (sharedPrefsHelper.hasQbUser()) {
+        qbUser = gson.fromJson(json1, QBUser.class);
+        if (qbUser != null) {
+            LoginService.start(SplashActivity.this, qbUser);
+            Bundle userBundle = new Bundle();
+            userBundle.putParcelable("SavedProfile", savedProfile);
+            userBundle.putParcelable("QBUser", (Parcelable) qbUser);
+            Intent helpIntent = new Intent(SplashActivity.this, ChatMainAct.class);
+            overridePendingTransition(R.anim.slide_in_right,
+                    R.anim.slide_out_left);
+            helpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            helpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(helpIntent);
+            //MainActivity.start(SplashActivity.this);
+
+        }
+        /*if (sharedPrefsHelper.hasQbUser()) {
             LoginService.start(SplashActivity.this, sharedPrefsHelper.getQbUser());
             Bundle userBundle=new Bundle();
             userBundle.putParcelable("SavedProfile",savedProfile);
@@ -114,20 +179,8 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
             startActivity(helpIntent);
             //MainActivity.start(SplashActivity.this);
 
-        }
-        if(savedProfile !=null){
-            Bundle userBundle=new Bundle();
-            userBundle.putParcelable("SavedProfile",savedProfile);
-            userBundle.putParcelable("QBUser", (Parcelable) sharedPrefsHelper.getQbUser());
-            Intent helpIntent = new Intent(SplashActivity.this, MainActivity.class);
-            overridePendingTransition(R.anim.slide_in_right,
-                    R.anim.slide_out_left);
-            helpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            helpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(helpIntent);
-
-
-        } else{
+        }*/
+        else{
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -166,9 +219,14 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
     }
 
     private boolean checkOverlayPermissions() {
+
         Log.e(TAG, "Checking Permissions");
-        boolean overlayChecked = sharedPrefsHelper.get(OVERLAY_PERMISSION_CHECKED_KEY, false);
-        boolean miOverlayChecked = sharedPrefsHelper.get(MI_OVERLAY_PERMISSION_CHECKED_KEY, false);
+        if(sharedPrefsHelper !=null){
+            overlayChecked = sharedPrefsHelper.get(OVERLAY_PERMISSION_CHECKED_KEY, false);
+            miOverlayChecked = sharedPrefsHelper.get(MI_OVERLAY_PERMISSION_CHECKED_KEY, false);
+
+        }
+
 
         if (!Settings.canDrawOverlays(this) && !overlayChecked) {
             Log.e(TAG, "Android Overlay Permission NOT Granted");
@@ -179,24 +237,34 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
             buildMIUIOverlayPermissionAlertDialog();
             return false;
         }
-        Log.e(TAG, "All Overlay Permission Granted");
-        sharedPrefsHelper.save(OVERLAY_PERMISSION_CHECKED_KEY, true);
-        sharedPrefsHelper.save(MI_OVERLAY_PERMISSION_CHECKED_KEY, true);
+        if(sharedPrefsHelper !=null){
+            Log.e(TAG, "All Overlay Permission Granted");
+            sharedPrefsHelper.save(OVERLAY_PERMISSION_CHECKED_KEY, true);
+            sharedPrefsHelper.save(MI_OVERLAY_PERMISSION_CHECKED_KEY, true);
+
+        }
+
         return true;
     }
 
     private void buildOverlayPermissionAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Overlay Permission Required");
+        sharedPrefsHelper= new SharedPrefsHelper();
         builder.setIcon(R.drawable.error_fg);
         builder.setMessage("To receive calls in background - \nPlease Allow overlay permission in Android Settings");
         builder.setCancelable(false);
+
 
         builder.setNeutralButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ToastUtils.longToast("You might miss calls while your application in background");
-                sharedPrefsHelper.save(OVERLAY_PERMISSION_CHECKED_KEY, true);
+                if(sharedPrefsHelper !=null){
+                    sharedPrefsHelper.save(OVERLAY_PERMISSION_CHECKED_KEY, true);
+
+                }
+
             }
         });
 
@@ -226,13 +294,18 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Additional Overlay Permission Required");
         builder.setIcon(R.drawable.error_fg);
+        sharedPrefsHelper= new SharedPrefsHelper();
         builder.setMessage("Please make sure that all additional permissions granted");
         builder.setCancelable(false);
 
         builder.setNeutralButton("I'm sure", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                sharedPrefsHelper.save(MI_OVERLAY_PERMISSION_CHECKED_KEY, true);
+                if(sharedPrefsHelper !=null){
+                    sharedPrefsHelper.save(MI_OVERLAY_PERMISSION_CHECKED_KEY, true);
+
+                }
+
                 runNextScreen();
             }
         });
@@ -268,8 +341,4 @@ public class SplashActivity extends BaseActivity implements Runnable, View.OnCli
     }
 
 
-    @Override
-    public void run() {
-
-    }
 }

@@ -2,8 +2,11 @@ package com.lahoriagency.cikolive.Classes;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -12,6 +15,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.lahoriagency.cikolive.Fragments.ProgressDialogFragment;
 import com.lahoriagency.cikolive.Interfaces.OnImagePickedListener;
+import com.lahoriagency.cikolive.Interfaces.SchemeType;
+import com.lahoriagency.cikolive.NewPackage.CoreApp;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -19,6 +24,7 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.URLConnection;
@@ -46,8 +52,31 @@ public class GetFilepathFromUriTask extends BaseAsyncTask<Intent, Void, File> {
 
     @Override
     public File performInBackground(Intent... params) throws Exception {
-        Uri fileUri = params[0].getData();
-        return getFile(fileUri);
+        //Uri fileUri = params[0].getData();
+
+
+        Intent data = params[0];
+
+        String imageFilePath = null;
+        Uri uri = data.getData();
+        String uriScheme = uri.getScheme();
+
+        boolean isFromGoogleApp = uri.toString().startsWith(SchemeType.SCHEME_CONTENT_GOOGLE);
+        boolean isKitKatAndUpper = true;
+
+        if (SchemeType.SCHEME_FILE.equalsIgnoreCase(uriScheme)) {
+            imageFilePath = uri.getPath();
+        } else {
+            imageFilePath = ImageUtils.saveUriToFile(uri);
+        }
+
+        if (TextUtils.isEmpty(imageFilePath)) {
+            throw new IOException("Can't find a filepath for URI " + uri.toString());
+        }
+
+
+        return new File(imageFilePath);
+
     }
 
     private File getFile(Uri uri) throws Exception {
@@ -168,4 +197,5 @@ public class GetFilepathFromUriTask extends BaseAsyncTask<Intent, Void, File> {
             ProgressDialogFragment.hide(fm);
         }
     }
+
 }

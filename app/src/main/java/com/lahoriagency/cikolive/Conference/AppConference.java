@@ -3,6 +3,7 @@ import android.app.Application;
 import android.text.TextUtils;
 
 import androidx.lifecycle.ProcessLifecycleOwner;
+import androidx.multidex.MultiDexApplication;
 
 import com.lahoriagency.cikolive.Classes.ActivityLifecycle;
 import com.lahoriagency.cikolive.Classes.BackgroundListener;
@@ -14,7 +15,12 @@ import com.lahoriagency.cikolive.R;
 import com.quickblox.auth.session.QBSettings;
 import com.quickblox.conference.ConferenceConfig;
 
-public class AppConference extends Application{
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
+
+public class AppConference extends MultiDexApplication {
     public static final int CHAT_PORT = 5223;
     public static final int SOCKET_TIMEOUT = 300;
     public static final boolean KEEP_ALIVE = true;
@@ -31,11 +37,11 @@ public class AppConference extends Application{
     private static final int MAX_SOCKET_TIMEOUT = 60000;
 
     //App credentials
-    private static final String APPLICATION_ID = "";
-    private static final String AUTH_KEY = "";
-    private static final String AUTH_SECRET = "";
-    private static final String ACCOUNT_KEY = "";
-    private static final String SERVER_URL = "";
+    private static final String APPLICATION_ID = QUICKBLOX_APP_ID;
+    private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
+    private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
+    private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
+    private static final String SERVER_URL = "http://192.168.1.15:5000/";
 
     public static final String USER_DEFAULT_PASSWORD = "quickblox";
 

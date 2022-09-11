@@ -7,10 +7,12 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.lifecycle.ProcessLifecycleOwner;
+import androidx.multidex.MultiDexApplication;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Conference.QBDialogsHolder;
+import com.lahoriagency.cikolive.Conference.QBUsersHolder;
 import com.lahoriagency.cikolive.Conference.QBUsersHolderImpl;
 import com.lahoriagency.cikolive.R;
 import com.quickblox.auth.session.QBSessionManager;
@@ -22,14 +24,15 @@ import com.quickblox.messages.services.QBPushManager;
 
 import java.util.Calendar;
 
-import static com.lahoriagency.cikolive.Utils.Const.PREF_NAME;
+
 
 ;
 
-public class AppChat extends Application {
+public class AppChat extends MultiDexApplication {
     public static final String TAG = AppChat.class.getSimpleName();
 
     private static AppChat instance;
+    private static final String PREF_NAME = "Ciko";
     public static final String USER_DEFAULT_PASSWORD = "quickblox";
     public static final int CHAT_PORT = 5223;
     public static final int SOCKET_TIMEOUT = 300;
@@ -65,6 +68,7 @@ public class AppChat extends Application {
     private static Gson gson = new Gson();
     public static final String DEFAULT_USER_PASSWORD = "quickblox";
     private SharedPrefsHelper sharedPrefsHelper;
+
     private QBUsersHolder qbUsersHolder;
     private QBDialogsHolder qbDialogsHolder;
     private ChatHelper chatHelper;
@@ -76,7 +80,7 @@ public class AppChat extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        ActivityLifecycle.init(this);
+        //ActivityLifecycle.init(this);
         //initQbConfigs();
         AppChat.context = getApplicationContext();
         preferencesManager = new PreferencesManager(AppChat.context);

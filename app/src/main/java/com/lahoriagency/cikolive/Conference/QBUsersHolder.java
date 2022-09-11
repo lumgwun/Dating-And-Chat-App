@@ -5,6 +5,7 @@ import com.quickblox.users.model.QBUser;
 import java.util.List;
 
 public interface QBUsersHolder {
+
     void putUser(QBUser user);
 
     void putUsers(List<QBUser> users);

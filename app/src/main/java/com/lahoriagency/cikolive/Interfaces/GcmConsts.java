@@ -6,6 +6,7 @@ public interface GcmConsts {
     String EXTRA_GCM_DIALOG_ID = "dialog-id";
     String EXTRA_GCM_RECIPIENT_ID = "recipient-id";
     String EXTRA_GCM_NEW_PAIR = "new-pair";
+    String EMPTY_GCM_MESSAGE = "empty message";
 
 
 }

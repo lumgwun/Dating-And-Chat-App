@@ -580,5 +580,8 @@
     <string name="login_hint">incorrect password</string>
     <string name="default_notification_channel_id">32456</string>
     <string name="msg_token_fmt">Firebase token</string>
+    <string name="please_wait">please wait...</string>
+    <string name="loading_chat">loading chat....</string>
+    <string name="error_leave_chat">error</string>
 
 </resources>

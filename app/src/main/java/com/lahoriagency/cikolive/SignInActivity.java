@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
@@ -59,6 +60,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.gson.Gson;
 import com.lahoriagency.cikolive.BottomSheets.WebBottomSheet;
 import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
@@ -82,6 +84,8 @@ import com.lahoriagency.cikolive.Fragments.TestFragment;
 import com.lahoriagency.cikolive.Interfaces.GcmConsts;
 import com.lahoriagency.cikolive.Interfaces.OnLoginChangeView;
 import com.lahoriagency.cikolive.Interfaces.ServerMethodsConsts;
+import com.lahoriagency.cikolive.NewPackage.ChatMainAct;
+import com.lahoriagency.cikolive.NewPackage.SignUpActivity;
 import com.lahoriagency.cikolive.Utils.Const;
 import com.lahoriagency.cikolive.Utils.SessionManager;
 import com.lahoriagency.cikolive.Conference.OpponentsActivity;
@@ -137,6 +141,12 @@ public class SignInActivity extends BaseActivity {
 
     private Button buttonLogin;
     private EditText editTextLogin;
+    private static final String PREF_NAME = "Ciko";
+    private SharedPreferences userPreferences;
+    private int profileID;
+    private Gson gson,gson1;
+    private String json,json1;
+    private QBUser qbUser;
 
 
 
@@ -164,12 +174,20 @@ public class SignInActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_sign_in);
+        //AppChat appChat= new AppChat();
         FacebookSdk.sdkInitialize(AppChat.getAppContext());
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        callbackManager = CallbackManager.Factory.create();
-        preferencesManager = AppChat.getPreferencesManager();
-        myPreferences = AppChat.getPreferences();
+        savedProfile=new SavedProfile();
+        qbUser= new QBUser();
+        userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        gson = new Gson();
+        gson1= new Gson();
+        json = userPreferences.getString("LastSavedProfileUsed", "");
+        json1 = userPreferences.getString("LastQBUserUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        qbUser = gson.fromJson(json1, QBUser.class);
 
+        callbackManager = CallbackManager.Factory.create();
 
         if(accessToken != null)
             startLogin(true);
@@ -177,6 +195,51 @@ public class SignInActivity extends BaseActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             message = getIntent().getExtras().getString(Consts.EXTRA_FCM_MESSAGE);
+        }
+
+        if(qbUser !=null){
+            startLoginService(qbUser);
+            QBUsers.updateUser(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+                @Override
+                public void onSuccess(QBUser qbUser, Bundle bundle) {
+                    hideProgressDialog();
+                    OpponentsActivity.start(SignInActivity.this);
+                    finish();
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+                    hideProgressDialog();
+                    ToastUtils.longToast(R.string.update_user_error);
+                }
+            });
+            QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser user, Bundle bundle) {
+                Log.d(TAG, "SignIn Success: " + qbUser.getId().toString());
+                SharedPrefsHelper.getInstance().saveQbUser(qbUser);
+                hideProgressDialog();
+                MessagesActivity.start(SignInActivity.this, message);
+                finish();
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.d(TAG, "SignIn Error: " + e.getLocalizedMessage());
+                if (e.getHttpStatusCode() == UNAUTHORIZED) {
+                    signUp(qbUser);
+                } else {
+                    showErrorSnackbar(findViewById(R.id.text_splash_app_title),
+                            R.string.splash_signin_error, e, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    signIn();
+                                }
+                            });
+                }
+            }
+
+        });
         }
 
         sessionManager = new SessionManager(this);
@@ -268,7 +331,7 @@ public class SignInActivity extends BaseActivity {
         btnCreateNewAcct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SignInActivity.this, CreateProfileActivity.class));
+                startActivity(new Intent(SignInActivity.this, SignUpActivity.class));
             }
         });
 
@@ -427,8 +490,30 @@ public class SignInActivity extends BaseActivity {
                 if (ValidationUtils.isLoginValid(this, edtUser) &&
                         ValidationUtils.isFoolNameValid(this, edtPassword)) {
                     hideKeyboard();
-                    userForSave = createUserWithEnteredData();
-                    startSignUpNewUser(userForSave);
+                    /*if (!logged) {
+                        try {
+                            if(!logFromSession) {
+                                LoginRequest loginRequest = new LoginRequest(myPreferences.getFbId(), myPreferences.getFbAccessToken());
+                                BaseAsyncTask22<LoginRequest> task = new BaseAsyncTask22<>(ServerMethodsConsts.LOGIN, loginRequest);
+                                task.setHttpMethod("POST");
+                                String result = task.execute().get();
+                                handleLoginResponse(result);
+                            }
+                            onLoginChangeView.hideContent();
+                            logged = true;
+                            if(checkSignIn())
+                                restoreChatSession();
+                            else {
+                                QBUser user = new QBUser(myPreferences.getFbId().toString(), myPreferences.getFbId().toString());
+                                user.setFullName(myPreferences.getFirstName() + " " + myPreferences.getLastName());
+                                loginToChat(user);
+                            }
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    }*/
+                    //userForSave = createUserWithEnteredData();
+                    //startSignUpNewUser(userForSave);
                 }
                 return true;
 
@@ -436,45 +521,8 @@ public class SignInActivity extends BaseActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-    private QBUser createUserWithEnteredData() {
-        return createQBUserWithCurrentData(String.valueOf(edtUser.getText()),
-                String.valueOf(edtPassword.getText()));
-    }
-    private QBUser createQBUserWithCurrentData(String userLogin, String userFullName) {
-        QBUser qbUser = null;
-        if (!TextUtils.isEmpty(userLogin) && !TextUtils.isEmpty(userFullName)) {
-            qbUser = new QBUser();
-            qbUser.setLogin(userLogin);
-            qbUser.setFullName(userFullName);
-            qbUser.setPassword(AppChat.USER_DEFAULT_PASSWORD);
-        }
-        return qbUser;
-    }
 
-    private void startSignUpNewUser(final QBUser newUser) {
-        Log.d(TAG, "SignUp New User");
-        showProgressDialog(R.string.dlg_creating_new_user);
-        requestExecutor.signUpNewUser(newUser, new QBEntityCallback<QBUser>() {
-                    @Override
-                    public void onSuccess(QBUser result, Bundle params) {
-                        Log.d(TAG, "SignUp Successful");
-                        saveUserData(newUser);
-                        loginToChat(result);
-                    }
 
-                    @Override
-                    public void onError(QBResponseException e) {
-                        Log.d(TAG, "Error SignUp" + e.getMessage());
-                        if (e.getHttpStatusCode() == Consts.ERR_LOGIN_ALREADY_TAKEN_HTTP_STATUS) {
-                            signInCreatedUser(newUser);
-                        } else {
-                            hideProgressDialog();
-                            ToastUtils.longToast(R.string.sign_up_error);
-                        }
-                    }
-                }
-        );
-    }
 
     private void hideKeyboard() {
 
@@ -483,10 +531,7 @@ public class SignInActivity extends BaseActivity {
     }
 
 
-    private void saveUserData(QBUser qbUser) {
-        SharedPrefsHelper sharedPrefsHelper = SharedPrefsHelper.getInstance();
-        sharedPrefsHelper.saveQbUser(qbUser);
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -498,7 +543,7 @@ public class SignInActivity extends BaseActivity {
             String errorMessage = data.getStringExtra(Consts.EXTRA_LOGIN_ERROR_MESSAGE);
 
             if (isLoginSuccess) {
-                saveUserData(userForSave);
+                //saveUserData(userForSave);
                 signInCreatedUser(userForSave);
             } else {
                 ToastUtils.longToast(getString(R.string.login_chat_login_error) + errorMessage);
@@ -691,7 +736,7 @@ public class SignInActivity extends BaseActivity {
             @Override
             public void onSuccess(Void result, Bundle bundle) {
                 bundle.putParcelable("QBUser", (Parcelable) user);
-                Intent loginIntent = new Intent(SignInActivity.this, ChatAct.class);
+                Intent loginIntent = new Intent(SignInActivity.this, ChatMainAct.class);
                 loginIntent.putExtras(bundle);
                 loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                         Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -759,9 +804,6 @@ public class SignInActivity extends BaseActivity {
         Intent tempIntent = new Intent(this, LoginService.class);
         PendingIntent pendingIntent = createPendingResult(Consts.EXTRA_LOGIN_RESULT_CODE, tempIntent, 0);
         LoginService.start(this, qbUser, pendingIntent);
-    }
-    private String getCurrentDeviceId(Context deviceID) {
-        return Utils.generateDeviceId();
     }
 
 

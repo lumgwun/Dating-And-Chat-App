@@ -7,7 +7,7 @@ import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.users.model.QBUser;
 
 public class SharedPrefsHelper {
-    private static final String SHARED_PREFS_NAME = "qb";
+    private static final String SHARED_PREFS_NAME = "CIKO";
 
     private static final String QB_USER_ID = "qb_user_id";
     private static final String QB_USER_LOGIN = "qb_user_login";
@@ -16,6 +16,7 @@ public class SharedPrefsHelper {
     private static final String QB_USER_TAGS = "qb_user_tags";
 
     private static SharedPrefsHelper instance;
+    AppChat appChat;
 
     private SharedPreferences sharedPreferences;
 
@@ -35,7 +36,11 @@ public class SharedPrefsHelper {
 
     public SharedPrefsHelper() {
         instance = this;
-        sharedPreferences = AppChat.getInstance().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        if(appChat !=null){
+            sharedPreferences = appChat.getInstance().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+
+
+        }
     }
 
     public void delete(String key) {

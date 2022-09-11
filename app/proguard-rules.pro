@@ -49,3 +49,25 @@
 
 #quickblox videochat-webrtc module
 -keep class org.webrtc.** { *; }
+
+
+-keepattributes EnclosingMethod
+-keepattributes InnerClasses
+-keepattributes Signature
+-keepattributes Exceptions
+
+# For using GSON @Expose annotation
+-keepattributes *Annotation*
+
+#quickblox sdk
+-keep class com.quickblox.** { *; }
+
+
+#glide
+-keep class com.bumptech.** { *; }
+
+#google gms
+-keep class com.google.android.gms.** { *; }
+
+#json
+-keep class org.json.** { *; }

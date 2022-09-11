@@ -14,14 +14,17 @@ import java.util.List;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
+
 public class QBUtils {
     private static String getSignature(QbConfigs qbConfigs, String FBToken, String nonce, Long timestamp) {
         StringBuilder builder = new StringBuilder();
         builder.append("application_id=");
-        builder.append(qbConfigs.getAppId());
+        builder.append(QUICKBLOX_APP_ID);
         builder.append("&");
         builder.append("auth_key=");
-        builder.append(qbConfigs.getAuthKey());
+        builder.append(QUICKBLOX_AUTH_KEY);
         builder.append("&");
         if(FBToken != null) {
             builder.append("keys[token]=");
@@ -41,23 +44,18 @@ public class QBUtils {
         builder.append("timestamp=");
         builder.append(timestamp);
 
-        return calculateRFC2104HMAC(qbConfigs.getAuthSecret(), builder.toString());
+        return calculateRFC2104HMAC(QUICKBLOX_AUTH_KEY, builder.toString());
     }
 
-    /**
-     * If FBToken is not null, then signature for obtaining user QBToken is created
-     * else created is new token to register new user in Qb
-     * @param FBToken
-     * @return
-     */
+
     public static String getSignatureRequestData(String FBToken) {
-        QbConfigs qbConfigs = AppChat.getInstance().getQbConfigs();
+        QbConfigs qbConfigs = AppChat.getQbConfigs();
         String nonce = getNonce();
         Long timestamp = getUnixTimestamp();
         JSONObject json = new JSONObject();
         try {
-            json.put("application_id", qbConfigs.getAppId());
-            json.put("auth_key", qbConfigs.getAuthKey());
+            json.put("application_id", QUICKBLOX_APP_ID);
+            json.put("auth_key", QUICKBLOX_AUTH_KEY);
             json.put("timestamp", timestamp);
             json.put("nonce", nonce);
             json.put("signature", getSignature(qbConfigs, FBToken, nonce, timestamp));
@@ -80,9 +78,7 @@ public class QBUtils {
         try {
             mac = Mac.getInstance("HmacSHA1");
             mac.init(signingKey);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             e.printStackTrace();
         }
 

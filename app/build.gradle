@@ -27,7 +27,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    productFlavors {
+    /*productFlavors {
         dev {
             dimension dimensionDefault
             buildConfigField('boolean', "IS_QA", "false")
@@ -39,7 +39,7 @@ android {
             buildConfigField("boolean", "IS_QA", "true")
             buildConfigField("int", "VERSION_QA_CODE", versionQACode.toString())
         }
-    }
+    }*/
     buildFeatures.dataBinding = false
 
     signingConfigs {
@@ -66,6 +66,7 @@ android {
             it.buildConfigField 'String', 'QUICKBLOX_AUTH_KEY', quickblox_Authorization_key
             it.buildConfigField 'String', 'QUICKBLOX_SECRET_KEY', quickblox_Authorization_secret
             it.buildConfigField 'String', 'QUICKBLOX_ACCT_KEY', quickblox_Account_key
+
             it.buildConfigField 'String', 'APPLICATION_ID', client_App_ID
             it.buildConfigField 'String', 'APP_ID_MQTTchat', MQTTchat_APP_ID
             it.buildConfigField 'String', 'SECRET_KEY_MQTTchat', MQTTchat_APP_SECRET
@@ -165,14 +166,17 @@ dependencies {
 
     implementation 'com.quickblox:quickblox-android-sdk-core:3.9.0'
 
-    //implementation "com.quickblox:quickblox-android-sdk-chat:$rootProject.qbSdkVersion"
+    implementation "com.quickblox:quickblox-android-sdk-conference:3.10.1"
     implementation "com.quickblox:quickblox-android-sdk-content:3.10.1"
     implementation "com.quickblox:quickblox-android-sdk-messages:3.10.1"
-    implementation "com.quickblox:quickblox-android-sdk-customobjects:3.10.1"
-    implementation "com.quickblox:quickblox-android-sdk-chat:3.10.1"
+    implementation "com.quickblox:quickblox-android-sdk-customobjects:3.9.0"
+    implementation "com.quickblox:quickblox-android-sdk-chat:3.9.13"
+    //implementation "com.quickblox:quickblox-android-sdk-custom0bjects:3.9.13"
     //implementation 'org.webrtc:google-webrtc:1.0.32006'
+    implementation "com.quickblox:quickblox-android-sdk-videochat-webrtc:3.10.1"
+    implementation "com.quickblox:quickblox-android-sdk-conference:3.9.0"
+    implementation 'com.quickblox:chat-message-adapter:2.0'
 
-    implementation "com.quickblox:quickblox-android-sdk-videochat-webrtc:3.3.3"
     implementation "com.google.firebase:firebase-messaging:23.0.7"
     implementation "com.google.firebase:firebase-core:21.1.0"
     implementation 'com.github.mtotschnig:stickylistheaders:2.8.0'
@@ -284,6 +288,10 @@ dependencies {
     implementation 'com.scwang.wave:MultiWaveHeader:1.0.0'
     implementation 'link.fls:swipestack:0.3.0'
     implementation 'com.kofigyan.stateprogressbar:stateprogressbar:1.0.0'
+    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    implementation "com.github.orangegangsters:swipy:1.2.3"
+
+
 
     //implementation 'com.telifoun.mqttchat:mqttchat-core:4.0.0'
     //implementation 'com.telifoun.mqttchat:mqttchat-gui:4.0.0'

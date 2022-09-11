@@ -59,7 +59,7 @@ public class AppInfoActivity extends BaseActivity {
         apiDomainTextView.setText(QBSettings.getInstance().getServerApiDomain());
         chatDomainTextView.setText(QBSettings.getInstance().getChatEndpoint());
 
-        if (BuildConfig.IS_QA) {
+        /*if (BuildConfig.IS_QA) {
             String appVersion = BuildConfig.VERSION_NAME;
             String versionQACode = String.valueOf(BuildConfig.VERSION_QA_CODE);
             String qaVersion = appVersion + "." + versionQACode;
@@ -70,6 +70,6 @@ public class AppInfoActivity extends BaseActivity {
             appQAVersionTextView.setVisibility(View.VISIBLE);
 
             findViewById(R.id.text_qa_version_title).setVisibility(View.VISIBLE);
-        }
+        }*/
     }
 }

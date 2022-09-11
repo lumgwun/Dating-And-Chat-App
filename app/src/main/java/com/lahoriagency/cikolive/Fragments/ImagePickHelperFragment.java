@@ -13,6 +13,7 @@ import com.lahoriagency.cikolive.Classes.GetFilepathFromUriTask;
 import com.lahoriagency.cikolive.Classes.ImageUtils;
 import com.lahoriagency.cikolive.Interfaces.OnImagePickedListener;
 
+@SuppressWarnings("deprecation")
 public class ImagePickHelperFragment extends Fragment {
 
     private static final String ARG_REQUEST_CODE = "requestCode";

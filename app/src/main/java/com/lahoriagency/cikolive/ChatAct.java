@@ -146,6 +146,8 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , Run
     public static final int MAX_ATTACHMENTS_COUNT = 1;
     public static final int MAX_MESSAGE_SYMBOLS_LENGTH = 1000;
 
+
+
     private ProgressBar progressBar;
 
     private StickyListHeadersListView messagesListView;

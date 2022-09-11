@@ -82,6 +82,7 @@ public class BaseActivity extends AppCompatActivity {
 
 
     private Snackbar snackbar;
+    private AppChat appChat;
 
     protected SharedPrefsHelper getSharedPrefsHelper() {
         return ((AppChat) getApplicationContext()).getSharedPrefsHelper();
@@ -131,8 +132,16 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.act_base);
+        appChat= new AppChat();
+        sharedPrefsHelper= new SharedPrefsHelper();
+        requestExecutor= new QBResRequestExecutor();
         actionBar = getSupportActionBar();
-        requestExecutor = AppChat.getInstance().getQbResRequestExecutor();
+        if(appChat !=null){
+            requestExecutor = AppChat.getInstance().getQbResRequestExecutor();
+
+        }
+        
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
         blurAlgorithm= new BlurAlgorithm() {
             @Override

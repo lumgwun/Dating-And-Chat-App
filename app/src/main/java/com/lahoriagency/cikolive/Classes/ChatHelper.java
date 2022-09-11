@@ -1,10 +1,13 @@
 package com.lahoriagency.cikolive.Classes;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.lahoriagency.cikolive.NewPackage.App;
+import com.lahoriagency.cikolive.NewPackage.SampleConfigs;
 import com.lahoriagency.cikolive.R;
 import com.quickblox.auth.session.QBSettings;
 import com.quickblox.chat.QBChatService;
@@ -39,8 +42,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings("deprecation")
 public class ChatHelper {
-    public static final int DIALOG_ITEMS_PER_PAGE = 15;
+
     private static final String TAG = ChatHelper.class.getSimpleName();
 
     public static final int CHAT_HISTORY_ITEMS_PER_PAGE = 50;
@@ -49,8 +53,14 @@ public class ChatHelper {
     public static final String CURRENT_PAGE_BUNDLE_PARAM = "current_page";
     private static final String CHAT_HISTORY_ITEMS_SORT_FIELD = "date_sent";
 
+    public static final int DIALOG_ITEMS_PER_PAGE = 100;
+
+
     private static ChatHelper instance;
-    private QBChatService qbChatService = QBChatService.getInstance();
+
+    private QBChatService qbChatService;
+
+    //private QBChatService qbChatService = QBChatService.getInstance();
     private ArrayList<QBUser> usersLoadedFromDialog = new ArrayList<>();
     private ArrayList<QBUser> usersLoadedFromDialogs = new ArrayList<>();
     private ArrayList<QBUser> usersLoadedFromMessage = new ArrayList<>();
@@ -61,6 +71,13 @@ public class ChatHelper {
 
     private Context context;
 
+
+    public boolean isLogged() {
+        return QBChatService.getInstance().isLoggedIn();
+    }
+
+
+
     public ChatHelper(Context context) {
         this.context = context;
         QBSettings.getInstance().setLogLevel(LogLevel.DEBUG);
@@ -70,8 +87,11 @@ public class ChatHelper {
         QBChatService.getInstance().setUseStreamManagement(true);
     }
 
+
     public ChatHelper() {
         super();
+        qbChatService = QBChatService.getInstance();
+        qbChatService.setUseStreamManagement(true);
     }
 
 
@@ -90,30 +110,55 @@ public class ChatHelper {
     private static QBChatService.ConfigurationBuilder buildChatConfigs() {
         QBChatService.ConfigurationBuilder configurationBuilder = new QBChatService.ConfigurationBuilder();
 
-        configurationBuilder.setSocketTimeout(AppChat.SOCKET_TIMEOUT);
+        /*configurationBuilder.setSocketTimeout(AppChat.SOCKET_TIMEOUT);
         configurationBuilder.setUseTls(AppChat.USE_TLS);
         configurationBuilder.setKeepAlive(AppChat.KEEP_ALIVE);
         configurationBuilder.setAutojoinEnabled(AppChat.AUTO_JOIN);
         configurationBuilder.setAutoMarkDelivered(AppChat.AUTO_MARK_DELIVERED);
         configurationBuilder.setReconnectionAllowed(AppChat.RECONNECTION_ALLOWED);
         configurationBuilder.setAllowListenNetwork(AppChat.ALLOW_LISTEN_NETWORK);
-        configurationBuilder.setPort(AppChat.CHAT_PORT);
+        configurationBuilder.setPort(AppChat.CHAT_PORT);*/
+
+        SampleConfigs sampleConfigs = App.getSampleConfigs();
+
+        if (sampleConfigs != null) {
+            int port = sampleConfigs.getChatPort();
+            int socketTimeout = sampleConfigs.getChatSocketTimeout();
+            boolean useTls = sampleConfigs.isUseTls();
+            boolean keepAlive = sampleConfigs.isKeepAlive();
+            boolean autoJoinEnabled = sampleConfigs.isAutoJoinEnabled();
+            boolean autoMarkDelivered = sampleConfigs.isAutoMarkDelivered();
+            boolean reconnectionAllowed = sampleConfigs.isReconnectionAllowed();
+            boolean allowListenNetwork = sampleConfigs.isAllowListenNetwork();
+
+            if (port != 0) {
+                configurationBuilder.setPort(port);
+            }
+
+            configurationBuilder.setSocketTimeout(socketTimeout);
+            configurationBuilder.setUseTls(useTls);
+            configurationBuilder.setKeepAlive(keepAlive);
+            configurationBuilder.setAutojoinEnabled(autoJoinEnabled);
+            configurationBuilder.setAutoMarkDelivered(autoMarkDelivered);
+            configurationBuilder.setReconnectionAllowed(reconnectionAllowed);
+            configurationBuilder.setAllowListenNetwork(allowListenNetwork);
+        }
 
         return configurationBuilder;
+
     }
+    public static QBUser getCurrentUser() {
+        return QBChatService.getInstance().getUser();
+        //return SharedPrefsHelper.getInstance().getQbUser();
+    }
+
 
     private static String buildDialogNameWithoutUser(String dialogName, String userName) {
         String regex = ", " + userName + "|" + userName + ", ";
         return dialogName.replaceAll(regex, "");
     }
 
-    public boolean isLogged() {
-        return QBChatService.getInstance().isLoggedIn();
-    }
 
-    public static QBUser getCurrentUser() {
-        return SharedPrefsHelper.getInstance().getQbUser();
-    }
 
     public void addConnectionListener(ConnectionListener listener) {
         qbChatService.addConnectionListener(listener);
@@ -155,6 +200,13 @@ public class ChatHelper {
                 //return qbUser;
             }
         });
+        QBUsers.signIn(user).performAsync(new QbEntityCallbackTwoTypeWrapper<QBUser, Void>(loginCallback) {
+            @Override
+            public void onSuccess(QBUser qbUser, Bundle args) {
+                user.setId(qbUser.getId());
+                loginToChat(user, new QbEntityCallbackWrapper<>(callback));
+            }
+        });
     }
 
     public void loginToChat(final QBUser user, final QBEntityCallback<Void> callback) {
@@ -163,6 +215,12 @@ public class ChatHelper {
         } else {
             callback.onSuccess(null, null);
         }
+        if (qbChatService.isLoggedIn()) {
+            callback.onSuccess(null, null);
+            return;
+        }
+
+        qbChatService.login(user, callback);
     }
 
     public void join(QBChatDialog chatDialog, final QBEntityCallback<Void> callback) {
@@ -254,6 +312,7 @@ public class ChatHelper {
 
         QBRestChatService.updateGroupChatDialog(qbDialog, qbRequestBuilder).performAsync(callback);
     }
+
 
     public void updateDialogUsers(QBChatDialog qbDialog,
                                   final List<QBUser> newQbDialogUsersList,
@@ -522,10 +581,25 @@ public class ChatHelper {
             }
         });
     }
+    public void createDialogWithSelectedUsers(final List<QBUser> users,
+                                              final QBEntityCallback<QBChatDialog> callback) {
 
+        QBRestChatService.createChatDialog(QbDialogUtils.createDialog(users)).performAsync(
+                new QbEntityCallbackWrapper<QBChatDialog>(callback) {
+                    @Override
+                    public void onSuccess(QBChatDialog dialog, Bundle args) {
+                        QbDialogHolder.getInstance().addDialog(dialog);
+                        QbUsersHolder.getInstance().putUsers(users);
+                        super.onSuccess(dialog, args);
+                    }
+                });
+    }
+
+
+    @SuppressLint("StaticFieldLeak")
     @SuppressWarnings("deprecation")
     private class DeleteGroupDialogsTask extends AsyncTask<Void, Void, Void> {
-        private List<QBChatDialog> groupDialogsToDelete;
+        private final List<QBChatDialog> groupDialogsToDelete;
         private QBEntityCallback<List<QBChatDialog>> callback;
         private boolean errorOccurs = false;
         private ArrayList<QBChatDialog> successfulDeletedDialogs = new ArrayList<>();

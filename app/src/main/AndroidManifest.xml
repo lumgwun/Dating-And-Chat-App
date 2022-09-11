@@ -49,13 +49,24 @@
         android:value="androidx.core.app.CoreComponentFactory"
         tools:ignore="GoogleAppIndexingWarning"
         tools:node="replace">
+        <activity android:name=".NewPackage.VideoCallActivity"></activity>
+        <activity android:name=".NewPackage.ChatDialogActivity" />
+        <activity android:name=".NewPackage.ChatMainAct" />
 
-        <activity android:name=".MyTimeLinesAct">
+        <service
+            android:name=".NewPackage.CallServiceNew"
+            android:enabled="true"
+            android:exported="true" />
 
-        </activity>
-        <activity android:name=".SuperAdmin.UpdateDiamondAct">
-
-        </activity>
+        <activity android:name=".NewPackage.ChatActivity" />
+        <activity android:name=".ListUsersActivity" />
+        <activity android:name=".NewPackage.CoreSplashActivity" />
+        <activity android:name=".NewPackage.CoreBaseActivity" />
+        <activity android:name=".NewPackage.SignUpActivity" />
+        <activity android:name=".BaseActNew" />
+        <activity android:name=".CoreBaseActivity" />
+        <activity android:name=".MyTimeLinesAct" />
+        <activity android:name=".SuperAdmin.UpdateDiamondAct" />
         <activity android:name=".SuperAdmin.TranXActList" />
         <activity android:name=".PayNowAct" />
         <activity android:name=".SuperAdmin.SuperLoginAct" />
@@ -147,13 +158,11 @@
             android:label="@string/title_activity_diamond_history"
             android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
         <activity android:name=".MainActivity" />
-
         <activity android:name=".BaseActivity" />
         <activity android:name=".EmptyAct" />
-
         <activity
             android:name=".SplashActivity"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -161,59 +170,35 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="com.quickblox.messages.TYPE"
-            android:value="GCM" />
-        <meta-data
-            android:name="com.quickblox.messages.SENDER_ID"
-            android:value="@string/sender_id" />
-        <meta-data
-            android:name="com.quickblox.messages.QB_ENVIRONMENT"
-            android:value="PRODUCTION" />
-        <meta-data
-            android:name="com.quickblox.messages.TYPE"
-            android:value="GCM" />
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+        <receiver
+            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-        <service
-            android:name="com.quickblox.messages.services.fcm.QBFcmPushInstanceIDService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <category android:name="${applicationId}" />
             </intent-filter>
-        </service>
-        <service
-            android:name="com.quickblox.messages.services.fcm.QBFcmPushInstanceIDService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".Classes.MyFirebaseMService"
-            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
+        </receiver>
 
         <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/logo_yellow" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
+            android:name="firebase_performance_logcat_enabled"
+            android:value="true" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id" />
+            android:value="default_channel_id" />
         <meta-data
-            android:name="firebase_messaging_auto_init_enabled"
-            android:value="false" />
+            android:name="com.quickblox.messages.TYPE"
+            android:value="GCM" /> <!-- <meta-data -->
+        <!-- android:name="com.quickblox.messages.SENDER_ID" -->
+        <!-- android:value="@string/sender_id" /> -->
         <meta-data
-            android:name="firebase_analytics_collection_enabled"
-            android:value="true" />
+            android:name="com.quickblox.messages.QB_ENVIRONMENT"
+            android:value="DEVELOPMENT" />
     </application>
 
 </manifest>

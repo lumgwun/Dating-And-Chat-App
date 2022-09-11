@@ -35,6 +35,7 @@ import com.lahoriagency.cikolive.Classes.CallService;
 import com.lahoriagency.cikolive.Classes.NoChildClickableRecyclerView;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.WebRtcSessionManager;
+import com.lahoriagency.cikolive.Conference.QBUsersHolder;
 import com.lahoriagency.cikolive.Interfaces.Consts;
 import com.lahoriagency.cikolive.Interfaces.ConversationFragmentCallback;
 import com.lahoriagency.cikolive.Interfaces.ReconnectionCallback;
@@ -76,6 +77,7 @@ public class ConversationFragment extends BaseToolBarFragment implements CallSer
 
     private WebRtcSessionManager sessionManager;
     private ConferenceSession currentSession;
+
     private QBUsersHolder qbUsersHolder;
     private ArrayList<Integer> opponentsIds;
     private Set<Integer> usersToDestroy;

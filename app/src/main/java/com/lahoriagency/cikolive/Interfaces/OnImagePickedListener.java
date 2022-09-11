@@ -8,4 +8,6 @@ public interface OnImagePickedListener {
     void onImagePickError(int requestCode, Exception e);
 
     void onImagePickClosed(int requestCode);
+
+
 }
