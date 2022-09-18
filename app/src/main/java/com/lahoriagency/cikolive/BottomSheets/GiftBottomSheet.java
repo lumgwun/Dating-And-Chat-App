@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.lahoriagency.cikolive.Adapters.GiftAdapter;
-import com.lahoriagency.cikolive.BaseActivity;
+import com.lahoriagency.cikolive.BaseActDiamond;
 import com.lahoriagency.cikolive.DiamondShopBottomSheet;
 import com.lahoriagency.cikolive.R;
 
@@ -28,7 +28,7 @@ import java.util.Collections;
 public class GiftBottomSheet extends BottomSheetDialogFragment {
 
     GiftAdapter giftAdapter;
-    BaseActivity baseActivity;
+    BaseActDiamond baseActivity;
 
     OnDismiss onDismiss;
     private ImageView imgTime;
@@ -58,7 +58,7 @@ public class GiftBottomSheet extends BottomSheetDialogFragment {
         btnAddDiamonds = rootView.findViewById(R.id.btn_add_diamonds);
         recyclerViewDiamond = rootView.findViewById(R.id.rv_diamond);
         diamondShopBottomSheet = new DiamondShopBottomSheet(getContext());
-        baseActivity = new BaseActivity();
+        baseActivity = new BaseActDiamond();
         baseActivity.makeListOfGift();
         giftAdapter = new GiftAdapter();
         rvGift.setAdapter(giftAdapter);

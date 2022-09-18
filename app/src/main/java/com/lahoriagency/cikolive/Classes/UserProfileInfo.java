@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.lahoriagency.cikolive.Classes.QBUser.QBUSER_ID;
-import static com.lahoriagency.cikolive.Classes.QBUser.QBUSER_TABLE;
+import static com.lahoriagency.cikolive.Classes.AppServerUser.QBUSER_ID;
+import static com.lahoriagency.cikolive.Classes.AppServerUser.QBUSER_TABLE;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_ID;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_TABLE;
 
@@ -24,7 +24,7 @@ public class UserProfileInfo implements Parcelable {
     private String description;
 
     public static final String USER_PROF_INFO_ID = "upi_Id";
-    public static final String USER_PROF_QB_ID = "upi_ID";
+    public static final String USER_PROF_QB_ID = "upi_qbUser_ID";
     public static final String USER_PROF_INFO_SP_ID = "upi_saved_prof_id";
     public static final String USER_PROF_INFO_NAME = "upi_name";
     public static final String USER_PROF_INFO_AGE = "upi_Age";
@@ -37,7 +37,6 @@ public class UserProfileInfo implements Parcelable {
     public static final String CREATE_USER_PROF_INFO_TABLE = "CREATE TABLE IF NOT EXISTS " + USER_PROF_INFO_TABLE + " ( " + USER_PROF_INFO_ID + " INTEGER  , " + USER_PROF_QB_ID + " INTEGER , " + USER_PROF_INFO_SP_ID + " INTEGER  , " +
             USER_PROF_INFO_NAME + " TEXT, " + USER_PROF_INFO_DESC + " TEXT, " + USER_PROF_INFO_AGE + " TEXT, " + USER_PROF_INFO_MATCHED_VALUE + " TEXT, " + USER_PROF_INFO_DISTANCE + " TEXT, " +
             "FOREIGN KEY(" + USER_PROF_QB_ID + ") REFERENCES " + QBUSER_TABLE + "(" + QBUSER_ID + "),"+ "FOREIGN KEY(" + USER_PROF_INFO_SP_ID + ") REFERENCES " + SAVED_PROFILE_TABLE + "(" + SAVED_PROFILE_ID + "),"+"PRIMARY KEY(" + USER_PROF_INFO_ID  + "))";
-
 
     public UserProfileInfo() {
     }

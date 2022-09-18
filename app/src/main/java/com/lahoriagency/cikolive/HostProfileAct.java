@@ -23,7 +23,7 @@ public class HostProfileAct extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_host_profile);
-        BaseActivity baseActivity = new BaseActivity();
+        BaseActDiamond baseActivity = new BaseActDiamond();
         btnUpDate = findViewById(R.id.btn_update);
         rvImages = findViewById(R.id.rv_images);
         rvVideos = findViewById(R.id.rv_videos);

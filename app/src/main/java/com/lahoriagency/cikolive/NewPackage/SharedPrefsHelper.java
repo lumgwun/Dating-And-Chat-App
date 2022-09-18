@@ -8,6 +8,7 @@ import com.quickblox.users.model.QBUser;
 
 public class SharedPrefsHelper {
     private static final String SHARED_PREFS_NAME = "ciko";
+    private static final String PREF_NAME = "ciko";
 
     private static final String QB_USER_ID = "qb_user_id";
     private static final String QB_USER_LOGIN = "qb_user_login";
@@ -16,8 +17,18 @@ public class SharedPrefsHelper {
     private static final String QB_USER_TAGS = "qb_user_tags";
 
     private static SharedPrefsHelper instance;
+    SharedPreferences pref;
+    int PRIVATE_MODE = 0;
+    SharedPreferences.Editor editor;
 
     private SharedPreferences sharedPreferences;
+    Context _context;
+    public SharedPrefsHelper(Context context) {
+        this._context = context;
+        pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        editor = pref.edit();
+    }
 
     public static synchronized SharedPrefsHelper getInstance() {
         if (instance == null) {
@@ -27,9 +38,9 @@ public class SharedPrefsHelper {
         return instance;
     }
 
-    private SharedPrefsHelper() {
+    public SharedPrefsHelper() {
         instance = this;
-        sharedPreferences = CoreApp.getInstance().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        //sharedPreferences = CoreApp.getInstance().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
     }
 
     public void delete(String key) {

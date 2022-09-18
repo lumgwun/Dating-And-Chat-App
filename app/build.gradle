@@ -290,6 +290,20 @@ dependencies {
     implementation 'com.kofigyan.stateprogressbar:stateprogressbar:1.0.0'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     implementation "com.github.orangegangsters:swipy:1.2.3"
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.13'
+    implementation 'com.google.firebase:firebase-perf'
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.firebaseui:firebase-ui-auth:8.0.0'
+    implementation "com.google.firebase:firebase-iid"
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation platform('com.google.firebase:firebase-bom:29.3.1')
+    implementation 'com.google.firebase:firebase-dynamic-links'
+    implementation 'com.google.android.gms:play-services-auth:20.3.0'
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+
+
+
+
 
 
 

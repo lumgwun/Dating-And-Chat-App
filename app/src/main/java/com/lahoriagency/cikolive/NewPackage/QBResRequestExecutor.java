@@ -1,5 +1,7 @@
 package com.lahoriagency.cikolive.NewPackage;
 
+import android.content.Context;
+
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.request.QBPagedRequestBuilder;
 import com.quickblox.users.QBUsers;
@@ -11,6 +13,23 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class QBResRequestExecutor {
+    private static QBResRequestExecutor instance;
+    Context _context;
+    public QBResRequestExecutor(Context context) {
+        this._context = context;
+    }
+
+    public QBResRequestExecutor() {
+        super();
+    }
+
+    public static synchronized QBResRequestExecutor getInstance() {
+        if (instance == null) {
+            instance = new QBResRequestExecutor();
+        }
+
+        return instance;
+    }
     private String TAG = QBResRequestExecutor.class.getSimpleName();
 
     public void signUpNewUser(final QBUser newQbUser, final QBEntityCallback<QBUser> callback) {

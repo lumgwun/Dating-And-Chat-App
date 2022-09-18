@@ -9,8 +9,8 @@ import com.quickblox.users.model.QBUser;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import static com.lahoriagency.cikolive.Classes.QBUser.QBUSER_ID;
-import static com.lahoriagency.cikolive.Classes.QBUser.QBUSER_TABLE;
+import static com.lahoriagency.cikolive.Classes.AppServerUser.QBUSER_ID;
+import static com.lahoriagency.cikolive.Classes.AppServerUser.QBUSER_TABLE;
 import static com.lahoriagency.cikolive.Classes.UserProfileInfo.USER_PROF_INFO_ID;
 import static com.lahoriagency.cikolive.Classes.UserProfileInfo.USER_PROF_INFO_TABLE;
 
@@ -27,7 +27,7 @@ public class SavedProfile implements Parcelable, Serializable {
     public static final String SAVED_PROFILE_TABLE = "saved_p_Table";
     public static final String SAVED_PROFILE_PHONE = "saved_p_phone";
     public static final String SAVED_PROFILE_EMAIL = "saved_p_email";
-    public static final String SAVED_PROFILE_PASSWORD = "saved_p_email";
+    public static final String SAVED_PROFILE_PASSWORD = "saved_p_Password";
     public static final String SAVED_PROFILE_COUNTRY = "saved_p_Country";
     public static final String SAVED_PROFILE_DEVICEID = "saved_p_device";
     public static final String SAVED_PROFILE_REFERRER = "saved_p_referrer";
@@ -36,40 +36,38 @@ public class SavedProfile implements Parcelable, Serializable {
     public static final String SAVED_PROFILE_DATE_JOINED = "saved_p_JoinedDate";
     public static final String SAVED_PROFILE_LOOKING_GENDER = "saved_p_Looking_for";
     public static final String SAVED_PROFILE_LAST_SEEN = "saved_p_Last_seen";
+    public static final String SAVED_PROFILE_STATUS = "saved_p_Status";
 
 
-    public static final String CREATE_SAVED_PROFILES_TABLE = "CREATE TABLE IF NOT EXISTS " + SAVED_PROFILE_TABLE + " (" + SAVED_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SAVED_PROFILE_NAME + " TEXT, " + SAVED_PROFILE_AGE + " TEXT, " + SAVED_PROFILE_LOC + " TEXT, " + SAVED_PROFILE_GENDER + " TEXT, " + SAVED_PROFILE_PHOTO + " TEXT, " + SAVED_PROFILE_PHONE + " TEXT, " +
-            SAVED_PROFILE_EMAIL + " TEXT, " + SAVED_PROFILE_PASSWORD + " TEXT, " + SAVED_PROFILE_DEVICEID + " TEXT,"+ SAVED_PROFILE_DOB + " TEXT,"+ SAVED_PROFILE_COUNTRY + " TEXT,"+ SAVED_PROFILE_REFERRER + " TEXT,"+ SAVED_PROFILE_ABOUT_ME + " TEXT,"+ SAVED_PROFILE_MY_INT + " TEXT,"+ SAVED_PROFILE_LOOKING_GENDER + " TEXT,"+ SAVED_PROFILE_DATE_JOINED + " TEXT, "+ SAVED_PROFILE_USERPROF_INFO_ID + " TEXT,"+ SAVED_PROFILE_QBID + " TEXT,"+ SAVED_PROFILE_LAST_SEEN + " TEXT," + "FOREIGN KEY(" + SAVED_PROFILE_USERPROF_INFO_ID + ") REFERENCES " + USER_PROF_INFO_TABLE + "(" + USER_PROF_INFO_ID + "),"+ "FOREIGN KEY(" + SAVED_PROFILE_QBID + ") REFERENCES " + QBUSER_TABLE + "(" + QBUSER_ID + "),"+"PRIMARY KEY(" + SAVED_PROFILE_ID  + "))";
-
-
-
+    public static final String CREATE_SAVED_PROFILES_TABLE = "CREATE TABLE IF NOT EXISTS " + SAVED_PROFILE_TABLE + " (" + SAVED_PROFILE_ID + " INTEGER , " + SAVED_PROFILE_NAME + " TEXT, " + SAVED_PROFILE_AGE + " TEXT, " + SAVED_PROFILE_LOC + " TEXT, " + SAVED_PROFILE_GENDER + " TEXT, " + SAVED_PROFILE_PHOTO + " TEXT, " + SAVED_PROFILE_PHONE + " TEXT, " +
+            SAVED_PROFILE_EMAIL + " TEXT, " + SAVED_PROFILE_PASSWORD + " TEXT, " + SAVED_PROFILE_DEVICEID + " TEXT,"+ SAVED_PROFILE_DOB + " TEXT,"+ SAVED_PROFILE_COUNTRY + " TEXT,"+ SAVED_PROFILE_REFERRER + " TEXT,"+ SAVED_PROFILE_ABOUT_ME + " TEXT,"+ SAVED_PROFILE_MY_INT + " TEXT,"+ SAVED_PROFILE_LOOKING_GENDER + " TEXT,"+ SAVED_PROFILE_DATE_JOINED + " TEXT, "+ SAVED_PROFILE_USERPROF_INFO_ID + " TEXT,"+ SAVED_PROFILE_QBID + " TEXT,"+ SAVED_PROFILE_LAST_SEEN + " TEXT," + SAVED_PROFILE_STATUS + " TEXT,"+ "FOREIGN KEY(" + SAVED_PROFILE_USERPROF_INFO_ID + ") REFERENCES " + USER_PROF_INFO_TABLE + "(" + USER_PROF_INFO_ID + "),"+ "FOREIGN KEY(" + SAVED_PROFILE_QBID + ") REFERENCES " + QBUSER_TABLE + "(" + QBUSER_ID + "),"+"PRIMARY KEY(" + SAVED_PROFILE_ID  + "))";
 
 
 
     private int savedProfID;
     private int savedProfQBID;
     private int savedProfUserProfInfoID;
-    private String name;
-    private String age;
-    private String location;
-    private int gender;
-    private String phone;
-    private String email;
-    private String dob;
-    private String country;
-    private String referrer;
-    private String password;
-    private String lastSeen;
-    private String status;
-    private String dateJoined;
-    private String aboutMe;
-    private String myInterest;
-    private String lookingFor;
-    private String deviceID;
-    private Uri image;
-    private QBUser qbUser;
-    private ModelItem modelItem;
-    private UserProfileInfo userProfileInfo;
+    private String savedPName;
+    private String savedPAge;
+    private String savedPLocation;
+    private int savedPGender;
+    private String savedPPhone;
+    private String savedPEmail;
+    private String savedPDob;
+    private String savedPCountry;
+    private String savedPReferrer;
+    private String savedPPassword;
+    private String savedPLastSeen;
+    private String savedPStatus;
+    private String savedPDateJoined;
+    private String savedPAboutMe;
+    private String savedPMyInterest;
+    private String savedPLookingFor;
+    private String savedPDeviceID;
+    private Uri savedPImage;
+    private QBUser savedPQbUser;
+    private ModelItem savedPModelItem;
+    private UserProfileInfo savedPUserProfileInfo;
     private UserProfileInfoModel userProfileInfoModel;
     private QBUserCustomData qbUserCustomData;
     private ArrayList<PurchaseDiamond> purchaseDiamonds;
@@ -118,15 +116,15 @@ public class SavedProfile implements Parcelable, Serializable {
 
     public SavedProfile(Parcel in) {
         savedProfID = in.readInt();
-        name = in.readString();
-        age = in.readString();
-        location = in.readString();
-        gender = in.readInt();
-        phone = in.readString();
-        email = in.readString();
-        password = in.readString();
-        deviceID = in.readString();
-        image = in.readParcelable(Uri.class.getClassLoader());
+        savedPName = in.readString();
+        savedPAge = in.readString();
+        savedPLocation = in.readString();
+        savedPGender = in.readInt();
+        savedPPhone = in.readString();
+        savedPEmail = in.readString();
+        savedPPassword = in.readString();
+        savedPDeviceID = in.readString();
+        savedPImage = in.readParcelable(Uri.class.getClassLoader());
     }
 
     public static final Creator<SavedProfile> CREATOR = new Creator<SavedProfile>() {
@@ -141,53 +139,53 @@ public class SavedProfile implements Parcelable, Serializable {
         }
     };
 
-    public SavedProfile(String surname, String emailStrg, String passwordStg, String aboutMe, String myInterest, String age, int myGender, String lookingFor, String dateJoined, String country, String cityStrg, Uri mImageUri) {
-     this.name=surname;
-        this.name=surname;
-        this.email=emailStrg;
-        this.password=passwordStg;
-        this.age=age;
-        this.age=aboutMe;
-        this.age=myInterest;
-        this.gender=myGender;
-        this.lookingFor=lookingFor;
-        this.dateJoined=dateJoined;
-        this.country=country;
-        this.location=cityStrg;
-        this.image=mImageUri;
+    public SavedProfile(String surname, String emailStrg, String passwordStg, String savedPAboutMe, String savedPMyInterest, String savedPAge, int myGender, String savedPLookingFor, String savedPDateJoined, String savedPCountry, String cityStrg, Uri mImageUri) {
+     this.savedPName =surname;
+        this.savedPName =surname;
+        this.savedPEmail =emailStrg;
+        this.savedPPassword =passwordStg;
+        this.savedPAge = savedPAge;
+        this.savedPAge = savedPAboutMe;
+        this.savedPAge = savedPMyInterest;
+        this.savedPGender =myGender;
+        this.savedPLookingFor = savedPLookingFor;
+        this.savedPDateJoined = savedPDateJoined;
+        this.savedPCountry = savedPCountry;
+        this.savedPLocation =cityStrg;
+        this.savedPImage =mImageUri;
 
     }
 
-    public String getName() {
-        return name;
+    public String getSavedPName() {
+        return savedPName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSavedPName(String savedPName) {
+        this.savedPName = savedPName;
     }
 
-    public String getAge() {
-        return age;
+    public String getSavedPAge() {
+        return savedPAge;
     }
 
-    public void setAge(String age) {
-        this.age = age;
+    public void setSavedPAge(String savedPAge) {
+        this.savedPAge = savedPAge;
     }
 
-    public String getLocation() {
-        return location;
+    public String getSavedPLocation() {
+        return savedPLocation;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setSavedPLocation(String savedPLocation) {
+        this.savedPLocation = savedPLocation;
     }
 
-    public Uri getImage() {
-        return image;
+    public Uri getSavedPImage() {
+        return savedPImage;
     }
 
-    public void setImage(Uri image) {
-        this.image = image;
+    public void setSavedPImage(Uri savedPImage) {
+        this.savedPImage = savedPImage;
     }
 
     public int getSavedProfID() {
@@ -199,44 +197,44 @@ public class SavedProfile implements Parcelable, Serializable {
     }
 
 
-    public int getGender() {
-        return gender;
+    public int getSavedPGender() {
+        return savedPGender;
     }
 
-    public void setGender(int gender) {
-        this.gender = gender;
+    public void setSavedPGender(int savedPGender) {
+        this.savedPGender = savedPGender;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getSavedPPhone() {
+        return savedPPhone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setSavedPPhone(String savedPPhone) {
+        this.savedPPhone = savedPPhone;
     }
 
-    public String getEmail() {
-        return email;
+    public String getSavedPEmail() {
+        return savedPEmail;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setSavedPEmail(String savedPEmail) {
+        this.savedPEmail = savedPEmail;
     }
 
-    public String getPassword() {
-        return password;
+    public String getSavedPPassword() {
+        return savedPPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setSavedPPassword(String savedPPassword) {
+        this.savedPPassword = savedPPassword;
     }
 
-    public String getDeviceID() {
-        return deviceID;
+    public String getSavedPDeviceID() {
+        return savedPDeviceID;
     }
 
-    public void setDeviceID(String deviceID) {
-        this.deviceID = deviceID;
+    public void setSavedPDeviceID(String savedPDeviceID) {
+        this.savedPDeviceID = savedPDeviceID;
     }
 
     @Override
@@ -247,71 +245,71 @@ public class SavedProfile implements Parcelable, Serializable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(savedProfID);
-        parcel.writeString(name);
-        parcel.writeString(age);
-        parcel.writeString(location);
-        parcel.writeInt(gender);
-        parcel.writeString(phone);
-        parcel.writeString(email);
-        parcel.writeString(password);
-        parcel.writeString(deviceID);
-        parcel.writeParcelable(image, i);
+        parcel.writeString(savedPName);
+        parcel.writeString(savedPAge);
+        parcel.writeString(savedPLocation);
+        parcel.writeInt(savedPGender);
+        parcel.writeString(savedPPhone);
+        parcel.writeString(savedPEmail);
+        parcel.writeString(savedPPassword);
+        parcel.writeString(savedPDeviceID);
+        parcel.writeParcelable(savedPImage, i);
     }
 
-    public String getDob() {
-        return dob;
+    public String getSavedPDob() {
+        return savedPDob;
     }
 
-    public void setDob(String dob) {
-        this.dob = dob;
+    public void setSavedPDob(String savedPDob) {
+        this.savedPDob = savedPDob;
     }
 
-    public String getCountry() {
-        return country;
+    public String getSavedPCountry() {
+        return savedPCountry;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setSavedPCountry(String savedPCountry) {
+        this.savedPCountry = savedPCountry;
     }
 
-    public String getReferrer() {
-        return referrer;
+    public String getSavedPReferrer() {
+        return savedPReferrer;
     }
 
-    public void setReferrer(String referrer) {
-        this.referrer = referrer;
+    public void setSavedPReferrer(String savedPReferrer) {
+        this.savedPReferrer = savedPReferrer;
     }
 
-    public String getLastSeen() {
-        return lastSeen;
+    public String getSavedPLastSeen() {
+        return savedPLastSeen;
     }
 
-    public void setLastSeen(String lastSeen) {
-        this.lastSeen = lastSeen;
+    public void setSavedPLastSeen(String savedPLastSeen) {
+        this.savedPLastSeen = savedPLastSeen;
     }
 
-    public String getStatus() {
-        return status;
+    public String getSavedPStatus() {
+        return savedPStatus;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setSavedPStatus(String savedPStatus) {
+        this.savedPStatus = savedPStatus;
     }
 
-    public QBUser getQbUser() {
-        return qbUser;
+    public QBUser getSavedPQbUser() {
+        return savedPQbUser;
     }
 
-    public void setQbUser(QBUser qbUser) {
-        this.qbUser = qbUser;
+    public void setSavedPQbUser(QBUser savedPQbUser) {
+        this.savedPQbUser = savedPQbUser;
     }
 
-    public UserProfileInfo getUserProfileInfo() {
-        return userProfileInfo;
+    public UserProfileInfo getSavedPUserProfileInfo() {
+        return savedPUserProfileInfo;
     }
 
-    public void setUserProfileInfo(UserProfileInfo userProfileInfo) {
-        this.userProfileInfo = userProfileInfo;
+    public void setSavedPUserProfileInfo(UserProfileInfo savedPUserProfileInfo) {
+        this.savedPUserProfileInfo = savedPUserProfileInfo;
     }
 
     public QBUserCustomData getQbUserCustomData() {
@@ -330,36 +328,36 @@ public class SavedProfile implements Parcelable, Serializable {
         this.userProfileInfoModel = userProfileInfoModel;
     }
 
-    public String getLookingFor() {
-        return lookingFor;
+    public String getSavedPLookingFor() {
+        return savedPLookingFor;
     }
 
-    public void setLookingFor(String lookingFor) {
-        this.lookingFor = lookingFor;
+    public void setSavedPLookingFor(String savedPLookingFor) {
+        this.savedPLookingFor = savedPLookingFor;
     }
 
-    public String getDateJoined() {
-        return dateJoined;
+    public String getSavedPDateJoined() {
+        return savedPDateJoined;
     }
 
-    public void setDateJoined(String dateJoined) {
-        this.dateJoined = dateJoined;
+    public void setSavedPDateJoined(String savedPDateJoined) {
+        this.savedPDateJoined = savedPDateJoined;
     }
 
-    public String getAboutMe() {
-        return aboutMe;
+    public String getSavedPAboutMe() {
+        return savedPAboutMe;
     }
 
-    public void setAboutMe(String aboutMe) {
-        this.aboutMe = aboutMe;
+    public void setSavedPAboutMe(String savedPAboutMe) {
+        this.savedPAboutMe = savedPAboutMe;
     }
 
-    public String getMyInterest() {
-        return myInterest;
+    public String getSavedPMyInterest() {
+        return savedPMyInterest;
     }
 
-    public void setMyInterest(String myInterest) {
-        this.myInterest = myInterest;
+    public void setSavedPMyInterest(String savedPMyInterest) {
+        this.savedPMyInterest = savedPMyInterest;
     }
 
     public int getSavedProfQBID() {
@@ -378,12 +376,12 @@ public class SavedProfile implements Parcelable, Serializable {
         this.savedProfUserProfInfoID = savedProfUserProfInfoID;
     }
 
-    public ModelItem getModelItem() {
-        return modelItem;
+    public ModelItem getSavedPModelItem() {
+        return savedPModelItem;
     }
 
-    public void setModelItem(ModelItem modelItem) {
-        this.modelItem = modelItem;
+    public void setSavedPModelItem(ModelItem savedPModelItem) {
+        this.savedPModelItem = savedPModelItem;
     }
 
     public ArrayList<PurchaseDiamond> getPurchaseDiamonds() {

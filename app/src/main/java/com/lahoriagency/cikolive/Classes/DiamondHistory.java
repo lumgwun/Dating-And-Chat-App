@@ -1,5 +1,7 @@
 package com.lahoriagency.cikolive.Classes;
 
+import static com.lahoriagency.cikolive.Classes.AppServerUser.QBUSER_ID;
+import static com.lahoriagency.cikolive.Classes.AppServerUser.QBUSER_TABLE;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_ID;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_TABLE;
 
@@ -8,17 +10,21 @@ public class DiamondHistory {
     private String dH_Date;
     private int dH_Count;
     private int dH_SProf_ID;
+    private String dH_To;
+    private int dH_QBUser_ID;
 
     public static final String DH_FROM = "dh_from";
     public static final String DH_DATE = "dh_date";
     public static final String DH_COUNT = "dh_count";
-    public static final String DH_ID = "dh_date";
+    public static final String DH_ID = "dh_ID";
     public static final String DH_TABLE = "dh_Table";
     public static final String DH_SAVED_PROF_ID = "dh_SProf_ID";
+    public static final String DH_SAVED_QBUSER_ID = "dh_QBUser_ID";
+    public static final String DH_TO = "dh_To";
 
     public static final String CREATE_DIAMOND_HISTORY_TABLE = "CREATE TABLE " + DH_TABLE + " (" + DH_ID + " INTEGER, " +
-            DH_SAVED_PROF_ID + " INTEGER, " + DH_FROM + " TEXT , " + DH_DATE + " TEXT , " + DH_COUNT + " INTEGER , "+
-            "PRIMARY KEY(" + DH_ID + "), " + "FOREIGN KEY(" + DH_SAVED_PROF_ID + ") REFERENCES " + SAVED_PROFILE_TABLE + "(" + SAVED_PROFILE_ID + "))";
+            DH_SAVED_PROF_ID + " INTEGER, " + DH_FROM + " TEXT , " + DH_DATE + " TEXT , " + DH_COUNT + " INTEGER , "+ DH_TO + " INTEGER , "+ DH_SAVED_QBUSER_ID + " INTEGER , "+
+            "PRIMARY KEY(" + DH_ID + "), " +"FOREIGN KEY(" + DH_SAVED_QBUSER_ID  + ") REFERENCES " + QBUSER_TABLE + "(" + QBUSER_ID + "),"+ "FOREIGN KEY(" + DH_SAVED_PROF_ID + ") REFERENCES " + SAVED_PROFILE_TABLE + "(" + SAVED_PROFILE_ID + "))";
 
 
     public DiamondHistory() {
@@ -62,5 +68,21 @@ public class DiamondHistory {
 
     public void setdH_SProf_ID(int dH_SProf_ID) {
         this.dH_SProf_ID = dH_SProf_ID;
+    }
+
+    public String getdH_To() {
+        return dH_To;
+    }
+
+    public void setdH_To(String dH_To) {
+        this.dH_To = dH_To;
+    }
+
+    public int getdH_QBUser_ID() {
+        return dH_QBUser_ID;
+    }
+
+    public void setdH_QBUser_ID(int dH_QBUser_ID) {
+        this.dH_QBUser_ID = dH_QBUser_ID;
     }
 }

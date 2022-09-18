@@ -197,7 +197,7 @@ public class DialogsManager {
                     Log.d(TAG, "Joining error: " + e.getMessage());
                 }
             });
-            ((AppChat) context).getChatHelper().join(dialog, new QBEntityCallback<Void>() {
+            ((AppConference) context).getChatHelper().join(dialog, new QBEntityCallback<Void>() {
                 @Override
                 public void onSuccess(Void aVoid, Bundle bundle) {
                     sendMessageHandleJoining(dialog, qbChatMessage);
@@ -427,12 +427,12 @@ public class DialogsManager {
     }
     public void onGlobalMessageReceived(String dialogId, final QBChatMessage chatMessage) {
         Log.d(TAG, "Global Message Received: " + chatMessage.getId());
-        if (isMessageCreatedDialog(chatMessage) && !((AppChat) context).getQBDialogsHolder().hasDialogWithId(dialogId)) {
+        if (isMessageCreatedDialog(chatMessage) && !((AppConference) context).getQBDialogsHolder().hasDialogWithId(dialogId)) {
             loadNewDialogByNotificationMessage(chatMessage);
         }
 
         if (isMessageAddedUser(chatMessage) || isMessageLeftUser(chatMessage)) {
-            if (((AppChat) context).getQBDialogsHolder().hasDialogWithId(dialogId)) {
+            if (((AppConference) context).getQBDialogsHolder().hasDialogWithId(dialogId)) {
                 notifyListenersDialogUpdated(dialogId);
             } else {
                 loadNewDialogByNotificationMessage(chatMessage);
@@ -440,16 +440,16 @@ public class DialogsManager {
         }
 
         if (chatMessage.isMarkable()) {
-            if (((AppChat) context).getQBDialogsHolder().hasDialogWithId(dialogId)) {
-                ((AppChat) context).getQBDialogsHolder().updateDialog(dialogId, chatMessage);
+            if (((AppConference) context).getQBDialogsHolder().hasDialogWithId(dialogId)) {
+                ((AppConference) context).getQBDialogsHolder().updateDialog(dialogId, chatMessage);
                 notifyListenersDialogUpdated(dialogId);
             } else {
                 QBRestChatService.getChatDialogById(dialogId).performAsync(new QBEntityCallback<QBChatDialog>() {
                     @Override
                     public void onSuccess(QBChatDialog qbChatDialog, Bundle bundle) {
                         Log.d(TAG, "Loading Dialog Successful");
-                        ((AppChat) context).getChatHelper().getUsersFromDialog(qbChatDialog, new QBEntityCallbackImpl<>());
-                        ((AppChat) context).getQBDialogsHolder().addDialog(qbChatDialog);
+                        ((AppConference) context).getChatHelper().getUsersFromDialog(qbChatDialog, new QBEntityCallbackImpl<>());
+                        ((AppConference) context).getQBDialogsHolder().addDialog(qbChatDialog);
                         notifyListenersNewDialogLoaded(qbChatDialog);
                     }
 
@@ -596,7 +596,7 @@ public class DialogsManager {
                 qbChatDialog.join(history, new QBEntityCallbackImpl() {
                     @Override
                     public void onSuccess(Object o, Bundle bundle) {
-                        ((AppChat) context).getQBDialogsHolder().addDialog(qbChatDialog);
+                        ((AppConference) context).getQBDialogsHolder().addDialog(qbChatDialog);
                         notifyListenersDialogCreated(qbChatDialog);
                     }
                 });

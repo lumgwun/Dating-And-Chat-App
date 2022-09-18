@@ -17,6 +17,7 @@ import android.widget.ToggleButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lahoriagency.cikolive.Classes.AppChat;
+import com.lahoriagency.cikolive.Classes.AppConference;
 import com.lahoriagency.cikolive.Classes.QBRTCSessionUtils;
 import com.lahoriagency.cikolive.R;
 import com.lahoriagency.cikolive.Conference.BaseConversationFragment;
@@ -150,7 +151,7 @@ public class OpponentsFromCallAdapter extends RecyclerView.Adapter<OpponentsFrom
         holder.getOpponentView().setId(user.getId());
         holder.setUserId(userID);
         String username = TextUtils.isEmpty(user.getFullName()) ? user.getLogin() : user.getFullName();
-        QBUser currentUser = ((AppChat) context.getApplicationContext()).getSharedPrefsHelper().getQbUser();
+        QBUser currentUser = ((AppConference) context.getApplicationContext()).getSharedPrefsHelper().getQbUser();
         if (Objects.equals(userID, currentUser.getId())) {
             holder.opponentName.setText(R.string.you);
         } else {

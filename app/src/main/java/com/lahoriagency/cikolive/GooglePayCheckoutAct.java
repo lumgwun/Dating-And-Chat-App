@@ -33,7 +33,7 @@ import org.json.JSONObject;
 import java.util.Locale;
 
 @SuppressWarnings("deprecation")
-public class CheckoutActivity extends AppCompatActivity {
+public class GooglePayCheckoutAct extends AppCompatActivity {
     private CheckoutViewModel model;
 
     private static final int ADD_TO_GOOGLE_WALLET_REQUEST_CODE = 999;

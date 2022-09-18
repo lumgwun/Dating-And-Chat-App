@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.DatePicker;
 
 import com.lahoriagency.cikolive.Adapters.TranxAdapter;
-import com.lahoriagency.cikolive.AppSupportAct;
 import com.lahoriagency.cikolive.Classes.ModelItem;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.Transaction;
@@ -175,7 +174,7 @@ public class TranXActList extends AppCompatActivity implements TranxAdapter.OnIt
             transaction=transactionArrayList.get(position);
             SavedProfile savedProfile= transaction.getTranxSavedProfile();
             if(savedProfile !=null){
-                modelItem = savedProfile.getModelItem();
+                modelItem = savedProfile.getSavedPModelItem();
             }
             int savedProfID=transaction.getTranSenderSavedProfID();
             int qbUserID=transaction.getTranQbUserID();

@@ -355,7 +355,7 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , Run
             currentUser = SharedPrefsHelper.getInstance().getQbUser();
         }
         if(savedProfile !=null){
-            modelItem=savedProfile.getModelItem();
+            modelItem=savedProfile.getSavedPModelItem();
         }
 
         if (ChatHelper.getCurrentUser() != null) {

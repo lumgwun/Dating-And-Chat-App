@@ -21,6 +21,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.lahoriagency.cikolive.Classes.AppChat;
+import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.SmoothInterpolator;
 import com.lahoriagency.cikolive.Classes.SpringInterpolator;
 import com.lahoriagency.cikolive.R;
@@ -61,10 +62,10 @@ public class MatchFragment extends Fragment {
         matchValueText.setText(matchValueTextString);
         matchValueText.setVisibility(View.INVISIBLE);
         imageViewLeft = viewRoot.findViewById(R.id.match_dialog_image_left);
-        imageViewLeft.setImageBitmap(AppChat.getImageLoader().getBitmapFromMemCache(imageLeftLink));
+        imageViewLeft.setImageBitmap(AppE.getImageLoader().getBitmapFromMemCache(imageLeftLink));
         imageViewLeft.setVisibility(View.INVISIBLE);
         imageViewRight = viewRoot.findViewById(R.id.match_dialog_image_right);
-        imageViewRight.setImageBitmap(AppChat.getImageLoader().getBitmapFromMemCache(imageRightLink));
+        imageViewRight.setImageBitmap(AppE.getImageLoader().getBitmapFromMemCache(imageRightLink));
         imageViewRight.setVisibility(View.INVISIBLE);
         buttonKeepSwipping = viewRoot.findViewById(R.id.match_dialog_keep_swiping);
         buttonSendMessage = viewRoot.findViewById(R.id.match_dialog_send_message);
@@ -143,8 +144,8 @@ public class MatchFragment extends Fragment {
         buttonKeepSwipping.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Animation animationDialog = AnimationUtils.loadAnimation(AppChat.getAppContext(), R.anim.match_dialog_dismiss);
-                Animation animationOverlay = AnimationUtils.loadAnimation(AppChat.getAppContext(), R.anim.match_dialog_overlay_dismiss);
+                Animation animationDialog = AnimationUtils.loadAnimation(AppE.getAppContext(), R.anim.match_dialog_dismiss);
+                Animation animationOverlay = AnimationUtils.loadAnimation(AppE.getAppContext(), R.anim.match_dialog_overlay_dismiss);
                 animationDialog.setAnimationListener(new Animation.AnimationListener() {
 
                     @Override
@@ -168,8 +169,8 @@ public class MatchFragment extends Fragment {
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Animation animationDialog = AnimationUtils.loadAnimation(AppChat.getAppContext(), R.anim.match_dialog_dismiss);
-                Animation animationOverlay = AnimationUtils.loadAnimation(AppChat.getAppContext(), R.anim.match_dialog_overlay_dismiss);
+                Animation animationDialog = AnimationUtils.loadAnimation(AppE.getAppContext(), R.anim.match_dialog_dismiss);
+                Animation animationOverlay = AnimationUtils.loadAnimation(AppE.getAppContext(), R.anim.match_dialog_overlay_dismiss);
                 animationDialog.setAnimationListener(new Animation.AnimationListener() {
 
                     @Override

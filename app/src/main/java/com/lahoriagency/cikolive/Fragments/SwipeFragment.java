@@ -10,11 +10,11 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.lahoriagency.cikolive.Adapters.UserSwipeProfileAdapter;
-import com.lahoriagency.cikolive.Classes.AppChat;
+import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
 import com.lahoriagency.cikolive.Classes.MyPreferences;
 import com.lahoriagency.cikolive.Classes.PushUtils;
-import com.lahoriagency.cikolive.Classes.QBUser;
+import com.lahoriagency.cikolive.Classes.AppServerUser;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SwipeUserRequest;
 import com.lahoriagency.cikolive.Classes.UserProfileInfo;
@@ -53,11 +53,11 @@ public class SwipeFragment extends Fragment implements SwipeStack.SwipeStackList
     }
 
     private void setup(View viewRoot) {
-        preferences = AppChat.getPreferences();
+        preferences = AppE.getPreferences();
 
         getSwipeUsers = new GetSwipeUsers(ServerMethodsConsts.USERSTOSWIPE + "/" + preferences.getUserId());
 
-        userSwipeProfileAdapter = new UserSwipeProfileAdapter(AppChat.getAppContext(), getActivity());
+        userSwipeProfileAdapter = new UserSwipeProfileAdapter(AppE.getAppContext(), getActivity());
         swipeDislikeButtonLayout = viewRoot.findViewById(R.id.swipe_dislike_button_layout);
         swipeLikeButtonLayout = viewRoot.findViewById(R.id.swipe_like_button_layout);
 
@@ -126,7 +126,7 @@ public class SwipeFragment extends Fragment implements SwipeStack.SwipeStackList
             super.onPostExecute(result);
             try {
                 if (result != null) {
-                    UserProfileInfoReply userProfileInfoReply = AppChat.getGson().fromJson(result, UserProfileInfoReply.class);
+                    UserProfileInfoReply userProfileInfoReply = AppE.getGson().fromJson(result, UserProfileInfoReply.class);
                     if (userProfileInfoReply.isStatusOkay() && userProfileInfoReply.getUsersProfileInfo() != null) {
                         for (UserProfileInfoModel model : userProfileInfoReply.getUsersProfileInfo()) {
                             UserProfileInfo profile = new UserProfileInfo(model);
@@ -143,7 +143,7 @@ public class SwipeFragment extends Fragment implements SwipeStack.SwipeStackList
                 Toast.makeText(getApplicationContext(), "error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
             if (result != null) {
-                UserSwipeReply userSwipeReply = AppChat.getGson().fromJson(result, UserSwipeReply.class);
+                UserSwipeReply userSwipeReply = AppE.getGson().fromJson(result, UserSwipeReply.class);
                 if (userSwipeReply.isMatch()) {
                     MainActivity mainActivity = (MainActivity) getContext();
                     UserProfileInfo userProfile = userSwipeProfileAdapter.getProfileByUserId(userSwipeReply.getUserId());
@@ -166,7 +166,7 @@ public class SwipeFragment extends Fragment implements SwipeStack.SwipeStackList
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             if (result != null) {
-                UserSwipeReply userSwipeReply = AppChat.getGson().fromJson(result, UserSwipeReply.class);
+                UserSwipeReply userSwipeReply = AppE.getGson().fromJson(result, UserSwipeReply.class);
                 if (userSwipeReply.isMatch()) {
                     MainActivity mainActivity = (MainActivity) getContext();
                     UserProfileInfo userProfile = userSwipeProfileAdapter.getProfileByUserId(userSwipeReply.getUserId());
@@ -186,7 +186,7 @@ public class SwipeFragment extends Fragment implements SwipeStack.SwipeStackList
     public interface OnMatchCreated {
         void showMatchDialog(UserProfileInfo userProfileInfo, boolean fromQueue);
         void showMatchDialog(SavedProfile savedProfile, boolean fromQueue);
-        void showMatchDialog(QBUser qbUser, boolean fromQueue);
+        void showMatchDialog(AppServerUser appServerUser, boolean fromQueue);
     }
 
 }

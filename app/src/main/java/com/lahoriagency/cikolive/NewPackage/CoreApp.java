@@ -1,5 +1,6 @@
 package com.lahoriagency.cikolive.NewPackage;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -17,19 +18,33 @@ public class CoreApp extends MultiDexApplication {
     private static CoreApp instance;
     private static final String QB_CONFIG_DEFAULT_FILE_NAME = "qb_config.json";
     protected QbConfigs qbConfigs;
+    private static final String PREF_NAME = "ciko";
+    int PRIVATE_MODE = 0;
+    SharedPrefsHelper sharedPrefsHelper;
+    Context _context;
+    public CoreApp(Context context) {
+        this._context = context;
+
+    }
+
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
+        sharedPrefsHelper= new SharedPrefsHelper();
         initQBSessionManager();
         initQbConfigs();
         initCredentials();
+        sharedPrefsHelper = SharedPrefsHelper.getInstance();
     }
 
     private void initQbConfigs() {
         Log.e(TAG, "QB CONFIG FILE NAME: " + getQbConfigFileName());
         qbConfigs = CoreConfigUtils.getCoreConfigsOrNull(getQbConfigFileName());
+    }
+    public SharedPrefsHelper getSharedPrefsHelper() {
+        return sharedPrefsHelper;
     }
 
     public static synchronized CoreApp getInstance() {

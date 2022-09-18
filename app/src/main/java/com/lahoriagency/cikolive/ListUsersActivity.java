@@ -64,6 +64,21 @@ public class ListUsersActivity extends AppCompatActivity implements View.OnClick
         retrieveAllUser();
     }
 
+
+    private void setClicks() {
+    }
+
+    private void initViews() {
+        recyclerView = findViewById(R.id.users_list_recycler_view);
+        createChatButton = findViewById(R.id.create_chat_bu);
+        createChatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+    }
     private void retrieveAllUser() {
         QBPagedRequestBuilder qbRequestGetBuilder = new QBPagedRequestBuilder();
         qbRequestGetBuilder.setPage(1);
@@ -99,20 +114,6 @@ public class ListUsersActivity extends AppCompatActivity implements View.OnClick
         });
     }
 
-    private void setClicks() {
-    }
-
-    private void initViews() {
-        recyclerView = findViewById(R.id.users_list_recycler_view);
-        createChatButton = findViewById(R.id.create_chat_bu);
-        createChatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-    }
 
 
     @Override

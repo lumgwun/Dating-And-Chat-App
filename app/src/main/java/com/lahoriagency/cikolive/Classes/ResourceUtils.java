@@ -8,6 +8,7 @@ import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
+@SuppressWarnings("deprecation")
 public class ResourceUtils {
     public static String getString(@StringRes int stringId) {
         return AppChat.getInstance().getString(stringId);

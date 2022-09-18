@@ -21,6 +21,7 @@ import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarChangeListener;
 import com.facebook.login.LoginManager;
 import com.lahoriagency.cikolive.Classes.AppChat;
+import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
 import com.lahoriagency.cikolive.Classes.MyPreferences;
@@ -63,8 +64,8 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_settings);
-        preferencesManager = AppChat.getPreferencesManager();
-        myPreferences = AppChat.getPreferences();
+        preferencesManager = AppE.getPreferencesManager();
+        myPreferences = AppE.getPreferences();
         menSwitch = findViewById(R.id.sex_preference_men_switch);
         womenSwitch = findViewById(R.id.sex_preference_women_switch);
         sexPreferenceTextView = findViewById(R.id.sex_preference_textview);
@@ -227,7 +228,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void QBuserLogout() {
         // TODO LOGOUT
         ChatHelper.getInstance().destroy();
-        SubscribeService.unSubscribeFromPushes(AppChat.getAppContext());
+        SubscribeService.unSubscribeFromPushes(AppE.getAppContext());
         SharedPrefsHelper.getInstance().removeQbUser();
         QbDialogHolder.getInstance().clear();
 

@@ -21,6 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.lahoriagency.cikolive.Adapters.CityNameAdapter;
+import com.lahoriagency.cikolive.BaseActDiamond;
 import com.lahoriagency.cikolive.BaseActivity;
 import com.lahoriagency.cikolive.Classes.CityName;
 import com.lahoriagency.cikolive.R;
@@ -32,7 +33,7 @@ import java.util.List;
 public class CityBottomSheet extends BottomSheetDialogFragment {
 
     CityNameAdapter.OnItemClick onItemClick;
-    BaseActivity baseActivity;
+    BaseActDiamond baseActivity;
 
     public CityNameAdapter.OnItemClick getOnItemClick() {
         return onItemClick;
@@ -87,7 +88,7 @@ public class CityBottomSheet extends BottomSheetDialogFragment {
 
     private void init() {
 
-        baseActivity = new BaseActivity();
+        baseActivity = new BaseActDiamond();
         lout1.setVisibility(View.VISIBLE);
         lout2.setVisibility(View.GONE);
         cityNameAdapter = new CityNameAdapter();

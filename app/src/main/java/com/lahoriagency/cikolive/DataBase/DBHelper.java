@@ -30,23 +30,17 @@ import static com.lahoriagency.cikolive.Classes.ModelItem.MODEL_ITEM_ID;
 import static com.lahoriagency.cikolive.Classes.ModelItem.MODEL_ITEM_TABLE;
 import static com.lahoriagency.cikolive.Classes.ModelItem.MODEL_LOCATION;
 import static com.lahoriagency.cikolive.Classes.ModelItem.MODEL_PROF_ID;
-import static com.lahoriagency.cikolive.Classes.QBUser.CREATE_QB_USER_TABLE;
-import static com.lahoriagency.cikolive.Classes.QBUser.QBUSER_TABLE;
+import static com.lahoriagency.cikolive.Classes.AppServerUser.CREATE_QB_USER_TABLE;
+import static com.lahoriagency.cikolive.Classes.AppServerUser.QBUSER_TABLE;
 import static com.lahoriagency.cikolive.Classes.RedeemRequest.CREATE_REDEEM_REQUEST_TABLE;
 import static com.lahoriagency.cikolive.Classes.RedeemRequest.REDEEM_REQUEST_TABLE;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.CREATE_SAVED_PROFILES_TABLE;
-import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_AGE;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_COUNTRY;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_DEVICEID;
-import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_DOB;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_EMAIL;
-import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_GENDER;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_LOC;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_NAME;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_PASSWORD;
-import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_PHONE;
-import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_PHOTO;
-import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_REFERRER;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_TABLE;
 import static com.lahoriagency.cikolive.Classes.TimeLine.CREATE_ACCOUNT_TIMELINE_TABLE;
 import static com.lahoriagency.cikolive.Classes.TimeLine.TIMELINE_TABLE;
@@ -286,18 +280,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public long insertNewSavedProfile(SavedProfile lastProfileUsed) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        String deviceID = lastProfileUsed.getDeviceID();
-        String name =lastProfileUsed.getName();
-        String country =lastProfileUsed.getCountry();
-        String phone =lastProfileUsed.getPhone();
-        String dob =lastProfileUsed.getDob();
-        String age =lastProfileUsed.getAge();
-        int gender =lastProfileUsed.getGender();
-        String email =lastProfileUsed.getEmail();
-        String location =lastProfileUsed.getLocation();
-        String password =lastProfileUsed.getPassword();
-        String referrer =lastProfileUsed.getReferrer();
-        Uri profilePicture =lastProfileUsed.getImage();
+        String deviceID = lastProfileUsed.getSavedPDeviceID();
+        String name =lastProfileUsed.getSavedPName();
+        String country =lastProfileUsed.getSavedPCountry();
+        String phone =lastProfileUsed.getSavedPPhone();
+        String dob =lastProfileUsed.getSavedPDob();
+        String age =lastProfileUsed.getSavedPAge();
+        int gender =lastProfileUsed.getSavedPGender();
+        String email =lastProfileUsed.getSavedPEmail();
+        String location =lastProfileUsed.getSavedPLocation();
+        String password =lastProfileUsed.getSavedPPassword();
+        String referrer =lastProfileUsed.getSavedPReferrer();
+        Uri profilePicture =lastProfileUsed.getSavedPImage();
         int savedProfID =lastProfileUsed.getSavedProfID();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SAVED_PROFILE_NAME, name);
@@ -312,18 +306,18 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public void upDateUser(SavedProfile lastProfileUsed) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        String deviceID = lastProfileUsed.getDeviceID();
-        String name =lastProfileUsed.getName();
-        String country =lastProfileUsed.getCountry();
-        String phone =lastProfileUsed.getPhone();
-        String dob =lastProfileUsed.getDob();
-        String age =lastProfileUsed.getAge();
-        int gender =lastProfileUsed.getGender();
-        String email =lastProfileUsed.getEmail();
-        String location =lastProfileUsed.getLocation();
-        String password =lastProfileUsed.getPassword();
-        String referrer =lastProfileUsed.getReferrer();
-        Uri profilePicture =lastProfileUsed.getImage();
+        String deviceID = lastProfileUsed.getSavedPDeviceID();
+        String name =lastProfileUsed.getSavedPName();
+        String country =lastProfileUsed.getSavedPCountry();
+        String phone =lastProfileUsed.getSavedPPhone();
+        String dob =lastProfileUsed.getSavedPDob();
+        String age =lastProfileUsed.getSavedPAge();
+        int gender =lastProfileUsed.getSavedPGender();
+        String email =lastProfileUsed.getSavedPEmail();
+        String location =lastProfileUsed.getSavedPLocation();
+        String password =lastProfileUsed.getSavedPPassword();
+        String referrer =lastProfileUsed.getSavedPReferrer();
+        Uri profilePicture =lastProfileUsed.getSavedPImage();
         int savedProfID =lastProfileUsed.getSavedProfID();
         ContentValues contentValues = new ContentValues();
 
@@ -337,11 +331,11 @@ public class DBHelper extends SQLiteOpenHelper {
             do{
                 SavedProfile savedProfile = new SavedProfile();
                 savedProfile.setSavedProfID(Integer.parseInt(cursor.getString(0)));
-                savedProfile.setName(cursor.getString(1));
-                savedProfile.setCountry(cursor.getString(10));
-                savedProfile.setLocation(cursor.getString(3));
-                savedProfile.setImage(Uri.parse(cursor.getString(5)));
-                savedProfile.setGender(cursor.getInt(4));
+                savedProfile.setSavedPName(cursor.getString(1));
+                savedProfile.setSavedPCountry(cursor.getString(10));
+                savedProfile.setSavedPLocation(cursor.getString(3));
+                savedProfile.setSavedPImage(Uri.parse(cursor.getString(5)));
+                savedProfile.setSavedPGender(cursor.getInt(4));
                 profileList.add(savedProfile);
             }while(cursor.moveToNext());
         }

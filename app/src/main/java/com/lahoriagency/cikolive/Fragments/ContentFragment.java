@@ -21,6 +21,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.lahoriagency.cikolive.Adapters.ContentPagerAdapter;
 import com.lahoriagency.cikolive.ChatAct;
 import com.lahoriagency.cikolive.Classes.AnimationUtils;
+import com.lahoriagency.cikolive.Classes.AppServerUser;
 import com.lahoriagency.cikolive.Classes.QBGetChatDialogById;
 import com.lahoriagency.cikolive.Classes.QbDialogHolder;
 import com.lahoriagency.cikolive.Classes.QbUsersHolder;
@@ -241,7 +242,7 @@ public class ContentFragment extends Fragment implements SwipeFragment.OnMatchCr
     }
 
     @Override
-    public void showMatchDialog(com.lahoriagency.cikolive.Classes.QBUser qbUser, boolean fromQueue) {
+    public void showMatchDialog(AppServerUser appServerUser, boolean fromQueue) {
 
     }
 }

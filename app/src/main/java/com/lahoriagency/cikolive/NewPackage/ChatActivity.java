@@ -45,6 +45,7 @@ import com.lahoriagency.cikolive.Interfaces.OnImagePickedListener;
 import com.lahoriagency.cikolive.Interfaces.PaginationHistoryListener;
 import com.lahoriagency.cikolive.ListUsersActivity;
 import com.lahoriagency.cikolive.R;
+import com.quickblox.auth.session.QBSettings;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.model.QBAttachment;
 import com.quickblox.chat.model.QBChatDialog;
@@ -69,6 +70,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
+
 public class ChatActivity extends BaseActNew implements OnImagePickedListener, View.OnClickListener {
     public static final String EXTRA_DIALOG_ID = "dialogId";
     public static final String userId = "userId";
@@ -81,6 +87,11 @@ public class ChatActivity extends BaseActNew implements OnImagePickedListener, V
     private LinearLayout attachmentPreviewContainerLayout;
     private Snackbar snackbar;
     private ChatAdapterNew chatAdapter;
+    private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
+    private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
+    private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
+    private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
+    private static final String SERVER_URL = "";
 
     private RecyclerView chatMessagesRecyclerView;
     private AttachmentPreviewAdapter attachmentPreviewAdapter;
@@ -104,6 +115,7 @@ public class ChatActivity extends BaseActNew implements OnImagePickedListener, V
 
     private WebRtcSessionManager webRtcSessionManager;
     SharedPrefsHelper sharedPrefsHelper;
+    private static final String PREF_NAME = "Ciko";
 
 
     public static void start(Context context, boolean isRunForCall) {
@@ -125,8 +137,9 @@ public class ChatActivity extends BaseActNew implements OnImagePickedListener, V
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
         setStatusbarColor();
+        QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
 
 

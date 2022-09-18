@@ -35,6 +35,7 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.Gson;
+import com.lahoriagency.cikolive.Classes.AppServerUser;
 import com.lahoriagency.cikolive.Classes.GPSLocationListener;
 import com.lahoriagency.cikolive.Classes.QBUserCustomData;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
@@ -274,7 +275,7 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
     }
 
     @Override
-    public void showMatchDialog(com.lahoriagency.cikolive.Classes.QBUser qbUser, boolean fromQueue) {
+    public void showMatchDialog(AppServerUser appServerUser, boolean fromQueue) {
 
     }
 
@@ -310,7 +311,7 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
     @Override
     public void showMatchDialogIfAny() {
         if (!matchDialogQueue.isEmpty()) {
-            showMatchDialog((com.lahoriagency.cikolive.Classes.QBUser) null, true);
+            showMatchDialog((AppServerUser) null, true);
         }
     }
 

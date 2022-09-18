@@ -9,7 +9,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context="com.lahoriagency.cikolive.CheckoutActivity">
+    tools:context="com.lahoriagency.cikolive.GooglePayCheckoutAct">
 
     <LinearLayout
         android:layout_width="match_parent"

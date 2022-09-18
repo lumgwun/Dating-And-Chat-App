@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import com.lahoriagency.cikolive.Classes.AppChat;
+import com.lahoriagency.cikolive.Classes.AppConference;
+import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.ImageLoader;
 import com.lahoriagency.cikolive.Classes.UserProfileInfo;
 import com.lahoriagency.cikolive.ProfileActivity;
@@ -31,7 +33,7 @@ public class UserSwipeProfileAdapter extends ArrayAdapter<UserProfileInfo> {
     public UserSwipeProfileAdapter(Context context, FragmentActivity fragmentActivity) {
         super(context, 0);
         this.fragmentActivity = fragmentActivity;
-        this.imageLoader = AppChat.getImageLoader();
+        this.imageLoader = AppE.getImageLoader();
     }
 
     @NonNull

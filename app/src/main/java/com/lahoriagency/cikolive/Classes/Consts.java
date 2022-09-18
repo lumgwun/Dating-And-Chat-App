@@ -36,4 +36,5 @@ public interface Consts {
     String EXTRA_DIALOG_OCCUPANTS = "9";
     String EXTRA_AS_LISTENER = "8";
     String PREF_MIC_ENABLED = "MIC ENABLED";
+    String SAMPLE_CONFIG_FILE_NAME = "sample_config.json";
 }

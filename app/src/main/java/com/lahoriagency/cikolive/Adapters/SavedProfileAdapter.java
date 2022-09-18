@@ -52,12 +52,12 @@ public class SavedProfileAdapter extends RecyclerView.Adapter<SavedProfileAdapte
         final SavedProfile savedProfile = list.get(position);
         if(savedProfile !=null){
             profileID =savedProfile.getSavedProfID();
-            age=savedProfile.getAge();
-            name=savedProfile.getName();
-            location=savedProfile.getLocation();
-            status=savedProfile.getStatus();
-            lastSeen=savedProfile.getLastSeen();
-            profilePicture=savedProfile.getImage();
+            age=savedProfile.getSavedPAge();
+            name=savedProfile.getSavedPName();
+            location=savedProfile.getSavedPLocation();
+            status=savedProfile.getSavedPStatus();
+            lastSeen=savedProfile.getSavedPLastSeen();
+            profilePicture=savedProfile.getSavedPImage();
 
         }
         holder.names.setText(name);

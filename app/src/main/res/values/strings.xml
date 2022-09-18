@@ -583,5 +583,6 @@
     <string name="please_wait">please wait...</string>
     <string name="loading_chat">loading chat....</string>
     <string name="error_leave_chat">error</string>
+    <string name="error_credentials_empty">Error! empty credentials</string>
 
 </resources>

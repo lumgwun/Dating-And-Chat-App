@@ -31,6 +31,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lahoriagency.cikolive.Adapters.OpponentsFromCallAdapter;
 import com.lahoriagency.cikolive.Classes.AppChat;
+import com.lahoriagency.cikolive.Classes.AppConference;
+import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.CallService;
 import com.lahoriagency.cikolive.Classes.NoChildClickableRecyclerView;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
@@ -143,8 +145,8 @@ public class ConversationFragment extends BaseToolBarFragment implements CallSer
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (getActivity() != null && getActivity().getApplicationContext() != null) {
-            qbUsersHolder = ((AppChat) getActivity().getApplicationContext()).getQBUsersHolder();
-            sharedPrefsHelper = ((AppChat) getActivity().getApplicationContext()).getSharedPrefsHelper();
+            qbUsersHolder = ((AppConference) getActivity().getApplicationContext()).getQBUsersHolder();
+            sharedPrefsHelper = ((AppConference) getActivity().getApplicationContext()).getSharedPrefsHelper();
         }
         conversationFragmentCallback.addCurrentCallStateCallback(this);
     }

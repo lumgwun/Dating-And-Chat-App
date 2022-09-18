@@ -1,53 +1,34 @@
-package com.lahoriagency.cikolive.Classes;
-
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.text.TextUtils;
-import android.util.Log;
+package com.lahoriagency.cikolive.NewPackage;
 
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.multidex.MultiDexApplication;
 
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.gson.Gson;
-import com.lahoriagency.cikolive.Conference.QBDialogsHolder;
-import com.lahoriagency.cikolive.Conference.QBUsersHolder;
-import com.lahoriagency.cikolive.Conference.QBUsersHolderImpl;
+import com.lahoriagency.cikolive.Classes.BackgroundListener;
 import com.lahoriagency.cikolive.R;
-import com.quickblox.auth.session.QBSessionManager;
-import com.quickblox.auth.session.QBSessionParameters;
 import com.quickblox.auth.session.QBSettings;
-import com.quickblox.conference.ConferenceConfig;
-import com.quickblox.core.ServiceZone;
-import com.quickblox.messages.services.QBPushManager;
 
-import java.util.Calendar;
-
-
-
-;import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
 import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
 import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
 import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
-public class AppChat extends MultiDexApplication {
-    public static final String TAG = AppChat.class.getSimpleName();
-
-    private static AppChat instance;
+public class AppThird extends MultiDexApplication {
     public static final String USER_DEFAULT_PASSWORD = "quickblox";
     public static final int CHAT_PORT = 5223;
     public static final int SOCKET_TIMEOUT = 300;
+    public static final boolean KEEP_ALIVE = true;
     public static final boolean USE_TLS = true;
+    public static final boolean AUTO_JOIN = false;
+    public static final boolean AUTO_MARK_DELIVERED = true;
+    public static final boolean RECONNECTION_ALLOWED = true;
+    public static final boolean ALLOW_LISTEN_NETWORK = true;
 
-    //App credentials
+    // app credentials
     private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
     private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
     private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
     private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
     private static final String SERVER_URL = "";
-
-
 
     // chat settings range
     private static final int MAX_PORT_VALUE = 65535;
@@ -55,6 +36,7 @@ public class AppChat extends MultiDexApplication {
     private static final int MIN_SOCKET_TIMEOUT = 300;
     private static final int MAX_SOCKET_TIMEOUT = 60000;
 
+    private static AppThird instance;
 
     @Override
     public void onCreate() {
@@ -66,7 +48,8 @@ public class AppChat extends MultiDexApplication {
         initCredentials();
         ProcessLifecycleOwner.get().getLifecycle().addObserver(new BackgroundListener());
     }
-    private void initApplication() {
+
+    void initApplication() {
         instance = this;
     }
 
@@ -94,7 +77,7 @@ public class AppChat extends MultiDexApplication {
         // QBSettings.getInstance().setZone(ServiceZone.PRODUCTION);
     }
 
-    public static AppChat getInstance() {
+    public static AppThird getInstance() {
         return instance;
     }
 }

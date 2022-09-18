@@ -1,5 +1,6 @@
 package com.lahoriagency.cikolive.NewPackage;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -15,6 +16,7 @@ public class App extends CoreApp {
     private static SampleConfigs sampleConfigs;
     //private static CommonInstances commonInstances;
     private static App instance;
+    Context _context;
 
     /*"app_id": "76720",
             "auth_key": "shkJz23eJhkVxOX",
@@ -25,6 +27,11 @@ public class App extends CoreApp {
             "gcm_sender_id": "647783175343"*/
 
     private static QBResRequestExecutor qbResRequestExecutor;
+    public App(Context context) {
+        super(context);
+        this._context = context;
+
+    }
     public static App getContext() {
         return instance;
     }
@@ -59,13 +66,7 @@ public class App extends CoreApp {
 
     // setting locale for the whole application
     public void setResourceLocale(Locale locale) {
-        if (Build.VERSION.SDK_INT >= 17) {
-            getBaseContext().getResources().getConfiguration().setLocale(locale);
-        } else {
-            Configuration config = getResources().getConfiguration();
-            config.locale = locale;
-            getBaseContext().getResources().updateConfiguration(config, getResources().getDisplayMetrics());
-        }
+        getBaseContext().getResources().getConfiguration().setLocale(locale);
     }
 
     //for setting locale on the basis of language selection

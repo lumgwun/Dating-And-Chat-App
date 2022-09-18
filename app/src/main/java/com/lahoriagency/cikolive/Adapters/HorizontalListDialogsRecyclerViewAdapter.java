@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lahoriagency.cikolive.ChatAct;
 import com.lahoriagency.cikolive.Classes.AppChat;
+import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.CircularProgressIndicator;
 import com.lahoriagency.cikolive.Classes.ImageLoader;
 import com.lahoriagency.cikolive.Classes.QbDialogUtils;
@@ -36,7 +37,7 @@ public class HorizontalListDialogsRecyclerViewAdapter extends RecyclerView.Adapt
     public HorizontalListDialogsRecyclerViewAdapter(FragmentActivity fragmentActivity, List<QBChatDialog> dialogs) {
         this.dialogList = dialogs;
         this.fragmentActivity = fragmentActivity;
-        imageLoader = AppChat.getImageLoader();
+        imageLoader = AppE.getImageLoader();
     }
 
     @NonNull

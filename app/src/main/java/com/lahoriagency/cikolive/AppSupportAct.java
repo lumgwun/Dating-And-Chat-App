@@ -40,12 +40,22 @@ import com.quickblox.users.QBUsers;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
+
 public class AppSupportAct extends BaseActivity implements TextWatcher {
     private final String TAG = getClass().getSimpleName();
 
     private EditText outgoingMessageEditText;
     private ProgressBar progressBar;
     private ArrayAdapter<String> adapter;
+    private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
+    private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
+    private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
+    private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
+    private static final String SERVER_URL = "";
 
     private List<String> receivedPushes;
 
@@ -72,7 +82,8 @@ public class AppSupportAct extends BaseActivity implements TextWatcher {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_app_support);
-
+        QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
         boolean enable = QBSettings.getInstance().isEnablePushNotification();
         String subtitle = getSubtitleStatus(enable);
         setActionbarSubTitle(subtitle);

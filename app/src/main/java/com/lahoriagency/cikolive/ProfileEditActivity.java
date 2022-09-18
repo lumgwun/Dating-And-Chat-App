@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lahoriagency.cikolive.Classes.AppChat;
+import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
 import com.lahoriagency.cikolive.Classes.Config;
 import com.lahoriagency.cikolive.Classes.GetFilePathFromUri;
@@ -76,8 +77,8 @@ public class ProfileEditActivity extends AppCompatActivity implements OnStartDra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_profile_edit);
-        preferencesManager = AppChat.getPreferencesManager();
-        myPreferences = AppChat.getPreferences();
+        preferencesManager = AppE.getPreferencesManager();
+        myPreferences = AppE.getPreferences();
         setActionBarSettings();
 
         descriptionEditText = findViewById(R.id.profile_edit_description_edit_text);
@@ -217,7 +218,7 @@ public class ProfileEditActivity extends AppCompatActivity implements OnStartDra
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {
-                    PhotoUploadReply photoUploadReply = AppChat.getGson().fromJson(response.body().string(), PhotoUploadReply.class);
+                    PhotoUploadReply photoUploadReply = AppE.getGson().fromJson(response.body().string(), PhotoUploadReply.class);
                     if (photoUploadReply.isStatusOkay()) {
                         updateUserCustomData(new ProfilePhotoData(photoUploadReply.getPhotoLink(), photoUploadReply.getBlobId()), filePath);
                     }

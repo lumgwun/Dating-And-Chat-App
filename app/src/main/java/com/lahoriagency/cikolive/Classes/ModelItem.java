@@ -20,11 +20,11 @@ public class ModelItem implements Serializable, Parcelable {
     public static final String MODEL_AGE = "model_age";
     public static final String MODEL_IS_SHORT = "model_is_short";
     public static final String MODEL_STATUS = "model_Status";
+    public static final String MODEL_QBUser_ID = "model_QbUser_ID";
 
     public static final String CREATE_MODEL_TYPE_TABLE = "CREATE TABLE " + MODEL_ITEM_TABLE + " (" + MODEL_ITEM_ID + " INTEGER, " +
-            MODEL_ACTOR_NAME + " TEXT, " + MODEL_AGE + " INTEGER , "+ MODEL_DIAMOND + " INTEGER , "+ MODEL_IS_SHORT + " INTEGER , "+ MODEL_ACTOR_IMAGE + " BLOB , " + MODEL_LOCATION + " REAL , " + MODEL_STATUS + " REAL , "+
+            MODEL_ACTOR_NAME + " TEXT, " + MODEL_AGE + " INTEGER , "+ MODEL_DIAMOND + " INTEGER , "+ MODEL_IS_SHORT + " INTEGER , "+ MODEL_ACTOR_IMAGE + " BLOB , " + MODEL_LOCATION + " REAL , " + MODEL_STATUS + " REAL , "+ MODEL_PROF_ID + " INTEGER , "+ MODEL_QBUser_ID + " INTEGER , "+
             "PRIMARY KEY(" + MODEL_ITEM_ID + "), " + "FOREIGN KEY(" + MODEL_PROF_ID + ") REFERENCES " + SAVED_PROFILE_TABLE + "(" + SAVED_PROFILE_ID + "))";
-
 
     private String actorName;
     private String actorImage;
@@ -32,6 +32,7 @@ public class ModelItem implements Serializable, Parcelable {
     private int diamond;
     private int modelProfID;
     private int modelID;
+    private int modelQBUserID;
 
     private int age;
     private String modelItemStatus;
@@ -166,5 +167,13 @@ public class ModelItem implements Serializable, Parcelable {
         parcel.writeInt(age);
         parcel.writeString(modelItemStatus);
         parcel.writeByte((byte) (isShort ? 1 : 0));
+    }
+
+    public int getModelQBUserID() {
+        return modelQBUserID;
+    }
+
+    public void setModelQBUserID(int modelQBUserID) {
+        this.modelQBUserID = modelQBUserID;
     }
 }

@@ -12,7 +12,15 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.lahoriagency.cikolive.Classes.CityName;
+import com.lahoriagency.cikolive.Classes.Comments;
+import com.lahoriagency.cikolive.Classes.DiamondHistory;
 import com.lahoriagency.cikolive.Classes.ErrorUtils;
+import com.lahoriagency.cikolive.Classes.Gift;
+import com.lahoriagency.cikolive.Classes.Notification;
+import com.lahoriagency.cikolive.Classes.PurchaseDiamond;
+import com.lahoriagency.cikolive.Classes.RedeemRequest;
+import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Interfaces.Consts;
 import com.lahoriagency.cikolive.NewPackage.App;
 import com.lahoriagency.cikolive.NewPackage.DialogUtils;
@@ -20,19 +28,37 @@ import com.lahoriagency.cikolive.NewPackage.GooglePlayServicesHelper;
 import com.lahoriagency.cikolive.NewPackage.QBResRequestExecutor;
 import com.lahoriagency.cikolive.NewPackage.SharedPrefsHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import eightbitlab.com.blurview.BlurAlgorithm;
+
 public abstract class BaseActNew extends CoreBaseActivity {
     protected ActionBar actionBar;
-    private static final String TAG = BaseActivity.class.getSimpleName();
+    private static final String TAG = BaseActNew.class.getSimpleName();
     protected ProgressDialog progressDialog;
     protected GooglePlayServicesHelper googlePlayServicesHelper;
     protected QBResRequestExecutor requestExecutor;
     SharedPrefsHelper sharedPrefsHelper;
 
+    private static String DUMMY_VALUE = "dummy_value";
+
+    private BlurAlgorithm blurAlgorithm;
+    public final List<String> listOfImages = new ArrayList<>();
+    public final List<Notification> listOfNotification = new ArrayList<>();
+    public final List<PurchaseDiamond> listOfPurchaseDiamond = new ArrayList<>();
+    public final List<Gift> giftList = new ArrayList<>();
+    public final List<RedeemRequest> listOfRedeems = new ArrayList<>();
+    public final List<DiamondHistory> listOfDiamondHistory = new ArrayList<>();
+    public final List<CityName> cityList = new ArrayList<>();
+    public final List<SavedProfile> savedProfileList = new ArrayList<>();
+    public final List<Comments> commentsList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_base_act_new);
-        actionBar = getSupportActionBar();
+        sharedPrefsHelper= new SharedPrefsHelper();
         actionBar = getSupportActionBar();
         progressDialog = DialogUtils.getProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -41,8 +67,6 @@ public abstract class BaseActNew extends CoreBaseActivity {
         googlePlayServicesHelper = new GooglePlayServicesHelper();
 
     }
-
-
 
     protected Snackbar showErrorSnackbar(@StringRes int resId, Exception e,
                                          View.OnClickListener clickListener) {

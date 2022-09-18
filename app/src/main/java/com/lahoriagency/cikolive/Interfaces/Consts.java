@@ -6,11 +6,11 @@ import com.lahoriagency.cikolive.Classes.ResourceUtils;
 import com.lahoriagency.cikolive.R;
 
 public interface Consts {
-    //String SAMPLE_CONFIG_FILE_NAME = "sample_config.json";
 
     int PREFERRED_IMAGE_SIZE_PREVIEW = ResourceUtils.getDimen(R.dimen.chat_attachment_preview_size);
     int PREFERRED_IMAGE_SIZE_FULL = ResourceUtils.dpToPx(320);
     String QB_USER_PASSWORD = "qb_user_password";
+
     String PREF_SWAP_CAM_TOGGLE_CHECKED = "pref_swap_cam_toggle_checked";
     String PREF_SCREEN_SHARING_TOGGLE_CHECKED = "pref_screen_sharing_toggle_checked";
     String PREF_CAM_ENABLED = "pref_cam_enabled";

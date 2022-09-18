@@ -140,7 +140,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/cus_BankText"
+                android:id="@+id/tranx_Recycler"
                 android:textAllCaps="true"
                 android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
@@ -172,7 +172,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/cus_BankNo33"
+                    android:id="@+id/users_BRecycler"
                     android:textAllCaps="true"
                     android:gravity="center_horizontal"
                     android:layout_marginStart="5dp"

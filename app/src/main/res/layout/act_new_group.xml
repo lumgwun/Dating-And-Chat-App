@@ -37,7 +37,7 @@
             android:singleLine="true"
             android:textColor="#333333"
             android:textSize="17sp"
-            tools:text="QuickBlox chatting" />
+            tools:text="Ciko Live chatting" />
 
         <ImageView
             android:id="@+id/iv_clear"

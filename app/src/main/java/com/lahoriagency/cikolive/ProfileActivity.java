@@ -2,6 +2,7 @@ package com.lahoriagency.cikolive;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.transition.Fade;
@@ -21,8 +22,17 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.ybq.parallaxviewpager.ParallaxViewPager;
 import com.lahoriagency.cikolive.Adapters.UserSwipeProfileAdapter;
 import com.lahoriagency.cikolive.Classes.AppChat;
+import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.ImageLoader;
+import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.UserProfileInfo;
+import com.quickblox.auth.session.QBSettings;
+import com.quickblox.users.model.QBUser;
+
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
 
 public class ProfileActivity extends AppCompatActivity {
@@ -31,24 +41,57 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageLoader imageLoader;
     private FloatingActionButton fab;
     private CardView profileImageCard;
+    private UserProfileInfo userProfileInfo;
+    private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
+    private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
+    private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
+    private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
+    private static final String SERVER_URL = "";
+    private QBUser cloudUser;
+    private  QBUser currentUser;
+    SharedPreferences userPreferences;
+    private  SavedProfile savedProfile;
+    private String userName,password,profileName;
+    private int profileID;
+    private static final String PREF_NAME = "Ciko";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_profile);
-        imageLoader = AppChat.getImageLoader();
+        QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+        setTitle("Main Selection Arena");
+        imageLoader = AppE.getImageLoader();
+        userProfileInfo= new UserProfileInfo();
+        currentUser= new QBUser();
+        savedProfile= new SavedProfile();
+        userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        profileID = userPreferences.getInt("SAVED_PROFILE_ID", 0);
+        userName = userPreferences.getString("SAVED_PROFILE_EMAIL", "");
+        password = userPreferences.getString("SAVED_PROFILE_PASSWORD", "");
+        profileName = userPreferences.getString("SAVED_PROFILE_NAME", "");
+        TextView description = findViewById(R.id.profile_description);
+        TextView userDistance = findViewById(R.id.profile_about_distance);
+        profileImageCard = findViewById(R.id.user_swipe_card_view);
+        if(userProfileInfo !=null){
+            try {
+                swipeViewSource = getIntent().getExtras().getBoolean(UserSwipeProfileAdapter.EXTRA_SWIPE_VIEW_SOURCE);
+                userProfileInfo = (UserProfileInfo) getIntent().getExtras().getParcelable(UserSwipeProfileAdapter.EXTRA_USER_PROFILE);
+            } catch (NullPointerException e) {
+                System.out.println("Oops!");
+            }
 
-        UserProfileInfo userProfileInfo = (UserProfileInfo) getIntent().getExtras().getParcelable(UserSwipeProfileAdapter.EXTRA_USER_PROFILE);
-        swipeViewSource = getIntent().getExtras().getBoolean(UserSwipeProfileAdapter.EXTRA_SWIPE_VIEW_SOURCE);
+        }
         parallaxViewPager = findViewById(R.id.parallax_viewpager);
         TextView profileUsername = findViewById(R.id.profile_name);
-        profileUsername.setText(userProfileInfo.getName() + ", " + userProfileInfo.getAge());
+        if(userProfileInfo !=null){
+            profileUsername.setText(userProfileInfo.getName() + ", " + userProfileInfo.getAge());
+            userDistance.setText(userProfileInfo.getDistance() + " miles away");
+            description.setText(userProfileInfo.getDescription());
 
-        TextView userDistance = findViewById(R.id.profile_about_distance);
-        userDistance.setText(userProfileInfo.getDistance() + " miles away");
-        profileImageCard = findViewById(R.id.user_swipe_card_view);
-        TextView description = findViewById(R.id.profile_description);
-        description.setText(userProfileInfo.getDescription());
+        }
+
         if (!swipeViewSource) {
             TextView matchValue = findViewById(R.id.profile_match_text_view);
             matchValue.setText("match in " + userProfileInfo.getMatchValue() + "%!");
@@ -135,10 +178,15 @@ public class ProfileActivity extends AppCompatActivity {
 
             @Override
             public int getCount() {
-                return userProfileInfo.getPhotoLinks().size();
+                return (null != userProfileInfo.getPhotoLinks() ? userProfileInfo.getPhotoLinks().size() : 0);
             }
         };
-        parallaxViewPager.setAdapter(adapter);
+        try {
+            parallaxViewPager.setAdapter(adapter);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
     }
 
 

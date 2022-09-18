@@ -19,15 +19,21 @@ import androidx.navigation.ui.AppBarConfiguration;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.github.clans.fab.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.FirebaseApp;
 import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Classes.PreferencesManager;
 import com.lahoriagency.cikolive.Classes.QBResRequestExecutor;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 
+import com.quickblox.auth.session.QBSettings;
 import com.quickblox.users.model.QBUser;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
 public class ChattingActivity extends BaseActivity {
 
@@ -53,12 +59,20 @@ public class ChattingActivity extends BaseActivity {
     private QBResRequestExecutor requestExecutor = new QBResRequestExecutor();
     Bundle userExtras;
     private TextView txtName,txtAge,txtLoc,txtChatMsg,txtChatTime, txtMyChat,txtMyChatTime;
+    private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
+    private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
+    private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
+    private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
+    private static final String SERVER_URL = "";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_chatting1);
+        FirebaseApp.initializeApp(this);
+        QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
         init();
         listeners();
         sharedPrefsHelper= new SharedPrefsHelper();

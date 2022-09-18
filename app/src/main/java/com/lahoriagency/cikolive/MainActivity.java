@@ -66,10 +66,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.FirebaseApp;
 import com.google.gson.Gson;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 import com.lahoriagency.cikolive.Adapters.AddImageAdapter;
-import com.lahoriagency.cikolive.Classes.AppChat;
+import com.lahoriagency.cikolive.Classes.AppE;
+import com.lahoriagency.cikolive.Classes.AppServerUser;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
 import com.lahoriagency.cikolive.Classes.GPSLocationListener;
 import com.lahoriagency.cikolive.Classes.LoginReply;
@@ -91,6 +93,7 @@ import com.lahoriagency.cikolive.Interfaces.OnChangeViewListener;
 import com.lahoriagency.cikolive.Interfaces.OnLoginChangeView;
 import com.lahoriagency.cikolive.Utils.SessionManager;
 import com.quickblox.auth.session.QBSessionManager;
+import com.quickblox.auth.session.QBSettings;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
@@ -101,12 +104,15 @@ import java.security.SecureRandom;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
 @SuppressWarnings("deprecation")
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
@@ -243,8 +249,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private QBUser cloudUser;
     private  QBUser currentUser;
 
-    private final List<String> permissionNeeds = Arrays.asList("email", "user_birthday");
-
     private PreferencesManager preferencesManager;
     private MyPreferences myPreferences;
 
@@ -255,6 +259,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private SavedProfile savedProfile;
     private String userName,password;
     private String userSurname,userFirstName;
+    private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
+    private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
+    private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
+    private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
+    private static final String SERVER_URL = "";
 
     private MatchFragment matchDialogFragment;
     private List<UserProfileInfo> matchDialogQueue;
@@ -307,12 +316,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FirebaseApp.initializeApp(this);
+        QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
         setTitle("Main Selection Arena");
         cloudUser= new QBUser();
         currentUser= new QBUser();
         savedProfile= new SavedProfile();
         chipNavigationBar = findViewById(R.id.bottom_nav_barC);
         //FragmentManager fm = getSupportFragmentManager();
+        calendar=Calendar.getInstance();
 
         currentUser = SharedPrefsHelper.getInstance().getQbUser();
         gson = new Gson();
@@ -509,6 +522,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 return false;
             }
         });
+        calendar=Calendar.getInstance();
         welcomeString = new StringBuilder();
 
         timeOfDay = calendar.get(Calendar.HOUR_OF_DAY);
@@ -539,13 +553,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private void startLogin(boolean logFromSession) {
         if (!logged) {
-            /*if(!logFromSession) {
-                LoginRequest loginRequest = new LoginRequest(myPreferences.getFbId(), myPreferences.getFbAccessToken());
-                BaseAsyncTask<LoginRequest> task = new BaseAsyncTask<>(ServerMethodsConsts.LOGIN, loginRequest);
-                task.setHttpMethod("POST");
-                String result = task.execute().get();
-                handleLoginResponse(result);
-            }*/
+            if(!logFromSession) {
+            }
             onLoginChangeView.hideContent();
             logged = true;
             if(checkSignIn())
@@ -561,7 +570,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private void handleLoginResponse(String response) {
         try {
             if (response != null) {
-                LoginReply loginReply = AppChat.getGson().fromJson(response, LoginReply.class);
+                LoginReply loginReply = AppE.getGson().fromJson(response, LoginReply.class);
                 if (loginReply.isStatusOkay() | loginReply.getStatus().equals("registered")) {
                     myPreferences.setUserId(loginReply.getUserId());
                     myPreferences.setFirstName(loginReply.getFirstName());
@@ -623,7 +632,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onError(QBResponseException e) {
                 e.printStackTrace();
-                Toast.makeText(AppChat.getAppContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(AppE.getAppContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -650,7 +659,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private void savePrefs(SavedProfile profile) {
-        myPreferences.setImageURL(String.valueOf(profile.getImage()));
+        myPreferences.setImageURL(String.valueOf(profile.getSavedPImage()));
         preferencesManager.savePreferences();
     }
     /*private void setProfileTracker() {
@@ -839,7 +848,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     @Override
-    public void showMatchDialog(com.lahoriagency.cikolive.Classes.QBUser qbUser, boolean fromQueue) {
+    public void showMatchDialog(AppServerUser appServerUser, boolean fromQueue) {
 
     }
 
@@ -875,7 +884,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void showMatchDialogIfAny() {
         if (!matchDialogQueue.isEmpty()) {
-            showMatchDialog((com.lahoriagency.cikolive.Classes.QBUser) null, true);
+            showMatchDialog((AppServerUser) null, true);
         }
     }
 

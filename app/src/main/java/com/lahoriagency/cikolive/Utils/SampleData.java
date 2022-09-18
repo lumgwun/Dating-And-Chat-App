@@ -47,26 +47,26 @@ public class SampleData {
         SavedProfile item4 = new SavedProfile();
 
 
-        item1.setName("Jhonson Smith ");
-        item1.setLocation("Paris,France1");
-        item1.setAge("15");
-        item1.setImage(Uri.parse(SampleData.imagesOfModel[1]));
+        item1.setSavedPName("Jhonson Smith ");
+        item1.setSavedPLocation("Paris,France1");
+        item1.setSavedPAge("15");
+        item1.setSavedPImage(Uri.parse(SampleData.imagesOfModel[1]));
 
-        item2.setName("Mimi Brown");
-        item2.setLocation("Paris,France2");
-        item2.setAge("25");
-        item2.setImage(Uri.parse(SampleData.imagesOfModel[0]));
+        item2.setSavedPName("Mimi Brown");
+        item2.setSavedPLocation("Paris,France2");
+        item2.setSavedPAge("25");
+        item2.setSavedPImage(Uri.parse(SampleData.imagesOfModel[0]));
 
-        item3.setName("Jhonson Smith ");
-        item3.setLocation("Paris,France3");
-        item3.setAge("15");
-        item3.setImage(Uri.parse(SampleData.imagesOfModel[4]));
+        item3.setSavedPName("Jhonson Smith ");
+        item3.setSavedPLocation("Paris,France3");
+        item3.setSavedPAge("15");
+        item3.setSavedPImage(Uri.parse(SampleData.imagesOfModel[4]));
 
 
-        item4.setName("Janny Goa");
-        item4.setLocation("Paris,France4");
-        item4.setAge("35");
-        item4.setImage(Uri.parse(SampleData.imagesOfModel[5]));
+        item4.setSavedPName("Janny Goa");
+        item4.setSavedPLocation("Paris,France4");
+        item4.setSavedPAge("35");
+        item4.setSavedPImage(Uri.parse(SampleData.imagesOfModel[5]));
 
         savedProfileList.add(item1);
         savedProfileList.add(item2);

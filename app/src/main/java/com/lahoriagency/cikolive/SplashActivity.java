@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +27,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.devspark.robototextview.widget.RobotoTextView;
 import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Classes.Consts;
 import com.lahoriagency.cikolive.Classes.LoginService;
@@ -67,6 +70,9 @@ public class SplashActivity extends AppCompatActivity {
     private String json,json1;
     private QBUser qbUser;
     private static final String PREF_NAME = "Ciko";
+    Animation top_anim,bottom_anim;
+    ImageView logo;
+    RobotoTextView appName;
     /*@Override
     public void onClick(View v) {
         handler.removeCallbacks(this);
@@ -77,6 +83,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.act_splash);
         savedProfile=new SavedProfile();
         qbUser= new QBUser();
@@ -87,8 +94,10 @@ public class SplashActivity extends AppCompatActivity {
         json1 = userPreferences.getString("LastQBUserUsed", "");
         savedProfile = gson.fromJson(json, SavedProfile.class);
         qbUser = gson.fromJson(json1, QBUser.class);
+        top_anim = AnimationUtils.loadAnimation(this,R.anim.top_animation);
+        bottom_anim = AnimationUtils.loadAnimation(this,R.anim.bottom_animation);
         if (qbUser !=null) {
-            LoginService.start(SplashActivity.this, sharedPrefsHelper.getQbUser());
+            //LoginService.start(SplashActivity.this, sharedPrefsHelper.getQbUser());
             Bundle userBundle=new Bundle();
             userBundle.putParcelable("SavedProfile",savedProfile);
             userBundle.putParcelable("QBUser", (Parcelable) qbUser);
@@ -101,9 +110,14 @@ public class SplashActivity extends AppCompatActivity {
             //MainActivity.start(SplashActivity.this);
 
         }
+
+        appName = findViewById(R.id.text_splash_app_title);
         loadingBar = (ImageView) findViewById(R.id.logoSplash);
         loadingBar.setBackgroundResource(R.xml.loading);
         loadingAnimation = (AnimationDrawable) loadingBar.getBackground();
+        loadingBar.setAnimation(top_anim);
+        appName.setAnimation(bottom_anim);
+
         findViewById(R.id.splash_root).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,10 +132,6 @@ public class SplashActivity extends AppCompatActivity {
             message = getIntent().getExtras().getString(Consts.EXTRA_FCM_MESSAGE);
         }
 
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
 
         if (checkOverlayPermissions()) {
             runNextScreen();
@@ -149,28 +159,14 @@ public class SplashActivity extends AppCompatActivity {
         gson = new Gson();
         gson1 = new Gson();
         json = userPreferences.getString("LastSavedProfileUsed", "");
-        json1 = userPreferences.getString("LastQBUsereUsed", "");
+        json1 = userPreferences.getString("LastQBUserUsed", "");
         savedProfile = gson.fromJson(json, SavedProfile.class);
-        qbUser = gson.fromJson(json1, QBUser.class);
+        qbUser = gson1.fromJson(json1, QBUser.class);
         if (qbUser != null) {
-            LoginService.start(SplashActivity.this, qbUser);
+            //LoginService.start(SplashActivity.this, qbUser);
             Bundle userBundle = new Bundle();
             userBundle.putParcelable("SavedProfile", savedProfile);
             userBundle.putParcelable("QBUser", (Parcelable) qbUser);
-            Intent helpIntent = new Intent(SplashActivity.this, ChatMainAct.class);
-            overridePendingTransition(R.anim.slide_in_right,
-                    R.anim.slide_out_left);
-            helpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            helpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(helpIntent);
-            //MainActivity.start(SplashActivity.this);
-
-        }
-        /*if (sharedPrefsHelper.hasQbUser()) {
-            LoginService.start(SplashActivity.this, sharedPrefsHelper.getQbUser());
-            Bundle userBundle=new Bundle();
-            userBundle.putParcelable("SavedProfile",savedProfile);
-            userBundle.putParcelable("QBUser", (Parcelable) sharedPrefsHelper.getQbUser());
             Intent helpIntent = new Intent(SplashActivity.this, MainActivity.class);
             overridePendingTransition(R.anim.slide_in_right,
                     R.anim.slide_out_left);
@@ -179,7 +175,8 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(helpIntent);
             //MainActivity.start(SplashActivity.this);
 
-        }*/
+        }
+
         else{
             new Handler().postDelayed(new Runnable() {
                 @Override

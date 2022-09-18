@@ -4,97 +4,89 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/Coord_Layout"
+    android:id="@+id/bottomSheet_Coord"
     android:background="@drawable/rect_white"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-    <RelativeLayout
+    android:fitsSystemWindows="true">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:id="@+id/bottomSheet_child"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="-30dp"
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9"
+            app:cardBackgroundColor="@color/black_instead_blur"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp"
+            app:cardMaxElevation="0dp">
 
-            app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-            <androidx.cardview.widget.CardView
-
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="-30dp"
-                android:innerRadius="0dp"
-                android:shape="ring"
-                android:thicknessRatio="1.9"
-                app:cardBackgroundColor="@color/black_instead_blur"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="0dp"
-                app:cardMaxElevation="0dp">
-
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingBottom="30dp">
 
                 <RelativeLayout
+                    android:id="@+id/top_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:paddingBottom="30dp">
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/app_color"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="12dp">
 
-                    <RelativeLayout
-                        android:id="@+id/top_bar"
+                    <ImageView
+                        android:id="@+id/btn_closeT"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/ic_close"
+                        app:tint="@color/black"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_headingT"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:background="@color/app_color"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="20dp"
-                        android:paddingVertical="12dp">
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/gilroy_bold"
+                        android:gravity="center"
+                        android:text="@string/terms_of_use"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
 
-                        <ImageView
-                            android:id="@+id/btn_closeT"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginEnd="5dp"
-                            android:src="@drawable/ic_close"
-                            app:tint="@color/black"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/tv_headingT"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:fontFamily="@font/gilroy_bold"
-                            android:gravity="center"
-                            android:text="@string/terms_of_use"
-                            android:textColor="@color/black"
-                            android:textSize="18sp"
-
-                            />
-
-
-                    </RelativeLayout>
-
-                    <WebView
-                        android:id="@+id/webViewT"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_below="@id/top_bar">
-
-                    </WebView>
+                        />
 
 
                 </RelativeLayout>
 
+                <WebView
+                    android:id="@+id/webViewT"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/top_bar">
 
-            </androidx.cardview.widget.CardView>
+                </WebView>
 
-        </LinearLayout>
-    </RelativeLayout>
+
+            </RelativeLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

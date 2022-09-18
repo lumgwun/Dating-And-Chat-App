@@ -17,7 +17,7 @@ import com.lahoriagency.cikolive.DataBase.DBHelper;
 
 import java.util.ArrayList;
 
-public class SavedProfileActivity extends BaseActivity {
+public class SavedProfileActivity extends BaseActDiamond {
     SavedProfileAdapter savedProfileAdapter;
     private RecyclerView recyclerProfile;
     private ArrayList<SavedProfile> savedProfiles;

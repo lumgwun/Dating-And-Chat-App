@@ -7,7 +7,7 @@ import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.users.model.QBUser;
 
 public class SharedPrefsHelper {
-    private static final String SHARED_PREFS_NAME = "CIKO";
+    private static final String SHARED_PREFS_NAME = "ciko";
 
     private static final String QB_USER_ID = "qb_user_id";
     private static final String QB_USER_LOGIN = "qb_user_login";
@@ -36,11 +36,11 @@ public class SharedPrefsHelper {
 
     public SharedPrefsHelper() {
         instance = this;
-        if(appChat !=null){
+        /*if(appChat !=null){
             sharedPreferences = appChat.getInstance().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
 
 
-        }
+        }*/
     }
 
     public void delete(String key) {
@@ -78,11 +78,25 @@ public class SharedPrefsHelper {
     @SuppressWarnings("unchecked")
     public <T> T get(String key, T defValue) {
         T returnValue = (T) sharedPreferences.getAll().get(key);
-        return returnValue == null ? defValue : returnValue;
+        try {
+
+            return returnValue == null ? defValue : returnValue;
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        return returnValue;
     }
 
     public boolean has(String key) {
-        return sharedPreferences.contains(key);
+        try {
+
+            return sharedPreferences.contains(key);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
 
@@ -128,7 +142,15 @@ public class SharedPrefsHelper {
     }
 
     public boolean hasQbUser() {
-        return has(QB_USER_LOGIN) && has(QB_USER_PASSWORD);
+        try {
+
+            return has(QB_USER_LOGIN) && has(QB_USER_PASSWORD);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+
+        return false;
     }
 
     public void clearAllData() {

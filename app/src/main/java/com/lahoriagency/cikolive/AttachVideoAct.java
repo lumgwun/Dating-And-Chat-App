@@ -19,11 +19,18 @@ import android.widget.VideoView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.google.android.material.circularreveal.CircularRevealRelativeLayout;
+import com.google.firebase.FirebaseApp;
 import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
+import com.quickblox.auth.session.QBSettings;
 import com.quickblox.users.model.QBUser;
 
 import java.io.File;
+
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
 public class AttachVideoAct extends BaseActivity {
     private static final String EXTRA_FILE_NAME = "video_file_name";
@@ -39,6 +46,11 @@ public class AttachVideoAct extends BaseActivity {
     Bundle userExtras;
     private SavedProfile savedProfile;
     private static final String PREF_NAME = "Ciko";
+    private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
+    private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
+    private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
+    private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
+    private static final String SERVER_URL = "";
     Gson gson, gson1,gson2;
     String json, json1, json2;
     private QBUser qbUser;
@@ -53,7 +65,10 @@ public class AttachVideoAct extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseApp.initializeApp(this);
         setContentView(R.layout.act_attach_video);
+        QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
         initUI();
         loadVideo();
     }

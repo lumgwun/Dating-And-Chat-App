@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -19,7 +18,7 @@ import java.util.Collections;
 public class DiamondShopBottomSheet extends BottomSheetDialog {
     DiamondShopAdapter diamondShopAdapter;
 
-    BaseActivity baseActivity;
+    BaseActDiamond baseActivity;
 
     OnDismiss onDismiss;
     private RecyclerView recyclerViewDiamond;
@@ -48,7 +47,7 @@ public class DiamondShopBottomSheet extends BottomSheetDialog {
         txtTerms = findViewById(R.id.txtTerms);
         txtPolicy = findViewById(R.id.tv_privacyPolicy);
 
-        baseActivity = new BaseActivity();
+        baseActivity = new BaseActDiamond();
         baseActivity.makeListOfDiamonds();
         diamondShopAdapter = new DiamondShopAdapter();
         recyclerViewDiamond.setAdapter(diamondShopAdapter);

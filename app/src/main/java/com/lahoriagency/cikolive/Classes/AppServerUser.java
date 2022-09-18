@@ -1,11 +1,13 @@
 package com.lahoriagency.cikolive.Classes;
 
+import com.quickblox.users.model.QBUser;
+
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_ID;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_TABLE;
 import static com.lahoriagency.cikolive.Classes.UserProfileInfo.USER_PROF_INFO_ID;
 import static com.lahoriagency.cikolive.Classes.UserProfileInfo.USER_PROF_INFO_TABLE;
 
-public class QBUser extends com.quickblox.users.model.QBUser {
+public class AppServerUser extends QBUser {
     private int qbUserId;
     private int qbUser_SPId;
     private int qbUser_USI_Id;

@@ -49,7 +49,7 @@ public class QBUtils {
 
 
     public static String getSignatureRequestData(String FBToken) {
-        QbConfigs qbConfigs = AppChat.getQbConfigs();
+        QbConfigs qbConfigs = AppE.getQbConfigs();
         String nonce = getNonce();
         Long timestamp = getUnixTimestamp();
         JSONObject json = new JSONObject();

@@ -11,6 +11,9 @@ import android.widget.EditText;
 
 import com.lahoriagency.cikolive.BaseActivity;
 import com.lahoriagency.cikolive.Classes.AppChat;
+import com.lahoriagency.cikolive.Classes.AppConference;
+import com.lahoriagency.cikolive.Classes.AppE;
+import com.lahoriagency.cikolive.Classes.AppPush;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.ToastUtils;
 import com.quickblox.core.QBEntityCallback;
@@ -74,7 +77,7 @@ public class SuperLoginAct extends BaseActivity {
     private void signIn() {
         showProgressDialog(R.string.dlg_sign_in);
         String login = editTextLogin.getText().toString().trim();
-        final QBUser qbUser = new QBUser(login, AppChat.DEFAULT_USER_PASSWORD);
+        final QBUser qbUser = new QBUser(login, AppPush.DEFAULT_USER_PASSWORD);
         qbUser.setFullName(login);
 
         QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {

@@ -941,7 +941,7 @@ public class CallService extends Service {
         @Override
         public void onLocalAudioTrackReceive(ConferenceSession conferenceSession, QBRTCAudioTrack qbrtcAudioTrack) {
             Log.d(TAG, "onLocalAudioTrackReceive()");
-            boolean isMicEnabled = ((AppChat) getApplicationContext()).getSharedPrefsHelper().get(Consts.PREF_MIC_ENABLED, true);
+            boolean isMicEnabled = ((AppConference) getApplicationContext()).getSharedPrefsHelper().get(Consts.PREF_MIC_ENABLED, true);
             currentSession.getMediaStreamManager().getLocalAudioTrack().setEnabled(isMicEnabled);
         }
 

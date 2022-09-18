@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,8 @@ public class WebBottomSheet extends BottomSheetDialogFragment {
     ImageView btnClose;
     TextView txtHeader;
     WebView webView;
+    LinearLayout bottomSheetLinear;
+    private CoordinatorLayout bottomSheetCoord;
 
     public WebBottomSheet(String heading) {
         this.heading = heading;
@@ -40,10 +43,12 @@ public class WebBottomSheet extends BottomSheetDialogFragment {
             getDialog().setOnShowListener(dialog -> {
 
                 BottomSheetDialog d = (BottomSheetDialog) dialog;
-
-                CoordinatorLayout bottomSheet = (CoordinatorLayout) d.findViewById(R.id.Coord_Layout);
-                BottomSheetBehavior.from(bottomSheet)
-                        .setState(BottomSheetBehavior.STATE_EXPANDED);
+                bottomSheetLinear = (LinearLayout) d.findViewById(R.id.bottomSheet_child);
+                bottomSheetCoord = (CoordinatorLayout) d.findViewById(R.id.bottomSheet_Coord);
+                if (bottomSheetLinear != null) {
+                    BottomSheetBehavior.from(bottomSheetLinear)
+                            .setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
             });
 
         }
@@ -57,6 +62,8 @@ public class WebBottomSheet extends BottomSheetDialogFragment {
         txtHeader = v.findViewById(R.id.tv_headingT);
         btnClose = v.findViewById(R.id.btn_closeT);
         webView = v.findViewById(R.id.webViewT);
+        bottomSheetLinear = v.findViewById(R.id.bottomSheet_child);
+
         txtHeader.setText(heading);
 
         webView.getSettings().setJavaScriptEnabled(true);
