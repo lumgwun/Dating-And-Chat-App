@@ -15,21 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import com.github.clans.fab.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
-import com.lahoriagency.cikolive.Adapters.DiamondHisAdapter;
 import com.lahoriagency.cikolive.Adapters.RedeemRequestAdapter;
-import com.lahoriagency.cikolive.Classes.DiamondHistory;
 import com.lahoriagency.cikolive.Classes.RedeemRequest;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.DataBase.DBHelper;
-import com.lahoriagency.cikolive.DataBase.DiamondHisDAO;
 import com.lahoriagency.cikolive.DataBase.RedeemRequestDAO;
 import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
 
-public class RedeemRequestActivity extends AppCompatActivity {
+public class RedeemRequestActivity extends AppCompatActivity implements RedeemRequestAdapter.OnItemsClickListener{
 
     private AppBarConfiguration appBarConfiguration;
     SharedPreferences sharedPref;
@@ -67,10 +63,9 @@ public class RedeemRequestActivity extends AppCompatActivity {
         qbUser= new QBUser();
         savedProfile= new SavedProfile();
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        SharedPrefUserName=sharedPreferences.getString("PROFILE_USERNAME", "");
-        SharedPrefUserPassword=sharedPreferences.getString("PROFILE_PASSWORD", "");
+        SharedPrefUserName=sharedPreferences.getString("SAVED_PROFILE_EMAIL", "");
+        SharedPrefUserPassword=sharedPreferences.getString("SAVED_PROFILE_PASSWORD", "");
         profileID = userPreferences.getInt("SAVED_PROFILE_ID", 0);
-        profileID = userPreferences.getInt("PROFILE_ID", 0);
         json = sharedPref.getString("LastSavedProfileUsed", "");
         savedProfile = gson.fromJson(json, SavedProfile.class);
         json1 = sharedPref.getString("LastQBUserUsed", "");
@@ -105,5 +100,29 @@ public class RedeemRequestActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onItemClick(RedeemRequest redeemRequest) {
+        Bundle requestBundle= new Bundle();
+        sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        SharedPrefUserName=sharedPreferences.getString("SAVED_PROFILE_EMAIL", "");
+        SharedPrefUserPassword=sharedPreferences.getString("SAVED_PROFILE_PASSWORD", "");
+        profileID = userPreferences.getInt("SAVED_PROFILE_ID", 0);
+        json = sharedPref.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = sharedPref.getString("LastQBUserUsed", "");
+        qbUser = gson1.fromJson(json1, QBUser.class);
+        requestBundle.putParcelable("RedeemRequest",redeemRequest);
+        requestBundle.putParcelable("QBUser", (Parcelable) qbUser);
+        requestBundle.putParcelable("SavedProfile",savedProfile);
+        requestBundle.putInt("SAVED_PROFILE_ID",profileID);
+        requestBundle.putString("SAVED_PROFILE_EMAIL",SharedPrefUserName);
 
+        Intent dialogIntent = new Intent(RedeemRequestActivity.this, SubmitRedeemActivity.class);
+        dialogIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        overridePendingTransition(R.anim.slide_in_right,
+                R.anim.slide_out_left);
+        dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        dialogIntent.putExtras(requestBundle);
+        startActivity(dialogIntent);
+    }
 }

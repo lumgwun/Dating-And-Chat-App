@@ -16,20 +16,32 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Landing Area"
+        android:text="Ciko Dating App"
         android:textSize="45sp"
         android:gravity="top"
+        android:visibility="gone"
         android:id="@+id/landingText"
         android:layout_alignParentTop="true"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:layout_centerInParent="true"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:id="@+id/timeLine_Main"
+        android:layout_marginTop="20dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/timeline_list_row"
+        android:layout_marginBottom="20dp"
+        android:listSelector="@android:color/holo_blue_dark"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Where you are:"
         android:textSize="20sp"
+        android:visibility="gone"
         android:id="@+id/whereText"
         android:gravity="center_horizontal"
         android:layout_below="@id/landingText"
@@ -45,7 +57,6 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="wrap_content"
         android:id="@+id/bottomCoord"
-        android:background="@null"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="20dp"
         android:layout_height="wrap_content">
@@ -54,7 +65,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             app:fabCradleMargin="5dp"
-            android:background="@null"
             app:fabCradleRoundedCornerRadius="10dp"
             app:fabCradleVerticalOffset="10dp">
 
@@ -66,7 +76,7 @@
                 android:background="@drawable/shape_layer1d"
                 app:itemIconSize="@dimen/_10sdp"
                 android:layout_alignParentBottom="true"
-                app:itemBackground="@drawable/shape_layer_1a"
+                app:itemBackground="@null"
                 app:itemRippleColor="@color/primary_purple"
                 app:itemIconTint="@color/red_brown_dark"
                 app:itemTextColor="@color/color_red"
@@ -88,8 +98,10 @@
             android:layout_width="wrap_content"
             android:layout_marginBottom="40dp"
             android:layout_height="wrap_content"
+            app:backgroundTint="@color/white"
+            android:id="@+id/_navig_settings"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_chats"
+            android:src="@drawable/settings_fg"
             app:layout_anchor="@id/bottom_nav_barC" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

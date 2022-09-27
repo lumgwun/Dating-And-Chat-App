@@ -43,6 +43,14 @@ public class SavedProfile implements Parcelable, Serializable {
             SAVED_PROFILE_EMAIL + " TEXT, " + SAVED_PROFILE_PASSWORD + " TEXT, " + SAVED_PROFILE_DEVICEID + " TEXT,"+ SAVED_PROFILE_DOB + " TEXT,"+ SAVED_PROFILE_COUNTRY + " TEXT,"+ SAVED_PROFILE_REFERRER + " TEXT,"+ SAVED_PROFILE_ABOUT_ME + " TEXT,"+ SAVED_PROFILE_MY_INT + " TEXT,"+ SAVED_PROFILE_LOOKING_GENDER + " TEXT,"+ SAVED_PROFILE_DATE_JOINED + " TEXT, "+ SAVED_PROFILE_USERPROF_INFO_ID + " TEXT,"+ SAVED_PROFILE_QBID + " TEXT,"+ SAVED_PROFILE_LAST_SEEN + " TEXT," + SAVED_PROFILE_STATUS + " TEXT,"+ "FOREIGN KEY(" + SAVED_PROFILE_USERPROF_INFO_ID + ") REFERENCES " + USER_PROF_INFO_TABLE + "(" + USER_PROF_INFO_ID + "),"+ "FOREIGN KEY(" + SAVED_PROFILE_QBID + ") REFERENCES " + QBUSER_TABLE + "(" + QBUSER_ID + "),"+"PRIMARY KEY(" + SAVED_PROFILE_ID  + "))";
 
 
+    public static final String PICTURE_TABLE = "pictureTable";
+    //@Ignore
+    public static final String PICTURE_URI = "picture_uri";
+    public static final String PROFILE_PIC_ID = "picture_id";
+    public static final String PROFILE_PIC_SAVEDPROF_ID = "picture_SPid";
+
+    public static final String CREATE_PIXTURE_TABLE = "CREATE TABLE " + PICTURE_TABLE + " (" + PROFILE_PIC_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + PROFILE_PIC_SAVEDPROF_ID + " INTEGER, " + PICTURE_URI + " BLOB,"+"FOREIGN KEY(" + PROFILE_PIC_SAVEDPROF_ID + ") REFERENCES " + SAVED_PROFILE_TABLE + "(" + SAVED_PROFILE_ID + "))";
+
 
     private int savedProfID;
     private int savedProfQBID;
@@ -72,7 +80,9 @@ public class SavedProfile implements Parcelable, Serializable {
     private QBUserCustomData qbUserCustomData;
     private ArrayList<PurchaseDiamond> purchaseDiamonds;
     private ArrayList<RedeemRequest> redeemRequests;
-    private ArrayList<DiamondHistory> diamondHistories;
+    private ArrayList<DiamondTransfer> diamondHistories;
+    private Diamond savedPDiamond;
+    private LoginReply loginReply;
 
     public SavedProfile() {
         super();
@@ -89,8 +99,8 @@ public class SavedProfile implements Parcelable, Serializable {
     }
     public void addDiamondHistory(String from, String date,int count) {
         diamondHistories = new ArrayList<>();
-        DiamondHistory diamondHistory = new DiamondHistory(from,date,count);
-        diamondHistories.add(diamondHistory);
+        DiamondTransfer diamondTransfer = new DiamondTransfer(from,date,count);
+        diamondHistories.add(diamondTransfer);
     }
     @Override
     public int hashCode() {
@@ -400,11 +410,27 @@ public class SavedProfile implements Parcelable, Serializable {
         this.redeemRequests = redeemRequests;
     }
 
-    public ArrayList<DiamondHistory> getDiamondHistories() {
+    public ArrayList<DiamondTransfer> getDiamondHistories() {
         return diamondHistories;
     }
 
-    public void setDiamondHistories(ArrayList<DiamondHistory> diamondHistories) {
+    public void setDiamondHistories(ArrayList<DiamondTransfer> diamondHistories) {
         this.diamondHistories = diamondHistories;
+    }
+
+    public Diamond getSavedPDiamond() {
+        return savedPDiamond;
+    }
+
+    public void setSavedPDiamond(Diamond savedPDiamond) {
+        this.savedPDiamond = savedPDiamond;
+    }
+
+    public void setLoginReply(LoginReply loginReply) {
+        this.loginReply = loginReply;
+    }
+
+    public LoginReply getLoginReply() {
+        return loginReply;
     }
 }

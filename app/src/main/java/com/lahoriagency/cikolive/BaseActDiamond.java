@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.lahoriagency.cikolive.Classes.CityName;
 import com.lahoriagency.cikolive.Classes.Comments;
-import com.lahoriagency.cikolive.Classes.DiamondHistory;
+import com.lahoriagency.cikolive.Classes.DiamondTransfer;
 import com.lahoriagency.cikolive.Classes.Gift;
 import com.lahoriagency.cikolive.Classes.Notification;
 import com.lahoriagency.cikolive.Classes.PurchaseDiamond;
@@ -26,7 +26,7 @@ public class BaseActDiamond extends AppCompatActivity {
     public final List<PurchaseDiamond> listOfPurchaseDiamond = new ArrayList<>();
     public final List<Gift> giftList = new ArrayList<>();
     public final List<RedeemRequest> listOfRedeems = new ArrayList<>();
-    public final List<DiamondHistory> listOfDiamondHistory = new ArrayList<>();
+    public final List<DiamondTransfer> listOfDiamondTransfer = new ArrayList<>();
     public final List<CityName> cityList = new ArrayList<>();
     public final List<SavedProfile> savedProfileList = new ArrayList<>();
     public final List<Comments> commentsList = new ArrayList<>();
@@ -250,13 +250,13 @@ public class BaseActDiamond extends AppCompatActivity {
 
     public void makeListDiamondHistory() {
 
-        listOfDiamondHistory.clear();
-        DiamondHistory model1 = new DiamondHistory();
-        DiamondHistory model2 = new DiamondHistory();
-        DiamondHistory model3 = new DiamondHistory();
-        DiamondHistory model4 = new DiamondHistory();
-        DiamondHistory model5 = new DiamondHistory();
-        DiamondHistory model6 = new DiamondHistory();
+        listOfDiamondTransfer.clear();
+        DiamondTransfer model1 = new DiamondTransfer();
+        DiamondTransfer model2 = new DiamondTransfer();
+        DiamondTransfer model3 = new DiamondTransfer();
+        DiamondTransfer model4 = new DiamondTransfer();
+        DiamondTransfer model5 = new DiamondTransfer();
+        DiamondTransfer model6 = new DiamondTransfer();
 
 
         model1.setdH_Count(500);
@@ -288,12 +288,12 @@ public class BaseActDiamond extends AppCompatActivity {
         model6.setdH_From(getString(R.string.chatting));
 
 
-        listOfDiamondHistory.add(model1);
-        listOfDiamondHistory.add(model2);
-        listOfDiamondHistory.add(model3);
-        listOfDiamondHistory.add(model4);
-        listOfDiamondHistory.add(model5);
-        listOfDiamondHistory.add(model6);
+        listOfDiamondTransfer.add(model1);
+        listOfDiamondTransfer.add(model2);
+        listOfDiamondTransfer.add(model3);
+        listOfDiamondTransfer.add(model4);
+        listOfDiamondTransfer.add(model5);
+        listOfDiamondTransfer.add(model6);
     }
 
     public void makeListOfDiamonds() {

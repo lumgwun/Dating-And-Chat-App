@@ -24,7 +24,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -94,10 +93,13 @@ import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
 import com.lahoriagency.cikolive.Adapters.AddImageAdapter;
 import com.lahoriagency.cikolive.Classes.Consts;
+import com.lahoriagency.cikolive.Classes.Diamond;
+import com.lahoriagency.cikolive.Classes.LoginReply;
 import com.lahoriagency.cikolive.Classes.QBResRequestExecutor;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.ToastUtils;
+import com.lahoriagency.cikolive.Classes.UserProfileInfo;
 import com.lahoriagency.cikolive.Classes.ValidationUtils;
 import com.lahoriagency.cikolive.DataBase.DBHelper;
 import com.lahoriagency.cikolive.DataBase.SavedProfileDAO;
@@ -141,8 +143,6 @@ import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
 import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
 import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
 import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
-import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_EMAIL;
-import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_PASSWORD;
 
 
 @SuppressWarnings("deprecation")
@@ -213,13 +213,29 @@ public class CreateProfileActivity extends BaseActivity {
     private Button mRegister,btnUpdate;
     private TextView existaccount;
     private ProgressDialog progressDialog;
-    long profileID;
+    int profileID;
     int customerID;
     String machinePref;
     Uri pictureLink;
     SharedPreferences sharedPref;
     Bundle userExtras;
     private static final String PREF_NAME = "Ciko";
+    Gson gson, gson1;
+    String json, json1, nIN;
+    private QBUser cloudUser;
+    private  QBUser currentUser;
+    private boolean logged;
+    private boolean firstVisit;
+    private SavedProfile savedProfile;
+    private String userName,password;
+    Gson gson2,gson3;
+    String json2,json3, name;
+    private UserProfileInfo userProfileInfo;
+    private Bundle activityBundle;
+    private int savedProfileID;
+    private Diamond diamond;
+    int diamondCount,diamondID;
+    private int collections,qbUserID;
     public static final int PICTURE_REQUEST_CODE = 505;
     ContentLoadingProgressBar progressBar;
     private DBHelper dbHelper;
@@ -296,8 +312,6 @@ public class CreateProfileActivity extends BaseActivity {
     private static boolean isPersistenceEnabled = false;
     private LinearLayoutCompat layoutUp;
     private ScrollView layoutDown;
-    Gson gson, gson1;
-    String json, json1, nIN;
     SharedPreferences userPreferences;
 
     String[] PERMISSIONS = {
@@ -313,6 +327,9 @@ public class CreateProfileActivity extends BaseActivity {
     private MessageDigest m;
     private WifiManager wm;
     private BluetoothAdapter m_BluetoothAdapter;
+    private  String response;
+    private String responseString="registered";
+    private LoginReply loginReply;
     String referrer = "";
     String[] PERMISSIONS33 = {
             Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -335,19 +352,18 @@ public class CreateProfileActivity extends BaseActivity {
     private ImageView btn_back;
     private CircularImageView profile_image_;
 
-    String name=null;
     String lookingFor=null;
     String age=null;
     int myGender=0;
     String email=null;
     String UserLocation=null;
-    String password=null;
     Uri profilePicture=null;
     int savedProfID=0;
     String interest=null;
     String dateJoined=null;
     String status=null;
-    private int qbUserID;
+    private  int myAgeInt;
+    private long profileIDLong;
     public static int SPLASH_SCREEN = 3000;
     QBEntityCallback<QBUser> callback;
     private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
@@ -355,7 +371,7 @@ public class CreateProfileActivity extends BaseActivity {
     private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
     private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
     private static final String SERVER_URL = "";
-    String machineUser,userName, office,state,role,userLocation,passwordStg,emailStrg,gender;
+    String machineUser, office,state,role,userLocation,passwordStg,emailStrg,gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -366,6 +382,7 @@ public class CreateProfileActivity extends BaseActivity {
         QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
         init();
         getDeviceID(deviceID);
+        loginReply= new LoginReply();
 
         //listeners();
         setTitle("Create a new  Profile");
@@ -373,11 +390,33 @@ public class CreateProfileActivity extends BaseActivity {
         LastProfileUsed= new SavedProfile();
         random1 = new SecureRandom();
         qbUser= new QBUser();
+        cloudUser= new QBUser();
+        currentUser= new QBUser();
+        diamond = new Diamond();
+        savedProfile= new SavedProfile();
+        activityBundle= new Bundle();
+        gson = new Gson();
+        gson= new Gson();
+        gson1= new Gson();
+        gson2= new Gson();
+        gson3= new Gson();
+        userProfileInfo= new UserProfileInfo();
+        savedProfile= new SavedProfile();
         sharedPref= getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         sessionManager = new SessionManager(this);
         requestExecutor = new QBResRequestExecutor();
         //addImageAdapter = new AddImageAdapter();
         welcomeMessage="Welcome to the Community, chat and build your networth";
+        json = userPreferences.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = userPreferences.getString("LastQBUserUsed", "");
+        currentUser = gson1.fromJson(json1, QBUser.class);
+        json2 = userPreferences.getString("LastUserProfileInfoUsed", "");
+        userProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
+        profileID = userPreferences.getInt("SAVED_PROFILE_ID", 0);
+        userName = userPreferences.getString("SAVED_PROFILE_EMAIL", "");
+        password = userPreferences.getString("SAVED_PROFILE_PASSWORD", "");
+        profileName = userPreferences.getString("SAVED_PROFILE_NAME", "");
         referrerClient = InstallReferrerClient.newBuilder(this).build();
         txtLoc = findViewById(R.id.where_You_Are);
         recyclerViewPhoto = findViewById(R.id.rv_images);
@@ -398,6 +437,19 @@ public class CreateProfileActivity extends BaseActivity {
         layoutUp = findViewById(R.id.layoutTop);
         layoutDown = findViewById(R.id.layoutDown);
         textReturnedEmail = findViewById(R.id.WelcomeE);
+        if(savedProfile !=null){
+            savedProfileID=savedProfile.getSavedProfID();
+
+        }
+        if(currentUser !=null){
+            qbUserID=currentUser.getId();
+        }
+        if(diamond !=null){
+            diamondCount=diamond.getDiamondCount();
+            diamondID=diamond.getDiamondWalletID();
+            collections=diamond.getDiamondCollections();
+
+        }
 
 
         btnSignUp.setOnClickListener(this::registerUser);
@@ -463,8 +515,8 @@ public class CreateProfileActivity extends BaseActivity {
         spnGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedGender = spnGender.getSelectedItem().toString();
-                selectedGender = (String) parent.getSelectedItem();
+                //selectedGender = spnGender.getSelectedItem().toString();
+                selectedGender = (String) parent.getSelectedItem().toString();
             }
 
             @Override
@@ -501,7 +553,7 @@ public class CreateProfileActivity extends BaseActivity {
                             startActivityForResult(i, RESULT_LOAD_IMAGE);
                         }
                         if (item.getItemId() == R.id.cancel_action) {
-                            setTitle("Skylight onBoarding");
+                            setTitle("Ciko Live onBoarding");
                         }
 
                         return true;
@@ -611,8 +663,7 @@ public class CreateProfileActivity extends BaseActivity {
                             Toast.LENGTH_LONG)
                             .show();
                 } else {
-
-
+                    myAgeInt= Integer.parseInt(myAge);
                     LastProfileUsed= new SavedProfile(profileName,emailStrg,passwordStg,aboutMe,myIntrest,myAge,userGender,gender,joinedDate,country,cityStrg,mImageUri);
                     qbUser= new QBUser();
                     qbUser.setCustomData(myAge);
@@ -622,7 +673,7 @@ public class CreateProfileActivity extends BaseActivity {
                     qbUser.setFullName(profileName);
                     qbUser.setExternalId(String.valueOf(profileID));
                     //finishRegisteration(qbUser, LastProfileUsed);
-                    startSignUpNewUser(qbUser,LastProfileUsed);
+                    startSignUpNewUser(qbUser,LastProfileUsed,myAgeInt,aboutMe,myIntrest,country,selectedGender,mImageUri);
 
                 }
 
@@ -630,6 +681,223 @@ public class CreateProfileActivity extends BaseActivity {
                 //startActivity(new Intent(CreateProfileActivity.this, SignInActivity.class));
             }
         });
+    }
+    private void saveDrafts() {
+        edtEmailAddress = findViewById(R.id.et_emailC);
+        et_Password = findViewById(R.id.et_PasswordC);
+        emailStrg = edtEmailAddress.getText().toString();
+        passwordStg = edtPassword.getText().toString();
+        SharedPrefsHelper.getInstance().save("SAVED_PROFILE_EMAIL", emailStrg);
+        SharedPrefsHelper.getInstance().save("SAVED_PROFILE_PASSWORD", passwordStg);
+    }
+
+    private void saveToDB(String email, String password, String status, String joinedDate, String country,String deviceID) {
+        SavedProfileDAO dbHelper = new SavedProfileDAO(this);
+        if(profileID>0){
+            profileIDLong=profileID;
+
+        }
+        dbHelper.open();
+        profileIDLong= dbHelper.insertFirstSavedProfile(email,password,joinedDate,deviceID,country,status);
+    }
+    private void SignUpUser(final QBUser newUser, final SavedProfile lastProfileUsed) {
+        newUser.setCustomDataClass(lastProfileUsed.getClass());
+        QBUsers.signUp(newUser).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+
+            }
+        });
+    }
+
+    private void startSignUpNewUser(final QBUser newUser, SavedProfile lastProfileUsed, int myAge, String aboutMe, String myIntrest, String country, String selectedGender, Uri mImageUri) {
+        Log.d(TAG, "SignUp New User");
+        showProgressDialog(R.string.dlg_creating_new_user);
+        Bundle userBundle=new Bundle();
+        String mImageUriString= String.valueOf(mImageUri);
+        requestExecutor = new QBResRequestExecutor();
+        newUser.setCustomDataClass(lastProfileUsed.getClass());
+        SavedProfileDAO dbHelper = new SavedProfileDAO(this);
+        loginReply= new LoginReply();
+
+        QBUsers.signUp(newUser).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
+                saveUserData(qbUser);
+                loginReply.setStatus(responseString);
+                loginReply.setSexChoice(selectedGender);
+                if(lastProfileUsed !=null){
+                    profileID=lastProfileUsed.getSavedProfID();
+                }
+                if(profileID>0){
+
+                    if(qbUser !=null){
+                        qbUserID=qbUser.getFileId();
+
+                    }
+                    dbHelper.updateProfileQBUserID(Math.toIntExact(profileID),qbUserID);
+
+                    userProfileInfo= new UserProfileInfo(qbUserID,profileID, myAge,name,aboutMe,myIntrest, country,selectedGender,mImageUriString);
+                    lastProfileUsed.setSavedPUserProfileInfo(userProfileInfo);
+                    lastProfileUsed.setLoginReply(loginReply);
+
+                }
+                finishRegisteration(qbUser,lastProfileUsed,userProfileInfo,loginReply);
+                signIn(qbUser,userProfileInfo,loginReply);
+
+
+                //saveToDBase(qsUserID);
+                Toast.makeText(CreateProfileActivity.this, "Sign up successfully", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Toast.makeText(CreateProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Error SignUp" + e.getMessage());
+                if (e.getHttpStatusCode() == Consts.ERR_LOGIN_ALREADY_TAKEN_HTTP_STATUS) {
+                } else {
+                    //hideProgressDialog();
+                    ToastUtils.longToast(R.string.sign_up_error);
+                }
+
+            }
+        });
+    }
+    private void  signIn(QBUser qbUser, UserProfileInfo userProfileInfo, LoginReply loginReply){
+        QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
+                //startAfterLoginService(qbUser);
+                Toast.makeText(CreateProfileActivity.this, "Login successfully", Toast.LENGTH_SHORT).show();
+                QBChatService.setDebugEnabled(true); // enable chat logging
+                QBChatService.setDefaultPacketReplyTimeout(10000);
+
+                QBChatService.ConfigurationBuilder chatServiceConfigurationBuilder = new QBChatService.ConfigurationBuilder();
+                chatServiceConfigurationBuilder.setSocketTimeout(60); //Sets chat socket's read timeout in seconds
+                chatServiceConfigurationBuilder.setKeepAlive(true); //Sets connection socket's keepAlive option.
+                chatServiceConfigurationBuilder.setUseTls(true); //Sets the TLS security mode used when making the connection. By default TLS is disabled.
+                QBChatService.setConfigurationBuilder(chatServiceConfigurationBuilder);
+                Intent chatDialogIntent = new Intent(CreateProfileActivity.this, ChatDialogActivity.class);
+                chatDialogIntent.putExtra("QBUser", qbUser);
+                chatDialogIntent.putExtra("password", password);
+                chatDialogIntent.putExtra("userName", userName);
+                chatDialogIntent.putExtra("id", qbUser.getId());
+                chatDialogIntent.putExtra("UserProfileInfo", userProfileInfo);
+                chatDialogIntent.putExtra("LoginReply", (Parcelable) loginReply);
+                //startActivity(chatDialogIntent);
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Toast.makeText(CreateProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
+
+    private void finishRegisteration(QBUser qbUser, SavedProfile lastProfileUsed, UserProfileInfo userProfileInfo, LoginReply loginReply) {
+
+        dbHelper= new DBHelper(this);
+        gson1= new Gson();
+        gson= new Gson();
+        gson2= new Gson();
+        dbHelper.upDateUser(lastProfileUsed);
+        if (userPreferences == null){
+
+            userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor prefsEditor = userPreferences.edit();
+            json = gson.toJson(LastProfileUsed);
+            json1 = gson1.toJson(qbUser);
+            json2 = gson2.toJson(userProfileInfo);
+            if(lastProfileUsed !=null){
+                deviceID = lastProfileUsed.getSavedPDeviceID();
+                name =lastProfileUsed.getSavedPName();
+                country =lastProfileUsed.getSavedPCountry();
+                lookingFor =lastProfileUsed.getSavedPLookingFor();
+                aboutMe =lastProfileUsed.getSavedPAboutMe();
+                age =lastProfileUsed.getSavedPAge();
+                myGender =lastProfileUsed.getSavedPGender();
+                email =lastProfileUsed.getSavedPEmail();
+                UserLocation =lastProfileUsed.getSavedPLocation();
+                password =lastProfileUsed.getSavedPPassword();
+                interest =lastProfileUsed.getSavedPMyInterest();
+                profilePicture =lastProfileUsed.getSavedPImage();
+                dateJoined =lastProfileUsed.getSavedPDateJoined();
+                savedProfID =lastProfileUsed.getSavedProfID();
+
+            }
+
+            prefsEditor.putBoolean("rememberMe", true);
+            prefsEditor.putString("SAVED_PROFILE_NAME", name);
+            prefsEditor.putInt("SAVED_PROFILE_ID", savedProfID);
+            prefsEditor.putString("SAVED_PROFILE_LOC", UserLocation);
+            prefsEditor.putString("SAVED_PROFILE_PHOTO", String.valueOf(profilePicture));
+            prefsEditor.putString("SAVED_PROFILE_EMAIL", email);
+            prefsEditor.putInt("SAVED_PROFILE_GENDER", myGender);
+            prefsEditor.putString("SAVED_PROFILE_LOOKING_GENDER", lookingFor);
+            prefsEditor.putString("SAVED_PROFILE_PASSWORD", password);
+            prefsEditor.putString("SAVED_PROFILE_DEVICEID", deviceID);
+            prefsEditor.putString("SAVED_PROFILE_COUNTRY", country);
+            prefsEditor.putString("SAVED_PROFILE_MY_INT", interest);
+            prefsEditor.putString("SAVED_PROFILE_DATE_JOINED", dateJoined);
+            prefsEditor.putString("SAVED_PROFILE_ABOUT_ME", aboutMe);
+            prefsEditor.putString("SAVED_PROFILE_AGE", age);
+            prefsEditor.putString("SAVED_PROFILE_LOC", referrer);
+            prefsEditor.putString("LastQBUserUsed", json1);
+            prefsEditor.putString("LastUserProfileInfoUsed", json2);
+            prefsEditor.putString("LastSavedProfileUsed", json).apply();
+
+            //dataBaseCall(lastProfileUsed);
+
+            Bundle userBundle = new Bundle();
+            if(LastProfileUsed !=null){
+                profileID=LastProfileUsed.getSavedProfID();
+            }
+            finishRegisteration(qbUser, lastProfileUsed, userProfileInfo, loginReply);
+
+            userBundle.putString("SAVED_PROFILE_NAME", name);
+            userBundle.putInt("SAVED_PROFILE_ID", Math.toIntExact(profileID));
+            userBundle.putString("SAVED_PROFILE_LOC", cityStrg);
+            userBundle.putString("SAVED_PROFILE_PHOTO", String.valueOf(mImageUri));
+            userBundle.putString("SAVED_PROFILE_EMAIL", emailStrg);
+            userBundle.putString("SAVED_PROFILE_GENDER", gender);
+            userBundle.putString("SAVED_PROFILE_GENDER", gender);
+            userBundle.putString("SAVED_PROFILE_PASSWORD", passwordStg);
+            userBundle.putString("SAVED_PROFILE_DEVICEID", deviceID);
+            userBundle.putString("SAVED_PROFILE_COUNTRY", country);
+            userBundle.putString("SAVED_PROFILE_REFERRER", referrer);
+            userBundle.putString("SAVED_PROFILE_AGE", referrer);
+
+            Intent intent = new Intent(CreateProfileActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtras(userBundle);
+            userBundle.putParcelable("QBUser", (Parcelable) qbUser);
+            userBundle.putParcelable("LastUserProfileInfoUsed",userProfileInfo);
+            userBundle.putParcelable("lastSavedProfileUsed",lastProfileUsed);
+            startActivity(intent);
+            Toast.makeText(CreateProfileActivity.this, "Thank you" + "" +
+                    "for Signing up " + "" + uFirstName + "" + "on the App", Toast.LENGTH_LONG).show();
+            setResult(Activity.RESULT_OK, new Intent());
+
+
+
+
+        }
+
+    }
+
+
+    private void saveUserData(QBUser qbUser) {
+        SharedPrefsHelper sharedPrefsHelper = SharedPrefsHelper.getInstance();
+        sharedPrefsHelper.saveQbUser(qbUser);
     }
     private void registerNewUser(String email, String password, String joinedDate) {
 
@@ -781,208 +1049,8 @@ public class CreateProfileActivity extends BaseActivity {
             return false;
         }
     }
-    private void saveDrafts() {
-        edtEmailAddress = findViewById(R.id.et_emailC);
-        et_Password = findViewById(R.id.et_PasswordC);
-        emailStrg = edtEmailAddress.getText().toString();
-        passwordStg = edtPassword.getText().toString();
-        SharedPrefsHelper.getInstance().save("SAVED_PROFILE_EMAIL", edtEmailAddress.getText().toString());
-        SharedPrefsHelper.getInstance().save("SAVED_PROFILE_PASSWORD", edtPassword.getText().toString());
-    }
-
-    private void saveToDB(String email, String password, String status, String joinedDate, String country,String deviceID) {
-        SavedProfileDAO dbHelper = new SavedProfileDAO(this);
-        profileID= dbHelper.insertFirstSavedProfile(email,password,joinedDate,deviceID,country,status);
-    }
-    private void SignUpUser(final QBUser newUser, final SavedProfile lastProfileUsed) {
-        QBUsers.signUp(newUser).performAsync(new QBEntityCallback<QBUser>() {
-            @Override
-            public void onSuccess(QBUser qbUser, Bundle bundle) {
-
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-
-            }
-        });
-    }
-
-    private void startSignUpNewUser(final QBUser newUser, SavedProfile lastProfileUsed) {
-        Log.d(TAG, "SignUp New User");
-        showProgressDialog(R.string.dlg_creating_new_user);
-        Bundle userBundle=new Bundle();
-        requestExecutor = new QBResRequestExecutor();
-        SavedProfileDAO dbHelper = new SavedProfileDAO(this);
-
-        QBUsers.signUp(newUser).performAsync(new QBEntityCallback<QBUser>() {
-            @Override
-            public void onSuccess(QBUser qbUser, Bundle bundle) {
-                saveUserData(qbUser);
-                signIn(qbUser);
-                if(lastProfileUsed !=null){
-                    profileID=lastProfileUsed.getSavedProfID();
-                }
-                if(profileID>0){
-
-                    if(qbUser !=null){
-                        qbUserID=qbUser.getFileId();
-
-                    }
-                    dbHelper.updateProfileQBUserID(Math.toIntExact(profileID),qbUserID);
-                    finishRegisteration(qbUser ,lastProfileUsed);
-
-                }
 
 
-                //saveToDBase(qsUserID);
-                Toast.makeText(CreateProfileActivity.this, "Sign up successfully", Toast.LENGTH_SHORT).show();
-
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-                Toast.makeText(CreateProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "Error SignUp" + e.getMessage());
-                if (e.getHttpStatusCode() == Consts.ERR_LOGIN_ALREADY_TAKEN_HTTP_STATUS) {
-                } else {
-                    //hideProgressDialog();
-                    ToastUtils.longToast(R.string.sign_up_error);
-                }
-
-            }
-        });
-
-
-
-
-    }
-    private void  signIn(QBUser qbUser){
-        QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
-            @Override
-            public void onSuccess(QBUser qbUser, Bundle bundle) {
-                //startAfterLoginService(qbUser);
-                Toast.makeText(CreateProfileActivity.this, "Login successfully", Toast.LENGTH_SHORT).show();
-
-                QBChatService.setDebugEnabled(true); // enable chat logging
-
-                QBChatService.setDefaultPacketReplyTimeout(10000);
-
-                QBChatService.ConfigurationBuilder chatServiceConfigurationBuilder = new QBChatService.ConfigurationBuilder();
-                chatServiceConfigurationBuilder.setSocketTimeout(60); //Sets chat socket's read timeout in seconds
-                chatServiceConfigurationBuilder.setKeepAlive(true); //Sets connection socket's keepAlive option.
-                chatServiceConfigurationBuilder.setUseTls(true); //Sets the TLS security mode used when making the connection. By default TLS is disabled.
-                QBChatService.setConfigurationBuilder(chatServiceConfigurationBuilder);
-                Intent chatDialogIntent = new Intent(CreateProfileActivity.this, ChatDialogActivity.class);
-                chatDialogIntent.putExtra("QBUser", qbUser);
-                chatDialogIntent.putExtra("password", password);
-                chatDialogIntent.putExtra("userName", userName);
-                chatDialogIntent.putExtra("id", qbUser.getId());
-                //startActivity(chatDialogIntent);
-
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-                Toast.makeText(CreateProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-    }
-
-    private void finishRegisteration(QBUser qbUser, SavedProfile lastProfileUsed) {
-
-        dbHelper= new DBHelper(this);
-        gson1= new Gson();
-        gson= new Gson();
-        dbHelper.upDateUser(lastProfileUsed);
-        if (userPreferences == null){
-
-            userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-            SharedPreferences.Editor prefsEditor = userPreferences.edit();
-            json = gson.toJson(LastProfileUsed);
-            json1 = gson1.toJson(qbUser);
-            if(lastProfileUsed !=null){
-                deviceID = lastProfileUsed.getSavedPDeviceID();
-                name =lastProfileUsed.getSavedPName();
-                country =lastProfileUsed.getSavedPCountry();
-                lookingFor =lastProfileUsed.getSavedPLookingFor();
-                aboutMe =lastProfileUsed.getSavedPAboutMe();
-                age =lastProfileUsed.getSavedPAge();
-                myGender =lastProfileUsed.getSavedPGender();
-                email =lastProfileUsed.getSavedPEmail();
-                UserLocation =lastProfileUsed.getSavedPLocation();
-                password =lastProfileUsed.getSavedPPassword();
-                interest =lastProfileUsed.getSavedPMyInterest();
-                profilePicture =lastProfileUsed.getSavedPImage();
-                dateJoined =lastProfileUsed.getSavedPDateJoined();
-                savedProfID =lastProfileUsed.getSavedProfID();
-
-            }
-
-            prefsEditor.putBoolean("rememberMe", true);
-            prefsEditor.putString("SAVED_PROFILE_NAME", name);
-            prefsEditor.putInt("SAVED_PROFILE_ID", savedProfID);
-            prefsEditor.putString("SAVED_PROFILE_LOC", UserLocation);
-            prefsEditor.putString("SAVED_PROFILE_PHOTO", String.valueOf(profilePicture));
-            prefsEditor.putString("SAVED_PROFILE_EMAIL", email);
-            prefsEditor.putInt("SAVED_PROFILE_GENDER", myGender);
-            prefsEditor.putString("SAVED_PROFILE_LOOKING_GENDER", lookingFor);
-            prefsEditor.putString("SAVED_PROFILE_PASSWORD", password);
-            prefsEditor.putString("SAVED_PROFILE_DEVICEID", deviceID);
-            prefsEditor.putString("SAVED_PROFILE_COUNTRY", country);
-            prefsEditor.putString("SAVED_PROFILE_MY_INT", interest);
-            prefsEditor.putString("SAVED_PROFILE_DATE_JOINED", dateJoined);
-            prefsEditor.putString("SAVED_PROFILE_ABOUT_ME", aboutMe);
-            prefsEditor.putString("SAVED_PROFILE_AGE", age);
-            prefsEditor.putString("SAVED_PROFILE_LOC", referrer);
-            prefsEditor.putString("LastQBUserUsed", json1);
-            prefsEditor.putString("LastSavedProfileUsed", json).apply();
-
-            //dataBaseCall(lastProfileUsed);
-
-            Bundle userBundle = new Bundle();
-            if(LastProfileUsed !=null){
-                profileID=LastProfileUsed.getSavedProfID();
-            }
-            finishRegisteration(qbUser, lastProfileUsed);
-
-            userBundle.putString("SAVED_PROFILE_NAME", name);
-            userBundle.putInt("SAVED_PROFILE_ID", Math.toIntExact(profileID));
-            userBundle.putString("SAVED_PROFILE_LOC", cityStrg);
-            userBundle.putString("SAVED_PROFILE_PHOTO", String.valueOf(mImageUri));
-            userBundle.putString("SAVED_PROFILE_EMAIL", emailStrg);
-            userBundle.putString("SAVED_PROFILE_GENDER", gender);
-            userBundle.putString("SAVED_PROFILE_GENDER", gender);
-            userBundle.putString("SAVED_PROFILE_PASSWORD", passwordStg);
-            userBundle.putString("SAVED_PROFILE_DEVICEID", deviceID);
-            userBundle.putString("SAVED_PROFILE_COUNTRY", country);
-            userBundle.putString("SAVED_PROFILE_REFERRER", referrer);
-            userBundle.putString("SAVED_PROFILE_AGE", referrer);
-
-            Intent intent = new Intent(CreateProfileActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtras(userBundle);
-            userBundle.putParcelable("QBUser", (Parcelable) qbUser);
-            userBundle.putParcelable("lastSavedProfileUsed",lastProfileUsed);
-            startActivity(intent);
-            Toast.makeText(CreateProfileActivity.this, "Thank you" + "" +
-                    "for Signing up " + "" + uFirstName + "" + "on the App", Toast.LENGTH_LONG).show();
-            setResult(Activity.RESULT_OK, new Intent());
-
-
-
-
-        }
-
-    }
-
-
-    private void saveUserData(QBUser qbUser) {
-        SharedPrefsHelper sharedPrefsHelper = SharedPrefsHelper.getInstance();
-        sharedPrefsHelper.saveQbUser(qbUser);
-    }
 
     private String getCurrentDeviceId(Context deviceID) {
         return Utils.generateDeviceId();

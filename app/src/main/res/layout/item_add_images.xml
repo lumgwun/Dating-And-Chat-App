@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
     <androidx.cardview.widget.CardView
-        android:layout_width="70dp"
+        android:layout_width="90dp"
         android:layout_height="70dp"
         android:layout_marginEnd="10dp"
         app:cardCornerRadius="10dp">
@@ -25,8 +25,8 @@
                 android:src="@color/bg_chat_messages" />
 
             <RelativeLayout
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_centerInParent="true">
 
                 <ImageView
@@ -41,13 +41,11 @@
                     app:tint="@color/white" />
 
                 <ImageView
-                    android:id="@+id/btn_addImage"
+                    android:id="@+id/btn_addPImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-
                     android:padding="6dp"
-                    android:src="@drawable/ic_plus"
-                    app:tint="@color/gray_light" />
+                    android:src="@drawable/img_model" />
             </RelativeLayout>
         </RelativeLayout>
 

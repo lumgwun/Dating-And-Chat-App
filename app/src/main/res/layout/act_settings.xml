@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/proxima_nova_semibold"
-                android:textSize="8dp"
+                android:textSize="18sp"
                 android:text="@string/minimum_match_value"/>
 
             <TextView
@@ -35,7 +35,7 @@
                 android:layout_gravity="right"
                 android:gravity="right"
                 android:fontFamily="@font/proxima_nova_semibold"
-                android:textSize="8dp"
+                android:textSize="18sp"
                 tools:text="50%"/>
         </LinearLayout>
         <androidx.cardview.widget.CardView
@@ -53,7 +53,7 @@
                 android:background="@drawable/rect6h"
                 android:layout_marginBottom="16dp"
                 android:orientation="vertical">
-                <com.lahoriagency.cikolive.Classes.SettingsSeekbar
+                <androidx.appcompat.widget.AppCompatSeekBar
                     android:id="@+id/settings_match_value_seekbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -67,7 +67,16 @@
                     app:max_value="100"/>
             </LinearLayout>
 
+
         </androidx.cardview.widget.CardView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:id="@+id/match_progressT"
+            android:fontFamily="@font/proxima_nova_semibold"
+            android:text="Your match Progress"/>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -79,7 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/proxima_nova_semibold"
-                android:textSize="8dp"
+                android:textSize="18sp"
                 android:text="@string/show_me"/>
 
             <TextView
@@ -89,7 +98,7 @@
                 android:layout_gravity="right"
                 android:gravity="right"
                 android:fontFamily="@font/proxima_nova_semibold"
-                android:textSize="8dp"
+                android:textSize="18sp"
                 tools:text="Men"/>
         </LinearLayout>
         <androidx.cardview.widget.CardView
@@ -190,7 +199,7 @@
                 android:layout_marginTop="@dimen/_16sdp"
                 android:layout_marginBottom="@dimen/_16sdp"
                 android:orientation="vertical">
-                <com.lahoriagency.cikolive.Classes.SettingsSeekbar
+                <androidx.appcompat.widget.AppCompatSeekBar
                     android:id="@+id/settings_distance_seekbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -205,6 +214,14 @@
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:id="@+id/distance_progress"
+            android:fontFamily="@font/proxima_nova_semibold"
+            android:text="Your distance Progress"/>
+
 
 
         <LinearLayout
@@ -230,6 +247,7 @@
                 android:textSize="@dimen/_18sdp"
                 tools:text="20-46"/>
         </LinearLayout>
+
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -238,37 +256,54 @@
             app:cardUseCompatPadding="true">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_16sdp"
+                android:backgroundTint="@color/gray_10"
+                android:background="@drawable/rect6da"
                 android:layout_marginStart="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_16sdp"
                 android:layout_marginBottom="@dimen/_16sdp"
                 android:orientation="vertical">
-                <com.lahoriagency.cikolive.Classes.SettingsRangeSeekbar
+                <com.google.android.material.slider.RangeSlider
                     android:id="@+id/settings_age_range_seekbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/_16sdp"
-                    android:paddingBottom="@dimen/_16sdp"
-                    app:bar_color="@color/settings_background"
+                    app:labelBehavior="withinBounds"
+                    style="@style/Widget.AppCompat.SeekBar.Discrete"
+                    android:paddingBottom="30dp"
                     app:bar_highlight_color="@color/primary_blue"
-                    app:left_thumb_color="@color/primary_blue_light"
-                    app:right_thumb_color="@color/primary_blue_light"
-                    app:right_thumb_color_pressed="@color/primary_blue"
-                    app:corner_radius="5"
+                    app:corner_radius="20"
+                    app:thumbColor="@color/colorPrimary"
+                    android:value="25"
+                    android:valueFrom="16"
+                    android:valueTo="70"
+                    app:tickColor="@android:color/white"
+                    android:stepSize="1"
+                    app:haloColor="@android:color/holo_orange_light"
+                    app:trackColor="@color/black"
                     app:min_value="18"
+                    android:soundEffectsEnabled="true"
                     app:min_start_value="18"
-                    app:max_value="60"
-                    app:max_start_value="60"/>
+                    app:max_value="70"
+                    app:max_start_value="70"/>
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:padding="20dp"
+            android:id="@+id/age_progress"
+            android:layout_gravity="center"
+            android:text="Age Progress"/>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/logout_cardview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginTop="2dp"
             app:cardCornerRadius="@dimen/_1sdp"
             app:cardElevation="@dimen/_1sdp"
             app:cardUseCompatPadding="true">
@@ -282,7 +317,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/_12sdp"
+                    android:paddingTop="5dp"
                     android:padding="20dp"
                     android:background="@drawable/rect6h"
                     android:paddingBottom="@dimen/_12sdp"
@@ -297,7 +332,7 @@
             android:id="@+id/start_test_cardview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="@dimen/_16sdp"
             app:cardCornerRadius="@dimen/_1sdp"
             app:cardElevation="@dimen/_1sdp"

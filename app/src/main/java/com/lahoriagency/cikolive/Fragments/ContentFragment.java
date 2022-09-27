@@ -3,6 +3,7 @@ package com.lahoriagency.cikolive.Fragments;
 import android.graphics.Point;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,7 @@ import com.lahoriagency.cikolive.R;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.users.model.QBUser;
 
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import static com.lahoriagency.cikolive.Classes.ResourceUtils.getColor;
@@ -47,10 +49,12 @@ public class ContentFragment extends Fragment implements SwipeFragment.OnMatchCr
     private Integer recipientId;
 
     private SwipeFragment.OnMatchCreated onMatchCreatedListener;
+    private UserFragment userFragment;
+    private SwipeFragment swipeFragment;
+    private DialogsFragment dialogsFragment;
 
     public ContentFragment(){
     }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,16 +63,16 @@ public class ContentFragment extends Fragment implements SwipeFragment.OnMatchCr
 
         if(contentPagerAdapter == null)
             contentPagerAdapter = new ContentPagerAdapter(getChildFragmentManager());
-        viewPager = (ViewPager) view.findViewById(R.id.content_container);
+        viewPager = (ViewPager) view.findViewById(R.id.content_conFrag);
         tabLayout = (TabLayout) view.findViewById(R.id.content_tabs);
 
         if (!contentPagerAdapter.fragments.isEmpty()) {
-            UserFragment userFragment = contentPagerAdapter.fragments.get(0) != null ? (UserFragment) contentPagerAdapter.fragments.get(0) : new UserFragment();
-            SwipeFragment swipeFragment = contentPagerAdapter.fragments.get(1) != null ? (SwipeFragment) contentPagerAdapter.fragments.get(1) : new SwipeFragment();
-            DialogsFragment dialogsFragment = contentPagerAdapter.fragments.get(2) != null ? (DialogsFragment) contentPagerAdapter.fragments.get(2) : new DialogsFragment();
+            userFragment = contentPagerAdapter.fragments.get(0) != null ? (UserFragment) contentPagerAdapter.fragments.get(0) : new UserFragment();
+             swipeFragment = contentPagerAdapter.fragments.get(1) != null ? (SwipeFragment) contentPagerAdapter.fragments.get(1) : new SwipeFragment();
+            dialogsFragment = contentPagerAdapter.fragments.get(2) != null ? (DialogsFragment) contentPagerAdapter.fragments.get(2) : new DialogsFragment();
         } else {
             contentPagerAdapter.fragments.add(new UserFragment());
-            SwipeFragment swipeFragment = new SwipeFragment();
+            swipeFragment = new SwipeFragment();
             swipeFragment.setOnMatchCreatedListener(this);
             contentPagerAdapter.fragments.add(swipeFragment);
             contentPagerAdapter.fragments.add(new DialogsFragment());
@@ -85,17 +89,17 @@ public class ContentFragment extends Fragment implements SwipeFragment.OnMatchCr
                     case 0:
                         Drawable tabProfileDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_profile);
                         tabLayout.getTabAt(0).setIcon(tabProfileDrawable);
-                        ((Animatable) tab.getIcon()).start();
+                        //((Animatable) tab.getIcon()).start();
                         break;
                     case 1:
                         Drawable tabSwipeDrawable = ContextCompat.getDrawable(getContext(), R.drawable.swipe);
                         tabLayout.getTabAt(1).setIcon(tabSwipeDrawable);
-                        ((Animatable) tab.getIcon()).start();
+                        //((Animatable) tab.getIcon()).start();
                         break;
                     case 2:
                         Drawable tabChatDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_chats);
                         tabLayout.getTabAt(2).setIcon(tabChatDrawable);
-                        ((Animatable) tab.getIcon()).start();
+                        //((Animatable) tab.getIcon()).start();
                         break;
                     default:
                 }
@@ -105,19 +109,42 @@ public class ContentFragment extends Fragment implements SwipeFragment.OnMatchCr
             public void onTabUnselected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        Drawable tabProfileDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_bell);
-                        tabLayout.getTabAt(0).setIcon(tabProfileDrawable);
-                        ((Animatable) tab.getIcon()).start();
+
+                        try {
+                            Drawable tabProfileDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_bell);
+                            tabLayout.getTabAt(0).setIcon(tabProfileDrawable);
+                            ((Animatable) tab.getIcon()).start();
+
+                        }catch (ClassCastException e)
+                        {
+                            e.printStackTrace();
+                        }
+
                         break;
                     case 1:
-                        Drawable tabSwipeDrawable = ContextCompat.getDrawable(getContext(), R.drawable.swipe_like_button);
-                        tabLayout.getTabAt(1).setIcon(tabSwipeDrawable);
-                        ((Animatable) tab.getIcon()).start();
+
+                        try {
+                            Drawable tabSwipeDrawable = ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.swipe_like_button);
+                            tabLayout.getTabAt(1).setIcon(tabSwipeDrawable);
+                            ((Animatable) tab.getIcon()).start();
+
+                        }catch (ClassCastException e)
+                        {
+                            e.printStackTrace();
+                        }
+
                         break;
                     case 2:
-                        Drawable tabChatDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_chats);
-                        tabLayout.getTabAt(2).setIcon(tabChatDrawable);
-                        ((Animatable) tab.getIcon()).start();
+                        try {
+                            Drawable tabChatDrawable = ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_chats);
+                            tabLayout.getTabAt(2).setIcon(tabChatDrawable);
+                            ((Animatable) tab.getIcon()).start();
+
+                        }catch (ClassCastException e)
+                        {
+                            e.printStackTrace();
+                        }
+
                         break;
                     default:
                 }
@@ -139,7 +166,15 @@ public class ContentFragment extends Fragment implements SwipeFragment.OnMatchCr
         int height = size.y;
         RevealAnimationSetting revealAnimationSetting = RevealAnimationSetting.with(width/2, height/2,
                 width, height);
-        AnimationUtils.registerCircularRevealAnimation(getActivity(), view, revealAnimationSetting, getColor(R.color.white), getColor(R.color.white));
+
+        try {
+            AnimationUtils.registerCircularRevealAnimation(getActivity(), view, revealAnimationSetting, getColor(R.color.white), getColor(R.color.white));
+
+        }catch (NullPointerException e)
+        {
+            e.printStackTrace();
+        }
+
 
         return view;
     }
@@ -150,13 +185,20 @@ public class ContentFragment extends Fragment implements SwipeFragment.OnMatchCr
     }
 
     private void setupTabIcons() {
-        AnimatedVectorDrawable tabProfileDrawable = (AnimatedVectorDrawable) ContextCompat.getDrawable(getContext(), R.drawable.ic_profile);
-        tabLayout.getTabAt(0).setIcon(tabProfileDrawable);
 
-        Drawable tabSwipeDrawable = ContextCompat.getDrawable(getContext(), R.drawable.swipe);
-        tabLayout.getTabAt(1).setIcon(tabSwipeDrawable);
-        Drawable tabChatDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_chats);
-        tabLayout.getTabAt(2).setIcon(tabChatDrawable);
+        try {
+            AnimatedVectorDrawable tabProfileDrawable = (AnimatedVectorDrawable) ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_profile);
+            Objects.requireNonNull(tabLayout.getTabAt(0)).setIcon(tabProfileDrawable);
+            Drawable tabSwipeDrawable = ContextCompat.getDrawable(getContext(), R.drawable.swipe);
+            Objects.requireNonNull(tabLayout.getTabAt(1)).setIcon(tabSwipeDrawable);
+            Drawable tabChatDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_chats);
+            Objects.requireNonNull(tabLayout.getTabAt(2)).setIcon(tabChatDrawable);
+
+        }catch (ClassCastException e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     public @Nullable Fragment getFragmentForPosition(int position)

@@ -15,16 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Adapters.DiamondHisAdapter;
-import com.lahoriagency.cikolive.Adapters.TimelineAdapter;
-import com.lahoriagency.cikolive.Classes.DiamondHistory;
+import com.lahoriagency.cikolive.Classes.DiamondTransfer;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
-import com.lahoriagency.cikolive.Classes.TimeLine;
 import com.lahoriagency.cikolive.DataBase.DBHelper;
 import com.lahoriagency.cikolive.DataBase.DiamondHisDAO;
-import com.lahoriagency.cikolive.DataBase.TimeLineDAO;
 import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
@@ -38,7 +34,7 @@ public class DiamondHistoryAct extends AppCompatActivity {
     private DiamondHisDAO diamondHisDAO;
     private RecyclerView recyclerView;
     DiamondHisAdapter hisAdapter;
-    private ArrayList<DiamondHistory> diamondHistories;
+    private ArrayList<DiamondTransfer> diamondHistories;
     private SavedProfile savedProfile;
     private int savedProfID;
     private SharedPreferences userPreferences;

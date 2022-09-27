@@ -117,7 +117,7 @@ public class DialogsActivity extends BaseActivity implements DialogsManager.Mana
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_dialogs);
-
+        checkInternetConnection();
 
         if (!ChatHelper.getInstance().isLogged()) {
             reloginToChat();
@@ -130,7 +130,11 @@ public class DialogsActivity extends BaseActivity implements DialogsManager.Mana
             finish();
         }
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(getString(R.string.dialogs_logged_in_as, currentUser.getFullName()));
+            if(currentUser !=null){
+                getSupportActionBar().setTitle(getString(R.string.dialogs_logged_in_as, currentUser.getFullName()));
+
+            }
+
         }
         initUi();
         initConnectionListener();
@@ -739,7 +743,7 @@ public class DialogsActivity extends BaseActivity implements DialogsManager.Mana
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(true);//you can cancel it by pressing back button
         progressDialog.setMessage("signing up wait ...");
-        progressBar.show();
+        progressDialog.show();
     }
 
     private void showErrorSnackbar(int dialogs_deletion_error, QBResponseException e, View.OnClickListener onClickListener) {

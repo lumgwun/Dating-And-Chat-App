@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.lahoriagency.cikolive.Classes.DiamondHistory;
+import com.lahoriagency.cikolive.Classes.DiamondTransfer;
 import com.lahoriagency.cikolive.R;
 
 import java.text.MessageFormat;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class DiamondHisAdapter extends RecyclerView.Adapter<DiamondHisAdapter.RecyclerViewHolder> {
 
-    private ArrayList<DiamondHistory> diamondHistories;
+    private ArrayList<DiamondTransfer> diamondHistories;
     private Context mcontext;
     int resources;
     private String from, date;
@@ -26,12 +26,12 @@ public class DiamondHisAdapter extends RecyclerView.Adapter<DiamondHisAdapter.Re
     int diamondCount;
     private OnItemsClickListener listener;
 
-    public DiamondHisAdapter(ArrayList<DiamondHistory> recyclerDataArrayList, Context mcontext) {
+    public DiamondHisAdapter(ArrayList<DiamondTransfer> recyclerDataArrayList, Context mcontext) {
         this.diamondHistories = recyclerDataArrayList;
         this.mcontext = mcontext;
     }
 
-    public DiamondHisAdapter(Context context, int resources, ArrayList<DiamondHistory> diamondHistories) {
+    public DiamondHisAdapter(Context context, int resources, ArrayList<DiamondTransfer> diamondHistories) {
         this.diamondHistories = diamondHistories;
         this.mcontext = context;
         this.resources = resources;
@@ -40,13 +40,13 @@ public class DiamondHisAdapter extends RecyclerView.Adapter<DiamondHisAdapter.Re
     public void setWhenClickListener(OnItemsClickListener listener){
         this.listener = listener;
     }
-    public DiamondHisAdapter(Context context, ArrayList<DiamondHistory> diamondHistories) {
+    public DiamondHisAdapter(Context context, ArrayList<DiamondTransfer> diamondHistories) {
         this.diamondHistories = diamondHistories;
         this.mcontext = context;
 
     }
 
-    public DiamondHisAdapter(FragmentActivity activity, ArrayList<DiamondHistory> diamondHistories) {
+    public DiamondHisAdapter(FragmentActivity activity, ArrayList<DiamondTransfer> diamondHistories) {
         this.diamondHistories = diamondHistories;
         this.activity = activity;
     }
@@ -61,7 +61,7 @@ public class DiamondHisAdapter extends RecyclerView.Adapter<DiamondHisAdapter.Re
 
     @Override
     public void onBindViewHolder(@NonNull DiamondHisAdapter.RecyclerViewHolder holder, int position) {
-        DiamondHistory recyclerData = diamondHistories.get(position);
+        DiamondTransfer recyclerData = diamondHistories.get(position);
         if(recyclerData !=null){
             from=recyclerData.getdH_From();
             diamondCount=recyclerData.getdH_Count();
@@ -95,6 +95,6 @@ public class DiamondHisAdapter extends RecyclerView.Adapter<DiamondHisAdapter.Re
         }
     }
     public interface OnItemsClickListener{
-        void onItemClick(DiamondHistory diamondHistory);
+        void onItemClick(DiamondTransfer diamondTransfer);
     }
 }

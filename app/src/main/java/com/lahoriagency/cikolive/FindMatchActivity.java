@@ -43,15 +43,22 @@ import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.UserProfileInfo;
 import com.lahoriagency.cikolive.Fragments.ContentFragment;
 import com.lahoriagency.cikolive.Fragments.DialogsFragment;
+import com.lahoriagency.cikolive.Fragments.EmptyLoginFragment;
 import com.lahoriagency.cikolive.Fragments.MatchFragment;
 import com.lahoriagency.cikolive.Fragments.SwipeFragment;
 import com.lahoriagency.cikolive.Fragments.TestFragment;
 import com.lahoriagency.cikolive.Fragments.UserFragment;
 import com.lahoriagency.cikolive.Interfaces.OnChangeViewListener;
+import com.quickblox.auth.session.QBSettings;
 import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
 @SuppressWarnings("deprecation")
 public class FindMatchActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
@@ -76,9 +83,20 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
     Bundle userExtras;
     private SavedProfile savedProfile;
     private static final String PREF_NAME = "Ciko";
-    Gson gson, gson1,gson2;
+    Gson gson, gson1,gson2,gson3;
     String json, json1, json2;
+    private QBUser currentUser;
+    private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
+    private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
+    private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
+    private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
+    private static final String SERVER_URL = "";
+    SharedPreferences userPreferences;
+    int profileID;
+    private String userName,password,profileName;
     private QBUser qbUser;
+    private UserProfileInfo userProfileInfo;
+
 
 
     @Override
@@ -88,6 +106,30 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.act_find_match);
         FragmentManager fm = getSupportFragmentManager();
+        QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+        setTitle("CIKO Dating Find Match Mate");
+        currentUser= new QBUser();
+        savedProfile= new SavedProfile();
+        userProfileInfo= new UserProfileInfo();
+        gson= new Gson();
+        gson1= new Gson();
+        gson2= new Gson();
+        gson3= new Gson();
+        userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        profileID = userPreferences.getInt("SAVED_PROFILE_ID", 0);
+        userName = userPreferences.getString("SAVED_PROFILE_EMAIL", "");
+        password = userPreferences.getString("SAVED_PROFILE_PASSWORD", "");
+        profileName = userPreferences.getString("SAVED_PROFILE_NAME", "");
+        userName = userPreferences.getString("PROFILE_USERNAME", "");
+        password = userPreferences.getString("PROFILE_PASSWORD", "");
+        json = userPreferences.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = userPreferences.getString("LastQBUserUsed", "");
+        currentUser = gson1.fromJson(json1, QBUser.class);
+        json2 = userPreferences.getString("LastUserProfileInfoUsed", "");
+        userProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
+
         loadPermissions(Manifest.permission.ACCESS_FINE_LOCATION, REQUEST_FINE_LOCATION);
         locationListener = new GPSLocationListener();
         locationDialog();
@@ -182,7 +224,7 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
                 }
             }
         } else {
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_content);
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frag_match);
             fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -209,7 +251,7 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
     @Override
     public void showTest() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.main_content, new TestFragment());
+        fragmentTransaction.replace(R.id.frag_match, new TestFragment());
         fragmentTransaction.commit();
 
     }
@@ -235,7 +277,7 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
     @Override
     public void showContent() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.main_content, new ContentFragment());
+        fragmentTransaction.replace(R.id.frag_match, new ContentFragment());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -248,13 +290,6 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
         this.contentFragment = contentFragment;
     }
 
-    /*public FBLoginFragment getFbLoginFragment() {
-        return fbLoginFragment;
-    }
-
-    public void setFbLoginFragment(FBLoginFragment fbLoginFragment) {
-        this.fbLoginFragment = fbLoginFragment;
-    }*/
 
     @Override
     public void showMatchDialog(UserProfileInfo userProfileInfo, boolean fromQueue) {
@@ -288,7 +323,7 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
         matchDialogFragment.setMatchValue(userProfileInfo.getMatchValue());
         matchDialogFragment.setAddedToLayout(true);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.main_content, matchDialogFragment);
+        transaction.add(R.id.frag_match, matchDialogFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -315,12 +350,12 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
         }
     }
 
-    /*@Override
+    //@Override
     public void hideContent() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.main_content, new EmptyLoginFragment(), "HIDE_CONTENT");
+        fragmentTransaction.add(R.id.frag_match, new EmptyLoginFragment(), "HIDE_CONTENT");
         fragmentTransaction.commit();
-    }*/
+    }
 
 
 }

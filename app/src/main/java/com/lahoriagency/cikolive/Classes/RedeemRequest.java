@@ -1,9 +1,14 @@
 package com.lahoriagency.cikolive.Classes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_ID;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_TABLE;
 
-public class RedeemRequest {
+public class RedeemRequest implements Parcelable, Serializable {
 
     private int rr_Id;
     private String rr_Date;
@@ -36,6 +41,42 @@ public class RedeemRequest {
         this.rr_Count = rr_Count;
         this.rr_Amount = rr_Amount;
     }
+
+    protected RedeemRequest(Parcel in) {
+        rr_Id = in.readInt();
+        rr_Date = in.readString();
+        rr_Type = in.readInt();
+        rr_Count = in.readInt();
+        rr_Amount = in.readString();
+        rr_SProf_ID = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(rr_Id);
+        dest.writeString(rr_Date);
+        dest.writeInt(rr_Type);
+        dest.writeInt(rr_Count);
+        dest.writeString(rr_Amount);
+        dest.writeInt(rr_SProf_ID);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<RedeemRequest> CREATOR = new Creator<RedeemRequest>() {
+        @Override
+        public RedeemRequest createFromParcel(Parcel in) {
+            return new RedeemRequest(in);
+        }
+
+        @Override
+        public RedeemRequest[] newArray(int size) {
+            return new RedeemRequest[size];
+        }
+    };
 
     public int getRr_Id() {
         return rr_Id;

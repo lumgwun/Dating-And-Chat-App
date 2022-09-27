@@ -18,10 +18,16 @@ public class UserProfileInfo implements Parcelable {
     private int userSavedProfID;
     private String name;
     private List<String> photoLinks;
+    private ArrayList<String> photoLinkArray;
+    private String upiPhoto;
     private int age;
     private int matchValue;
     private int distance;
     private String description;
+    private String upiAboutMe;
+    private String upiInterest;
+    private String upiMyCountry;
+    private String upiLookingForGender;
 
     public static final String USER_PROF_INFO_ID = "upi_Id";
     public static final String USER_PROF_QB_ID = "upi_qbUser_ID";
@@ -32,15 +38,39 @@ public class UserProfileInfo implements Parcelable {
     public static final String USER_PROF_INFO_DISTANCE = "upi_Distance";
     public static final String USER_PROF_INFO_DESC = "upi_Desc";
     public static final String USER_PROF_INFO_TABLE = "upi_table";
+    public static final String USER_PROF_INFO_ABOUT_ME = "upi_aboutMe";
+    public static final String USER_PROF_INTEREST20 = "upi_interest";
+    public static final String USER_PROF_INFO_COUNTRY = "upi_Country";
 
 
     public static final String CREATE_USER_PROF_INFO_TABLE = "CREATE TABLE IF NOT EXISTS " + USER_PROF_INFO_TABLE + " ( " + USER_PROF_INFO_ID + " INTEGER  , " + USER_PROF_QB_ID + " INTEGER , " + USER_PROF_INFO_SP_ID + " INTEGER  , " +
-            USER_PROF_INFO_NAME + " TEXT, " + USER_PROF_INFO_DESC + " TEXT, " + USER_PROF_INFO_AGE + " TEXT, " + USER_PROF_INFO_MATCHED_VALUE + " TEXT, " + USER_PROF_INFO_DISTANCE + " TEXT, " +
+            USER_PROF_INFO_NAME + " TEXT, " + USER_PROF_INFO_DESC + " TEXT, " + USER_PROF_INFO_AGE + " TEXT, " + USER_PROF_INFO_MATCHED_VALUE + " TEXT, " + USER_PROF_INFO_DISTANCE + " TEXT, " + USER_PROF_INFO_ABOUT_ME + " TEXT, "+ USER_PROF_INTEREST20 + " TEXT, "+ USER_PROF_INFO_COUNTRY + " TEXT, "+
             "FOREIGN KEY(" + USER_PROF_QB_ID + ") REFERENCES " + QBUSER_TABLE + "(" + QBUSER_ID + "),"+ "FOREIGN KEY(" + USER_PROF_INFO_SP_ID + ") REFERENCES " + SAVED_PROFILE_TABLE + "(" + SAVED_PROFILE_ID + "),"+"PRIMARY KEY(" + USER_PROF_INFO_ID  + "))";
 
     public UserProfileInfo() {
+        super();
     }
 
+    public UserProfileInfo(int userQbId,int userSavedProfID,String name) {
+        this.userProfInfoID = userSavedProfID;
+        this.userQbId = userQbId;
+        this.name = name;
+    }
+    public UserProfileInfo(int userQbId,int userSavedProfID,int age,String name, String upiAboutMe,String upiInterest,String upiMyCountry,String upiLookingForGender,String mImageUriString) {
+        this.userProfInfoID = userSavedProfID;
+        this.userQbId = userQbId;
+        this.name = name;
+        this.upiAboutMe = upiAboutMe;
+        this.upiInterest = upiInterest;
+        this.upiMyCountry = upiMyCountry;
+        this.upiLookingForGender = upiLookingForGender;
+        this.age = age;
+        this.upiPhoto = mImageUriString;
+    }
+    public UserProfileInfo(int userQbId,String name) {
+        this.userQbId = userQbId;
+        this.name = name;
+    }
     public UserProfileInfo(UserProfileInfoModel model) {
         this.userProfInfoID = model.getUserId();
         this.userQbId = model.getQuickbloxId();
@@ -49,6 +79,11 @@ public class UserProfileInfo implements Parcelable {
         this.distance = model.getDistance();
         this.description = model.getDescription();
         this.photoLinks = splitLinks(model.getPhotoLinks());
+    }
+    public void  addPhotoLink(String photoLinks){
+        photoLinkArray = new ArrayList<String>();
+        photoLinkArray.add(photoLinks);
+
     }
 
     public int getUserProfInfoID() {
@@ -182,5 +217,45 @@ public class UserProfileInfo implements Parcelable {
 
     public void setUserSavedProfID(int userSavedProfID) {
         this.userSavedProfID = userSavedProfID;
+    }
+
+    public String getUpiAboutMe() {
+        return upiAboutMe;
+    }
+
+    public void setUpiAboutMe(String upiAboutMe) {
+        this.upiAboutMe = upiAboutMe;
+    }
+
+    public String getUpiInterest() {
+        return upiInterest;
+    }
+
+    public void setUpiInterest(String upiInterest) {
+        this.upiInterest = upiInterest;
+    }
+
+    public String getUpiMyCountry() {
+        return upiMyCountry;
+    }
+
+    public void setUpiMyCountry(String upiMyCountry) {
+        this.upiMyCountry = upiMyCountry;
+    }
+
+    public String getUpiLookingForGender() {
+        return upiLookingForGender;
+    }
+
+    public void setUpiLookingForGender(String upiLookingForGender) {
+        this.upiLookingForGender = upiLookingForGender;
+    }
+
+    public String getUpiPhoto() {
+        return upiPhoto;
+    }
+
+    public void setUpiPhoto(String upiPhoto) {
+        this.upiPhoto = upiPhoto;
     }
 }

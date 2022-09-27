@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <data>
-
-    </data>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:gravity="center"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="5dp"
+    app:layout_behavior="@string/bottom_sheet_behavior"
+    tools:context="com.lahoriagency.cikolive.HostMainActivity"
+    tools:showIn="@layout/act_host_main">
 
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:outlineSpotShadowColor="@color/transparent"
-        app:cardBackgroundColor="@color/white"
+        app:cardBackgroundColor="@color/gray_10"
         app:cardCornerRadius="20dp">
-
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -25,6 +32,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="20dp"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal">
 
@@ -34,11 +42,10 @@
                     android:fontFamily="@font/gilroy_regular"
                     android:text="@string/start_the_live"
                     android:textAllCaps="true"
+                    android:padding="20dp"
+                    android:background="@drawable/rect6da"
                     android:textColor="@color/black"
-                    android:textSize="19sp"
-
-                    />
-
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -59,11 +66,8 @@
                 android:gravity="center"
                 android:lineSpacingExtra="1dp"
                 android:text="@string/live_dialog_text"
-                android:textColor="@color/gray"
-                android:textSize="13sp"
-
-                />
-
+                android:textColor="@color/black"
+                android:textSize="13sp" />
 
             <LinearLayout
                 android:layout_width="230dp"
@@ -77,11 +81,10 @@
                     android:layout_marginEnd="10dp"
                     android:src="@drawable/img_dimond" />
 
-
                 <EditText
                     android:layout_width="70dp"
+                    android:id="@+id/liveAmount"
                     android:layout_height="wrap_content"
-
                     android:background="@drawable/bg_cornered_rect_10"
                     android:backgroundTint="@color/bg_chats"
                     android:ellipsize="start"
@@ -108,16 +111,12 @@
                     android:lineSpacingExtra="1dp"
                     android:text="@string/minute"
                     android:textColor="@color/gray"
-                    android:textSize="17sp"
-
-                    />
-
+                    android:textSize="17sp" />
 
             </LinearLayout>
 
-
             <LinearLayout
-                android:id="@+id/btn_start"
+                android:id="@+id/btn_startNewLive"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
@@ -128,32 +127,31 @@
                 android:orientation="horizontal"
                 android:paddingVertical="10dp">
 
-                <TextView
-
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_startLiveT"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
                     android:fontFamily="@font/gilroy_semi_bold"
                     android:text="Start"
+                    android:background="@null"
+                    android:onClick="doStartLive"
                     android:textAllCaps="true"
                     android:textColor="@color/black"
-                    android:textSize="14sp"
-
-                    />
-
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
             <TextView
-                android:id="@+id/btn_cancel"
+                android:id="@+id/btn_cancelLive"
                 android:layout_width="wrap_content"
-
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/gilroy_regular"
                 android:gravity="center"
+                android:onClick="cancelLive"
                 android:text="@string/cancel"
                 android:textColor="@color/gray"
                 android:textSize="14sp" />
@@ -162,4 +160,5 @@
 
 
     </androidx.cardview.widget.CardView>
-</layout>
+
+</RelativeLayout>

@@ -15,6 +15,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -58,7 +59,7 @@ public class PurchaseDiamondActivity extends AppCompatActivity  {
 
     private Context context;
 
-    private Button payCusAmount,pay5Diamond,pay10Diamond,pay100Diamond;
+    private Button payCusAmount,pay10Diamond,pay100Diamond;
     private String otpTransactionIdentifier;
     private String transactionIdentifier,linkToPay;
     int savedProfileID,noOfDiamond;
@@ -106,6 +107,7 @@ public class PurchaseDiamondActivity extends AppCompatActivity  {
         dbHelper = new DBHelper(this);
         savedProfile= new SavedProfile();
         qbUser= new QBUser();
+        paymentBundle= new Bundle();
         payBundle= new Bundle();
         qbUserCustomData= new QBUserCustomData();
         setTitle("Pay for Diamond");
@@ -125,7 +127,7 @@ public class PurchaseDiamondActivity extends AppCompatActivity  {
         context = this;
 
         payCusAmount = (Button) findViewById(R.id.payButton);
-        pay5Diamond = (Button) findViewById(R.id.pay5Button);
+        AppCompatButton pay5Diamond = (AppCompatButton) findViewById(R.id.pay5Button);
         pay10Diamond = (Button) findViewById(R.id.pay10Button);
         pay100Diamond = (Button) findViewById(R.id.payButton100);
 
@@ -212,8 +214,13 @@ public class PurchaseDiamondActivity extends AppCompatActivity  {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent myIntent = new Intent(PurchaseDiamondActivity.this, MainActivity.class);
+                overridePendingTransition(R.anim.slide_in_right,
+                        R.anim.slide_out_left);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                myIntent.putExtras(payBundle);
+                startActivity(myIntent);
             }
         });
     }

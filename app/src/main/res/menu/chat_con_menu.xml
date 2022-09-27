@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/con_Chat_menu"
+        android:title="Chat Info"
+        app:cnb_iconTintMode="src_in"
+        app:cnb_iconColor="#F44336"
+        android:icon="@drawable/ic_chats"/>
+
+    <item
+        android:id="@+id/con_calls"
+        android:title="Call Area"
+        app:cnb_iconTintMode="src_in"
+        app:cnb_iconColor="#FF9800"
+        android:icon="@drawable/settings_fg"/>
+
+    <item
+        android:id="@+id/opponents_con"
+        android:title="Opponent Area"
+        app:cnb_iconTintMode="src_in"
+        app:cnb_iconColor="#FF9800"
+        android:icon="@drawable/swipe_like_button"/>
+
+    <item
+        android:id="@+id/chatA_HomeCon"
+        android:title="Home"
+        app:cnb_backgroundColor="@color/dark_and_red"
+        app:cnb_iconTintMode="src_in"
+        app:cnb_iconColor="#2196F3"
+        android:icon="@drawable/ic_home_black_24dp"/>
+
+</menu>

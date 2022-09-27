@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="#f1f3f5"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.lahoriagency.cikolive.Fragments.ContentFragment">
@@ -22,7 +23,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
-        android:id="@+id/content_container"
+        android:id="@+id/content_conFrag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"

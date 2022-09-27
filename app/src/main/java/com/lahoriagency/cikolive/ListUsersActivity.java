@@ -1,7 +1,6 @@
 package com.lahoriagency.cikolive;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,7 +17,7 @@ import com.lahoriagency.cikolive.Classes.QbDialogHolder;
 import com.lahoriagency.cikolive.Classes.QbUsersHolder;
 import com.lahoriagency.cikolive.Fragments.ProgressDialogFragment;
 import com.lahoriagency.cikolive.Interfaces.ItemClickListener;
-import com.lahoriagency.cikolive.NewPackage.ChatActivity;
+import com.lahoriagency.cikolive.NewPackage.ChatMatchAct;
 import com.lahoriagency.cikolive.NewPackage.DialogsManager;
 import com.lahoriagency.cikolive.NewPackage.ListUsersAdapter;
 import com.quickblox.chat.QBChatService;
@@ -150,7 +149,7 @@ public class ListUsersActivity extends AppCompatActivity implements View.OnClick
             bothUsersList.remove(ChatHelper.getCurrentUser());
             QBChatDialog existingPrivateDialog = QbDialogHolder.getInstance().getPrivateDialogWithUser(bothUsersList.get(0));
 
-            ChatActivity.startForResult(ListUsersActivity.this, REQUEST_DIALOG_ID_FOR_UPDATE, existingPrivateDialog, qbUser.getId());
+            ChatMatchAct.startForResult(ListUsersActivity.this, REQUEST_DIALOG_ID_FOR_UPDATE, existingPrivateDialog, qbUser.getId());
             bothUsersList.clear();
         } else {
             ProgressDialogFragment.show(getSupportFragmentManager(), R.string.loading_chat);
@@ -174,7 +173,7 @@ public class ListUsersActivity extends AppCompatActivity implements View.OnClick
                     @Override
                     public void onSuccess(QBChatDialog dialog, Bundle args) {
                         dialogsManager.sendSystemMessageAboutCreatingDialog(systemMessagesManager, dialog);
-                        ChatActivity.startForResult(ListUsersActivity.this, REQUEST_DIALOG_ID_FOR_UPDATE, dialog,userId);
+                        ChatMatchAct.startForResult(ListUsersActivity.this, REQUEST_DIALOG_ID_FOR_UPDATE, dialog,userId);
                         ProgressDialogFragment.hide(getSupportFragmentManager());
                     }
 

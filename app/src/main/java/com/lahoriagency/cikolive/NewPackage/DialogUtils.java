@@ -10,8 +10,10 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 
 import com.lahoriagency.cikolive.R;
+import com.quickblox.chat.model.QBChatDialog;
 
 public class DialogUtils {
+    Integer recipientId;
     public static ProgressDialog getProgressDialog(Context context) {
         ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setCancelable(false);
@@ -33,5 +35,10 @@ public class DialogUtils {
         builder.setNegativeButton(R.string.dlg_cancel, negativeClickListener);
 
         return builder.create();
+    }
+
+    public static QBChatDialog buildPrivateDialog(Integer recipientId) {
+        recipientId=recipientId;
+        return null;
     }
 }

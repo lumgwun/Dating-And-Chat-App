@@ -13,14 +13,27 @@
         android:layout_width="match_parent"
         android:layout_marginBottom="20dp"
         android:gravity="center_horizontal"
-        android:text="Our Exchange Rate is USD1=NGN550"
+        android:text="Our Exchange Rate is USD1=NGN710"
         android:layout_height="wrap_content"/>
 
-
     <Button
-        android:id="@+id/pay5Button"
+        android:id="@+id/payButton100"
         android:layout_width="match_parent"
         android:padding="20dp"
+        android:onClick="hundredDiamond"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/rect6d"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Pay for 100 Diamonds"/>
+
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/pay5Button"
+        android:layout_width="match_parent"
+        android:padding="30dp"
         android:onClick="fiveDiamond"
         android:layout_marginBottom="20dp"
         android:background="@drawable/rect6d"
@@ -41,21 +54,11 @@
         android:gravity="center"
         android:text="Pay for 10 Diamonds"/>
 
-    <Button
-        android:id="@+id/payButton100"
-        android:layout_width="match_parent"
-        android:padding="20dp"
-        android:onClick="hundredDiamond"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/rect6d"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="Pay for 100 Diamonds"/>
+
 
     <Button
         android:id="@+id/payButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:padding="20dp"
         android:onClick="customAmt"
         android:layout_marginBottom="20dp"
@@ -63,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Input Amount using our Exchange Rate"/>
+        android:text="Your Choice"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"

@@ -75,7 +75,6 @@ public interface ConversationFragmentCallback {
 
     boolean isCallState();
 
-    HashMap<Integer, QBRTCVideoTrack> getVideoTrackMap();
 
     QBRTCVideoTrack getVideoTrack(Integer userId);
 
@@ -101,6 +100,7 @@ public interface ConversationFragmentCallback {
 
     boolean isScreenSharingState();
 
+    HashMap<Integer, QBRTCVideoTrack> getVideoTrackMap();
 
     void onReturnToChat();
 

@@ -14,7 +14,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -32,24 +31,11 @@ import com.google.android.material.snackbar.Snackbar;
 import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.AppConference;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
-import com.lahoriagency.cikolive.Classes.CityName;
-import com.lahoriagency.cikolive.Classes.Comments;
 import com.lahoriagency.cikolive.Classes.DialogsManager;
-import com.lahoriagency.cikolive.Classes.DiamondHistory;
 import com.lahoriagency.cikolive.Classes.ErrorUtils;
-import com.lahoriagency.cikolive.Classes.Gift;
-import com.lahoriagency.cikolive.Classes.Notification;
-import com.lahoriagency.cikolive.Classes.PurchaseDiamond;
-import com.lahoriagency.cikolive.Classes.QBResRequestExecutor;
-import com.lahoriagency.cikolive.Classes.RedeemRequest;
-import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
-import com.lahoriagency.cikolive.Utils.SampleData;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
@@ -114,7 +100,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-
     protected void hideSnackbar() {
         if (snackbar != null && snackbar.isShown()) {
             snackbar.dismiss();
@@ -125,7 +110,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.act_base);
-        appChat= new AppChat();
+        appChat= new AppChat(this);
         sharedPrefsHelper= new SharedPrefsHelper();
         //requestExecutor= new QBResRequestExecutor();
         actionBar = getSupportActionBar();
@@ -134,7 +119,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             sharedPrefsHelper = SharedPrefsHelper.getInstance();
 
         }
-        
 
         blurAlgorithm= new BlurAlgorithm() {
             @Override
@@ -256,9 +240,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void fillField(TextView textView, String value) {
         textView.setText(value);
     }
-
-
-
 
 
     @Override
@@ -388,13 +369,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     public void tintStatusBar(int color) {
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(color);
-        }
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(color);
 
     }
 

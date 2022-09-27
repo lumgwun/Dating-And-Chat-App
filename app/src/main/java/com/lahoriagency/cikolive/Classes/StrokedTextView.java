@@ -6,13 +6,14 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.lahoriagency.cikolive.R;
 
-public class StrokedTextView extends AppCompatTextView {
+public class StrokedTextView extends androidx.appcompat.widget.AppCompatTextView {
     private static final int DEFAULT_STROKE_WIDTH = 0;
 
     private int _strokeColor;
@@ -21,6 +22,7 @@ public class StrokedTextView extends AppCompatTextView {
     public StrokedTextView(Context context) {
         this(context, null, 0);
     }
+
 
     public StrokedTextView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);

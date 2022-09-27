@@ -8,7 +8,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -39,6 +42,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
@@ -47,6 +51,7 @@ import androidx.recyclerview.widget.SnapHelper;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.FirebaseApp;
 import com.google.gson.Gson;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 import com.lahoriagency.cikolive.Adapters.ChatAdapter;
@@ -81,6 +86,7 @@ import com.lahoriagency.cikolive.Utils.Const;
 import com.lahoriagency.cikolive.Utils.SessionManager;
 import com.lahoriagency.cikolive.Conference.OpponentsActivity;
 import com.quickblox.auth.session.QBSessionManager;
+import com.quickblox.auth.session.QBSettings;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBMessageStatusesManager;
 import com.quickblox.chat.QBSystemMessagesManager;
@@ -114,6 +120,11 @@ import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
 
 @SuppressWarnings("deprecation")
@@ -226,10 +237,16 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , Run
     AnimationDrawable loadingAnimation;
     private static final int SPLASH_DELAY = 1500;
     private ModelItem modelItem;
+    private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
+    private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
+    private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
+    private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
+    private static final String SERVER_URL = "";
+
     private SystemMessagesListener systemMessagesListener = new SystemMessagesListener();
 
     public static void startForResult(AppCompatActivity activity, int code, QBChatDialog dialogId) {
-        Intent intent = new Intent(activity, ChattingActivity.class);
+        Intent intent = new Intent(activity, ChatAct.class);
         intent.putExtra(ChatAct.EXTRA_DIALOG_ID, dialogId);
         activity.startActivityForResult(intent, code);
     }
@@ -240,7 +257,7 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , Run
     }
 
     public static void startForResult(AppCompatActivity activity, int code, QBChatDialog dialogId, boolean isNewDialog) {
-        Intent intent = new Intent(activity, ChattingActivity.class);
+        Intent intent = new Intent(activity, ChatAct.class);
         intent.putExtra(ChatAct.EXTRA_DIALOG_ID, dialogId);
         intent.putExtra(ChatAct.EXTRA_IS_NEW_DIALOG, isNewDialog);
         activity.startActivityForResult(intent, code);
@@ -249,20 +266,20 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , Run
 
 
     public static void startForResult(Activity activity, int code, QBChatDialog dialogId) {
-        Intent intent = new Intent(activity, ChattingActivity.class);
+        Intent intent = new Intent(activity, ChatAct.class);
         intent.putExtra(ChatAct.EXTRA_DIALOG_ID, dialogId);
         activity.startActivityForResult(intent, code);
     }
 
     public static void startForResult(Activity activity, int code, QBChatDialog dialogId, boolean isNewDialog) {
-        Intent intent = new Intent(activity, ChattingActivity.class);
+        Intent intent = new Intent(activity, ChatAct.class);
         intent.putExtra(ChatAct.EXTRA_DIALOG_ID, dialogId);
         intent.putExtra(ChatAct.EXTRA_IS_NEW_DIALOG, isNewDialog);
         activity.startActivityForResult(intent, code);
     }
 
     public static void startForResultFromCall(CallActivity callActivity, int requestCodeOpenConversationChat, String dialogID, boolean b) {
-        Intent intent = new Intent(callActivity, ChattingActivity.class);
+        Intent intent = new Intent(callActivity, ChatAct.class);
         intent.putExtra(ChatAct.EXTRA_DIALOG_ID, requestCodeOpenConversationChat);
         intent.putExtra(ChatAct.EXTRA_IS_NEW_DIALOG, isNewDialog);
         callActivity.startActivityForResult(intent, code);
@@ -274,6 +291,10 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , Run
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_chat);
         setTitle("Chats Activity");
+        checkInternetConnection();
+        FirebaseApp.initializeApp(this);
+        QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
         userExtras= new Bundle();
         cloudUser= new QBUser();
         modelItem= new ModelItem();
@@ -1115,6 +1136,45 @@ public class ChatAct extends BaseActivity implements OnImagePickedListener , Run
         fileAttachClickListener = new FileAttachClickListener();
         messageLongClickListener = new MessageLongClickListenerImpl();
     }
+    public static boolean isOnline(ConnectivityManager cm) {
+        @SuppressLint("MissingPermission") NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        return false;
+    }
+    public boolean hasInternetConnection() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        @SuppressLint("MissingPermission") NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    public boolean checkInternetConnection() {
+        boolean hasInternetConnection = hasInternetConnection();
+        if (!hasInternetConnection) {
+            showWarningDialog("Internet connection failed");
+        }
+
+        return hasInternetConnection;
+    }
+    public void showWarningDialog(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message);
+        builder.setPositiveButton(R.string.button_ok, null);
+        builder.show();
+    }
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
     private void sendChatMessage(final String text, final QBAttachment attachment) {
         if (ChatHelper.getInstance().isLogged()) {

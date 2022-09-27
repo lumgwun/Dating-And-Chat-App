@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.lahoriagency.cikolive.Classes.DiamondHistory;
 import com.lahoriagency.cikolive.Classes.RedeemRequest;
 import com.lahoriagency.cikolive.R;
 

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.lahoriagency.cikolive.Classes.ImageUtils;
+import com.lahoriagency.cikolive.Conference.MediaUtils;
 import com.lahoriagency.cikolive.R;
 
 public class MediaSourcePickDialogFragment extends DialogFragment {
@@ -80,6 +81,27 @@ public class MediaSourcePickDialogFragment extends DialogFragment {
                     break;
                 case FILE_STORAGE:
                     ImageUtils.startFilePicker(fragment);
+            }
+        }
+    }
+    public static class LoggableActivityImageSourcePickedListener implements OnImageSourcePickedListener {
+        private Fragment fragment;
+
+        public LoggableActivityImageSourcePickedListener(Fragment fragment) {
+            this.fragment = fragment;
+        }
+
+        @Override
+        public void onImageSourcePicked(ImageSource source) {
+            switch (source) {
+                case GALLERY:
+                    MediaUtils.startMediaPicker(fragment);
+                    break;
+                case CAMERA:
+                    MediaUtils.startCameraForResult(fragment);
+                    break;
+                case FILE_STORAGE:
+                    MediaUtils.startFilePicker(fragment);
             }
         }
     }

@@ -24,4 +24,16 @@ public class PermissionsChecker {
     private boolean lacksPermission(String permission) {
         return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED;
     }
+    public boolean missAllPermissions(String... permissions) {
+        for (String permission : permissions) {
+            if (missPermission(permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean missPermission(String permission) {
+        return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED;
+    }
 }

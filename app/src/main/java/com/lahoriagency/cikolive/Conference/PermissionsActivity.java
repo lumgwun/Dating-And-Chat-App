@@ -1,5 +1,6 @@
 package com.lahoriagency.cikolive.Conference;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -25,6 +26,11 @@ public class PermissionsActivity extends AppCompatActivity {
 
     private PermissionsChecker checker;
     private boolean requiresCheck;
+    public static void startForResult(Activity activity, int code, String... permissions) {
+        Intent intent = new Intent(activity, PermissionsActivity.class);
+        intent.putExtra(EXTRA_PERMISSIONS, permissions);
+        ActivityCompat.startActivityForResult(activity, intent, code, null);
+    }
 
     public static void startActivity(AppCompatActivity activity, boolean checkOnlyAudio, String... permissions) {
         Intent intent = new Intent(activity, PermissionsActivity.class);

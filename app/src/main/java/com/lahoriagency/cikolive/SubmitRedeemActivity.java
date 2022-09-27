@@ -31,8 +31,12 @@ public class SubmitRedeemActivity extends BaseActivity {
     private SavedProfile savedProfile;
     private static final String PREF_NAME = "Ciko";
     Gson gson, gson1,gson2;
-    String json, json1, json2;
+    String json, json1, json2,userName,password,profileName;
     private QBUser qbUser;
+    private Bundle payBundle;
+    private int profileID;
+    private String strgAmount;
+    private long amount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +48,16 @@ public class SubmitRedeemActivity extends BaseActivity {
         gson1= new Gson();
         gson2= new Gson();
         qbUser= new QBUser();
+        payBundle= new Bundle();
         sharedPref= getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         json = sharedPref.getString("LastSavedProfileUsed", "");
         savedProfile = gson.fromJson(json, SavedProfile.class);
         json1 = sharedPref.getString("LastQBUserUsed", "");
         qbUser = gson1.fromJson(json1, QBUser.class);
+        profileID = sharedPref.getInt("SAVED_PROFILE_ID", 0);
+        userName = sharedPref.getString("SAVED_PROFILE_EMAIL", "");
+        password = sharedPref.getString("SAVED_PROFILE_PASSWORD", "");
+        profileName = sharedPref.getString("SAVED_PROFILE_NAME", "");
         editAmount =findViewById(R.id.amtToPay);
         btnSubmit =findViewById(R.id.submit_pay);
         spnPaymentGateWays =findViewById(R.id.spnGateWays);
@@ -56,8 +65,8 @@ public class SubmitRedeemActivity extends BaseActivity {
         spnPaymentGateWays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedGateWay = spnPaymentGateWays.getSelectedItem().toString();
-                selectedGateWay = (String) parent.getSelectedItem();
+                //selectedGateWay = spnPaymentGateWays.getSelectedItem().toString();
+                selectedGateWay = (String) parent.getSelectedItem().toString();
 
             }
 
@@ -65,9 +74,24 @@ public class SubmitRedeemActivity extends BaseActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                strgAmount=editAmount.getText().toString();
+                amount= Long.parseLong((strgAmount));
+                payBundle.putParcelable("SavedProfile",savedProfile);
+                payBundle.putParcelable("QBUser", (Parcelable) qbUser);
+                payBundle.putString("SAVED_PROFILE_NAME",profileName);
+                payBundle.putInt("SAVED_PROFILE_ID",profileID);
+                payBundle.putLong("Amount",amount);
+                Intent dialogIntent = new Intent(SubmitRedeemActivity.this, GooglePayCheckoutAct.class);
+                dialogIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                overridePendingTransition(R.anim.slide_in_right,
+                        R.anim.slide_out_left);
+                dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                dialogIntent.putExtras(payBundle);
+                startActivity(dialogIntent);
 
             }
         });
@@ -80,6 +104,7 @@ public class SubmitRedeemActivity extends BaseActivity {
                 Bundle bundle= new Bundle();
                 bundle.putParcelable("SavedProfile",savedProfile);
                 bundle.putParcelable("QBUser", (Parcelable) qbUser);
+                bundle.putInt("SavedProfile",profileID);
                 Intent intent = new Intent(SubmitRedeemActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtras(bundle);

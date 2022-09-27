@@ -5,12 +5,22 @@
     android:id="@+id/layout_root"
     style="@style/MatchParent"
     android:background="#F4F6F9">
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:id="@+id/timeLineRecy"
+        android:layout_marginTop="20dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/timeline_list_row"
+        android:layout_marginBottom="20dp"
+        android:listSelector="@android:color/holo_blue_dark"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"/>
 
     <RelativeLayout
         android:id="@+id/search_group"
+        android:layout_below="@+id/timeLineRecy"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/search"

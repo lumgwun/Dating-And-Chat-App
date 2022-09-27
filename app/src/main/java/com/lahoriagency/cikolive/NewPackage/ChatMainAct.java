@@ -12,8 +12,11 @@ import android.widget.Toast;
 
 import com.google.firebase.FirebaseApp;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
+import com.lahoriagency.cikolive.CreateProfileActivity;
 import com.lahoriagency.cikolive.Interfaces.Consts;
+import com.lahoriagency.cikolive.MainActivity;
 import com.lahoriagency.cikolive.R;
+import com.lahoriagency.cikolive.SettingsActivity;
 import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.auth.session.QBSettings;
 import com.quickblox.chat.QBChatService;
@@ -37,6 +40,7 @@ public class ChatMainAct extends AppCompatActivity implements View.OnClickListen
     private Button loginButton, signUpButton;
 
     private EditText userEditText, passEditText;
+    private int userId;
 
     private SharedPrefsHelper sharedPrefsHelper;
     private static final String PREF_NAME = "Ciko";
@@ -62,6 +66,12 @@ public class ChatMainAct extends AppCompatActivity implements View.OnClickListen
         } else {
             QBUser currentUser = getUserFromSession();
             if (currentUser == null) {
+                Intent myIntent = new Intent(ChatMainAct.this, CreateProfileActivity.class);
+                overridePendingTransition(R.anim.slide_in_right,
+                        R.anim.slide_out_left);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(myIntent);
 
 
             } else {
@@ -79,7 +89,7 @@ public class ChatMainAct extends AppCompatActivity implements View.OnClickListen
             ChatHelper.getInstance().destroy();
             return null;
         }
-        Integer userId = qbSessionManager.getSessionParameters().getUserId();
+        userId = qbSessionManager.getSessionParameters().getUserId();
         if(user!=null)
         {
             user.setId(userId);

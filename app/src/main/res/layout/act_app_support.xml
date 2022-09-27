@@ -1,9 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".AppSupportAct">
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:id="@+id/list_progress"
+        android:progressDrawable="@drawable/rect6da"
+        android:layout_height="wrap_content"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/cardReport"
+        android:background="@drawable/shape_layer1d"
+        android:id="@+id/layout_TType"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:paddingBottom="20dp"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatEditText
+            android:layout_width="match_parent"
+            android:id="@+id/edit_message_Now"
+            android:textAlignment="center"
+            android:padding="30dp"
+            android:hint="message"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <Button
+        android:layout_width="match_parent"
+        android:text="Send Message"
+        android:padding="20dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:onClick="doPushMessage"
+        android:id="@+id/push_sendM"
+        android:background="@drawable/rect6da"
+        android:layout_height="wrap_content"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:id="@+id/emtpty_list"
+        android:layout_height="wrap_content"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:id="@+id/supportList"
+        tools:listitem="@layout/list_item_message"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"/>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

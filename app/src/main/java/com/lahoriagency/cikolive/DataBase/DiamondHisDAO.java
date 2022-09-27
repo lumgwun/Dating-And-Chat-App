@@ -6,16 +6,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.lahoriagency.cikolive.Classes.DiamondHistory;
+import com.lahoriagency.cikolive.Classes.DiamondTransfer;
 
 import java.util.ArrayList;
 
-import static com.lahoriagency.cikolive.Classes.DiamondHistory.DH_COUNT;
-import static com.lahoriagency.cikolive.Classes.DiamondHistory.DH_DATE;
-import static com.lahoriagency.cikolive.Classes.DiamondHistory.DH_FROM;
-import static com.lahoriagency.cikolive.Classes.DiamondHistory.DH_ID;
-import static com.lahoriagency.cikolive.Classes.DiamondHistory.DH_SAVED_PROF_ID;
-import static com.lahoriagency.cikolive.Classes.DiamondHistory.DH_TABLE;
+import static com.lahoriagency.cikolive.Classes.DiamondTransfer.DH_COUNT;
+import static com.lahoriagency.cikolive.Classes.DiamondTransfer.DH_DATE;
+import static com.lahoriagency.cikolive.Classes.DiamondTransfer.DH_FROM;
+import static com.lahoriagency.cikolive.Classes.DiamondTransfer.DH_ID;
+import static com.lahoriagency.cikolive.Classes.DiamondTransfer.DH_SAVED_PROF_ID;
+import static com.lahoriagency.cikolive.Classes.DiamondTransfer.DH_TABLE;
 import static java.lang.String.valueOf;
 
 public class DiamondHisDAO extends DBHelperDAO{
@@ -36,9 +36,9 @@ public class DiamondHisDAO extends DBHelperDAO{
         return dHID;
     }
     @SuppressLint("Range")
-    public ArrayList<DiamondHistory> getDiamondHisByProfID(int savedProfID){
+    public ArrayList<DiamondTransfer> getDiamondHisByProfID(int savedProfID){
         SQLiteDatabase db = this.getWritableDatabase();
-        ArrayList<DiamondHistory> dataList = new ArrayList<DiamondHistory>();
+        ArrayList<DiamondTransfer> dataList = new ArrayList<DiamondTransfer>();
         String selection = DH_SAVED_PROF_ID + "=?";
         String[] selectionArgs = new String[]{valueOf(savedProfID)};
         String[] columns = new String[]{DH_ID,DH_FROM,DH_COUNT,DH_SAVED_PROF_ID,DH_DATE};
@@ -49,12 +49,12 @@ public class DiamondHisDAO extends DBHelperDAO{
         if(cursor!=null && cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {
                 do {
-                    DiamondHistory diamondHistory = new DiamondHistory();
+                    DiamondTransfer diamondTransfer = new DiamondTransfer();
 
-                    diamondHistory.setdH_Count(cursor.getInt(4));
-                    diamondHistory.setdH_Date(cursor.getString(3));
-                    diamondHistory.setdH_From(cursor.getString(2));
-                    dataList.add(diamondHistory);
+                    diamondTransfer.setdH_Count(cursor.getInt(4));
+                    diamondTransfer.setdH_Date(cursor.getString(3));
+                    diamondTransfer.setdH_From(cursor.getString(2));
+                    dataList.add(diamondTransfer);
                 } while (cursor.moveToNext());
             }
 

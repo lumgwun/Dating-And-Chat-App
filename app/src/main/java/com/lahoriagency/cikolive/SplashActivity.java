@@ -36,6 +36,7 @@ import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.ToastUtils;
 import com.lahoriagency.cikolive.NewPackage.ChatMainAct;
+import com.lahoriagency.cikolive.NewPackage.ConfChatAct;
 import com.lahoriagency.cikolive.NewPackage.SignUpActivity;
 import com.lahoriagency.cikolive.Utils.SessionManager;
 import com.quickblox.users.model.QBUser;
@@ -101,7 +102,7 @@ public class SplashActivity extends AppCompatActivity {
             Bundle userBundle=new Bundle();
             userBundle.putParcelable("SavedProfile",savedProfile);
             userBundle.putParcelable("QBUser", (Parcelable) qbUser);
-            Intent helpIntent = new Intent(SplashActivity.this, SignUpActivity.class);
+            Intent helpIntent = new Intent(SplashActivity.this, CreateProfileActivity.class);
             overridePendingTransition(R.anim.slide_in_right,
                     R.anim.slide_out_left);
             helpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -167,7 +168,7 @@ public class SplashActivity extends AppCompatActivity {
             Bundle userBundle = new Bundle();
             userBundle.putParcelable("SavedProfile", savedProfile);
             userBundle.putParcelable("QBUser", (Parcelable) qbUser);
-            Intent helpIntent = new Intent(SplashActivity.this, MainActivity.class);
+            Intent helpIntent = new Intent(SplashActivity.this, SettingsActivity.class);
             overridePendingTransition(R.anim.slide_in_right,
                     R.anim.slide_out_left);
             helpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -326,8 +327,6 @@ public class SplashActivity extends AppCompatActivity {
         intent.putExtra("extra_pkgname", getPackageName());
         startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
     }
-
-
 
 
     @Override

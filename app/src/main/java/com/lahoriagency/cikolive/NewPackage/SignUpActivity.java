@@ -1,6 +1,6 @@
 package com.lahoriagency.cikolive.NewPackage;
 
-import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.app.ActivityCompat;
@@ -41,11 +41,11 @@ import com.google.firebase.auth.FirebaseAuthSettings;
 import com.google.gson.Gson;
 import com.lahoriagency.cikolive.BaseActNew;
 import com.lahoriagency.cikolive.BaseActivity;
-import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.Consts;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.ToastUtils;
+import com.lahoriagency.cikolive.Classes.UserProfileInfo;
 import com.lahoriagency.cikolive.DataBase.DBHelper;
 import com.lahoriagency.cikolive.DataBase.SavedProfileDAO;
 import com.lahoriagency.cikolive.R;
@@ -92,8 +92,8 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     private static final int RESULT_LOAD_IMAGE = 1;
     private static final String REQUIRED = "Required";
     private static final int RESULT_CAMERA_CODE = 22;
-    Gson gson, gson1;
-    String json, json1, name;
+    Gson gson, gson1,gson2,gson3;
+    String json, json1,json2,json3, name;
     private static boolean isPersistenceEnabled = false;
     private Uri mImageUri;
     private CircleImageView profilePix;
@@ -103,6 +103,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     private DBHelper dbHelper;
     SharedPreferences.Editor editor;
     private static final String PREF_NAME = "Ciko";
+    private UserProfileInfo userProfileInfo;
     int PERMISSION_ALL = 1;
     String[] PERMISSIONS = {
             Manifest.permission.CAMERA,
@@ -132,7 +133,10 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         setClicks();
         gson= new Gson();
         gson1= new Gson();
+        gson2= new Gson();
+        gson3= new Gson();
         qbUser= new QBUser();
+        userProfileInfo= new UserProfileInfo();
         savedProfile= new SavedProfile();
         auth = FirebaseAuth.getInstance();
         cal = Calendar.getInstance();
@@ -141,6 +145,8 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         savedProfile = gson.fromJson(json, SavedProfile.class);
         json1 = userPreferences.getString("LastQBUserUsed", "");
         qbUser = gson1.fromJson(json1, QBUser.class);
+        json2 = userPreferences.getString("LastUserProfileInfoUsed", "");
+        userProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
         //FirebaseAuthSettings firebaseAuthSettings = auth.getFirebaseAuthSettings();
         savedProfileDAO= new SavedProfileDAO(this);
         registerSessions();
@@ -199,6 +205,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                 QBUser qbUser = new QBUser(userName, password);
                 name= fullNameEditText.getText().toString();
 
+
                 qbUser.setFullName(name);
                 cal = Calendar.getInstance();
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -212,7 +219,8 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                             qbUserID=qbUser.getFileId();
 
                         }
-                        saveToDBase(qbUserID,userName,password,name,joinedDate,qbUser);
+                        userProfileInfo= new UserProfileInfo(qbUserID,name);
+                        saveToDBase(qbUserID,userName,password,name,joinedDate,qbUser,userProfileInfo);
                         Toast.makeText(SignUpActivity.this, "Sign up successfully", Toast.LENGTH_SHORT).show();
                     }
 
@@ -296,7 +304,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
 
     }
 
-    private void saveToDBase(int qbUserID, String userName, String password, String name, String joinedDate, QBUser qbUser) {
+    private void saveToDBase(int qbUserID, String userName, String password, String name, String joinedDate, QBUser qbUser, UserProfileInfo userProfileInfo) {
         dbHelper= new DBHelper(this);
         savedProfile=new SavedProfile();
         savedProfileDAO= new SavedProfileDAO(this);
@@ -305,10 +313,11 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         gson1 = new Gson();
         SavedProfile lastSavedProfileUsed=new SavedProfile();
         QBUser lastQBUserUsed=new QBUser();
+        UserProfileInfo LastUserProfileInfoUsed= new UserProfileInfo();
 
 
         savedProfileID=savedProfileDAO.insertFirstSavedProf(qbUserID,userName,password,name,joinedDate,this.mImageUri,"New");
-
+        LastUserProfileInfoUsed=userProfileInfo;
         if(savedProfileID >0){
             setTitle("onBoarding was successful");
             savedProfile.setSavedProfID(Math.toIntExact(savedProfileID));
@@ -324,6 +333,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
 
             json = gson.toJson(lastSavedProfileUsed);
             json1 = gson1.toJson(lastQBUserUsed);
+            json2 = gson2.toJson(LastUserProfileInfoUsed);
 
             SharedPreferences.Editor editor = userPreferences.edit();
             editor.putInt("SAVED_PROFILE_ID", (int) savedProfileID);
@@ -334,6 +344,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
             editor.putString("SAVED_PROFILE_PASSWORD", password);
             editor.putString("SAVED_PROFILE_USERNAME", userName);
             editor.putString("LastQBUserUsed", json1);
+            editor.putString("LastUserProfileInfoUsed", json2);
             editor.putString("LastSavedProfileUsed", json).apply();
 
         }else {

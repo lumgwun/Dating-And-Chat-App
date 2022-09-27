@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.FirebaseApp;
+import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Adapters.DialogAdapter44;
 import com.lahoriagency.cikolive.Adapters.HorizontalListDialogsRecyclerViewAdapter;
 import com.lahoriagency.cikolive.ChatAct;
@@ -36,6 +39,7 @@ import com.lahoriagency.cikolive.Classes.ItemTouchHelperCallback;
 import com.lahoriagency.cikolive.Classes.QbChatDialogMessageListenerImp;
 import com.lahoriagency.cikolive.Classes.QbDialogHolder;
 import com.lahoriagency.cikolive.Classes.QbEntityCallbackImpl;
+import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.UserProfileInfo;
 import com.lahoriagency.cikolive.Classes.UserProfileInfoHolder;
 import com.lahoriagency.cikolive.Classes.UserProfileInfoModel;
@@ -46,6 +50,7 @@ import com.lahoriagency.cikolive.Interfaces.ServerMethodsConsts;
 import com.lahoriagency.cikolive.R;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
+import com.quickblox.auth.session.QBSettings;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBIncomingMessagesManager;
 import com.quickblox.chat.QBRestChatService;
@@ -64,6 +69,13 @@ import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static android.content.Context.MODE_PRIVATE;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
 @SuppressWarnings("deprecation")
 public class DialogsFragment extends Fragment implements DialogsManager.ManagingDialogsCallbacks {
@@ -91,16 +103,52 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
     private int skipRecords = 0;
     private boolean openDialogFromSwiping;
+    private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
+    private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
+    private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
+    private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
+    private static final String SERVER_URL = "";
+    private UserProfileInfoReply userProfileInfoReply;
+    Gson gson2,gson,gson3,gson1;
+    String json2,json3,json1,json, name;
+    private  UserProfileInfo userProfileInfo;
+    private SavedProfile savedProfile;
+    private static final String PREF_NAME = "Ciko";
+    private QBUser currentUser;
+    private SharedPreferences userPreferences;
+    private UserProfileInfoRequest userDialogInfoModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         googlePlayServicesHelper = new GooglePlayServicesHelper();
         pushBroadcastReceiver = new PushBroadcastReceiver();
+        userProfileInfoReply= new UserProfileInfoReply();
+        gson= new Gson();
+        gson1= new Gson();
+        gson2= new Gson();
+        gson3= new Gson();
+        currentUser= new QBUser();
+        userProfileInfo= new UserProfileInfo();
+        savedProfile= new SavedProfile();
+        FirebaseApp.initializeApp(Objects.requireNonNull(getContext()));
+        QBSettings.getInstance().init(getContext(), APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+        userPreferences = getContext().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = userPreferences.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = userPreferences.getString("LastQBUserUsed", "");
+        currentUser = gson1.fromJson(json1, QBUser.class);
+        json2 = userPreferences.getString("LastUserProfileInfoUsed", "");
+        userProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
+
+        json3 = userPreferences.getString("LastUserProfileInfoReplyUsed", "");
+        userProfileInfoReply = gson3.fromJson(json3, UserProfileInfoReply.class);
 
         allDialogsMessagesListener = new AllDialogsMessageListener();
         systemMessagesListener = new SystemMessagesListener();
         dialogsManager = new DialogsManager();
+
 
         registerQbChatListeners();
     }
@@ -302,7 +350,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             @Override
             public void onError(QBResponseException e) {
                 setOnRefreshListener.setRefreshing(false);
-                Toast.makeText(AppE.getAppContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -319,7 +367,28 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     }
 
     private void getUserDialogInfo(String userIds) {
-        UserProfileInfoRequest userDialogInfoModel = new UserProfileInfoRequest(AppE.getPreferences().getUserId(), userIds);
+        userProfileInfoReply= new UserProfileInfoReply();
+        gson= new Gson();
+        gson1= new Gson();
+        gson2= new Gson();
+        gson3= new Gson();
+        currentUser= new QBUser();
+        userProfileInfo= new UserProfileInfo();
+        savedProfile= new SavedProfile();
+        //FirebaseApp.initializeApp(Objects.requireNonNull(getContext()));
+        QBSettings.getInstance().init(getContext(), APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+        userPreferences = getContext().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = userPreferences.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = userPreferences.getString("LastQBUserUsed", "");
+        currentUser = gson1.fromJson(json1, QBUser.class);
+        json2 = userPreferences.getString("LastUserProfileInfoUsed", "");
+        userProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
+
+        json3 = userPreferences.getString("LastUserProfileInfoRequestUsed", "");
+        userDialogInfoModel = gson3.fromJson(json3, UserProfileInfoRequest.class);
+        userDialogInfoModel = new UserProfileInfoRequest(AppE.getPreferences().getUserId(), userIds);
         GetUsersProfileInfo baseAsyncTask = new GetUsersProfileInfo(ServerMethodsConsts.USERSPROFILEINFO, userDialogInfoModel);
         baseAsyncTask.setHttpMethod("POST");
         baseAsyncTask.execute();
@@ -328,15 +397,20 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     @Override
     public void onResume() {
         super.onResume();
-        googlePlayServicesHelper.checkPlayServicesAvailable();
-        LocalBroadcastManager.getInstance(AppE.getAppContext()).registerReceiver(pushBroadcastReceiver,
-                new IntentFilter(GcmConsts.ACTION_NEW_GCM_EVENT));
+        //googlePlayServicesHelper = new GooglePlayServicesHelper();
+        /*if(googlePlayServicesHelper !=null){
+            googlePlayServicesHelper.checkPlayServicesAvailable();
+
+        }*/
+
+        /*LocalBroadcastManager.getInstance(AppE.getAppContext()).registerReceiver(pushBroadcastReceiver,
+                new IntentFilter(GcmConsts.ACTION_NEW_GCM_EVENT));*/
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(AppE.getAppContext()).unregisterReceiver(pushBroadcastReceiver);
+        //LocalBroadcastManager.getInstance(AppE.getAppContext()).unregisterReceiver(pushBroadcastReceiver);
     }
 
     @Override
@@ -448,7 +522,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            UserProfileInfoReply userProfileInfoReply = AppE.getGson().fromJson(result, UserProfileInfoReply.class);
+            userProfileInfoReply = AppE.getGson().fromJson(result, UserProfileInfoReply.class);
             if (userProfileInfoReply.isStatusOkay()) {
                 for (UserProfileInfoModel model : userProfileInfoReply.getUsersProfileInfo()) {
                     UserProfileInfo profileInfo = new UserProfileInfo(model);

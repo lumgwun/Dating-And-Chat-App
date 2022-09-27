@@ -171,6 +171,17 @@ public class SavedProfileDAO extends DBHelperDAO{
 
 
     }
+    public void updateSavedProfile(int savedProfileID,String age,String aboutMe,String interest) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues savedProfUpdateValues = new ContentValues();
+        String selection = SAVED_PROFILE_ID + "=? ";
+        String[] selectionArgs = new String[]{valueOf(savedProfileID)};
+        savedProfUpdateValues.put(SAVED_PROFILE_AGE, age);
+        savedProfUpdateValues.put(SAVED_PROFILE_ABOUT_ME, aboutMe);
+        savedProfUpdateValues.put(SAVED_PROFILE_MY_INT, interest);
+        db.update(USER_PROF_INFO_TABLE, savedProfUpdateValues, selection, selectionArgs);
+
+    }
     public void deleteSavedProfile(int savedProfileID) {
         SQLiteDatabase db = this.getWritableDatabase();
         String selection = SAVED_PROFILE_ID + "=?";
@@ -178,7 +189,6 @@ public class SavedProfileDAO extends DBHelperDAO{
         db.delete(USER_PROF_INFO_TABLE,
                 selection,
                 selectionArgs);
-
 
     }
 

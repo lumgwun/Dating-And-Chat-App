@@ -1,5 +1,6 @@
 package com.lahoriagency.cikolive.Classes;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 
@@ -13,6 +14,13 @@ public class VerboseQbChatConnectionListener implements ConnectionListener {
     private static final String TAG = VerboseQbChatConnectionListener.class.getSimpleName();
     private View rootView;
     private Snackbar snackbar;
+    private Context context;
+
+    public VerboseQbChatConnectionListener(Context context, View rootView) {
+        this.context = context;
+        this.rootView = rootView;
+    }
+
 
     public VerboseQbChatConnectionListener(View rootView) {
         this.rootView = rootView;

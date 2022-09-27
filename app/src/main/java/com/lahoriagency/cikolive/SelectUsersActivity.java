@@ -19,14 +19,30 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.widget.ContentLoadingProgressBar;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.gson.Gson;
+import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 import com.lahoriagency.cikolive.Adapters.CheckboxUsersAdapter;
+import com.lahoriagency.cikolive.Adapters.TimelineAdapter;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
+import com.lahoriagency.cikolive.Classes.Diamond;
+import com.lahoriagency.cikolive.Classes.QbUsersDbManager;
+import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.ScrollViewWithMaxHeight;
+import com.lahoriagency.cikolive.Classes.TimeLine;
 import com.lahoriagency.cikolive.Classes.ToastUtils;
 import com.lahoriagency.cikolive.Classes.UiUtils;
+import com.lahoriagency.cikolive.DataBase.TimeLineDAO;
+import com.lahoriagency.cikolive.NewPackage.SharedPrefsHelper;
+import com.melnykov.fab.FloatingActionButton;
+import com.quickblox.auth.session.QBSettings;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
@@ -36,11 +52,17 @@ import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
 public class SelectUsersActivity extends BaseActivity  {
     private static final String EXTRA_QB_DIALOG = "qb_dialog";
@@ -76,6 +98,34 @@ public class SelectUsersActivity extends BaseActivity  {
     ContentLoadingProgressBar progressBar;
     private static final String PREF_NAME = "Ciko";
     SharedPreferences userPreferences;
+    private Integer qbUserId;
+    private QBUser currentUser;
+    private QbUsersDbManager dbManager;
+    int diamondCount,diamondID;
+    private int collections,qbUserID;
+    SharedPrefsHelper sharedPrefsHelper;
+    FloatingActionButton fabNew;
+    private SavedProfile savedProfile;
+    private Diamond diamond;
+    Gson gson, gson1,gson2;
+    String json, json1, json2;
+    private QBUser qbUser;
+    SharedPreferences sharedPref;
+    private double liveAmt;
+    private int liveDuration;
+    private Bundle extras;
+    private Date date;
+    long diff,minutes;
+    public static final int MAX_CONFERENCE_OPPONENTS_ALLOWED = 11;
+    private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
+    private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
+    private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
+    private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
+    private TimelineAdapter timelineAdapter;
+    private TimeLineDAO timeLineDAO;
+    private RecyclerView timeLineRecyclerView;
+    private ArrayList<TimeLine> timeLineArrayList;
+    private int savedProfileID;
 
 
     public static void startForResult(Activity activity, int code, QBChatDialog dialog) {
@@ -88,6 +138,27 @@ public class SelectUsersActivity extends BaseActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_select_users);
+        extras= new Bundle();
+        timeLineArrayList= new ArrayList<>();
+        timeLineDAO= new TimeLineDAO(this);
+        date= new Date();
+        timeLineRecyclerView = findViewById(R.id.timeLineRecy);
+        QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+        sharedPrefsHelper = SharedPrefsHelper.getInstance();
+        extras = getIntent().getExtras();
+        savedProfile= new SavedProfile();
+        gson= new Gson();
+        currentUser= new QBUser();
+        gson1= new Gson();
+        gson2= new Gson();
+        qbUser= new QBUser();
+        diamond= new Diamond();
+        sharedPref= getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = sharedPref.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = sharedPref.getString("LastQBUserUsed", "");
+        qbUser = gson1.fromJson(json1, QBUser.class);
 
         if (getIntent() != null && getIntent().getSerializableExtra(EXTRA_QB_DIALOG) != null) {
             qbChatDialog = (QBChatDialog) getIntent().getSerializableExtra(EXTRA_QB_DIALOG);
@@ -99,6 +170,28 @@ public class SelectUsersActivity extends BaseActivity  {
         } else {
             loadUsersFromQB(null);
         }
+        if(savedProfile !=null){
+            diamond=savedProfile.getSavedPDiamond();
+            savedProfileID=savedProfile.getSavedProfID();
+
+        }
+        if(qbUser !=null){
+            qbUserID=qbUser.getFileId();
+        }
+        if(diamond !=null){
+            diamondCount=diamond.getDiamondCount();
+            diamondID=diamond.getDiamondWalletID();
+            collections=diamond.getDiamondCollections();
+
+        }
+        timeLineArrayList=timeLineDAO.getTimeLineByProfID(savedProfileID);
+        timelineAdapter = new TimelineAdapter(SelectUsersActivity.this, timeLineArrayList);
+        SnapHelper snapHelper = new PagerSnapHelper();
+        timeLineRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        snapHelper.attachToRecyclerView(timeLineRecyclerView);
+        timeLineRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+        timeLineRecyclerView.setAdapter(timelineAdapter);
+
     }
 
     private void initUi() {

@@ -27,8 +27,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UserSwipeProfileAdapter extends ArrayAdapter<UserProfileInfo> {
     public static final String EXTRA_USER_PROFILE = "987";
     public static final String EXTRA_SWIPE_VIEW_SOURCE = "420";
-    private final ImageLoader imageLoader;
-    private final FragmentActivity fragmentActivity;
+    private ImageLoader imageLoader;
+    private FragmentActivity fragmentActivity;
+    Context context;
 
     public UserSwipeProfileAdapter(Context context, FragmentActivity fragmentActivity) {
         super(context, 0);

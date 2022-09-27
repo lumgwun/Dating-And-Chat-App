@@ -7,10 +7,11 @@ import androidx.multidex.MultiDexApplication;
 
 import com.lahoriagency.cikolive.Classes.ActivityLifecycle;
 import com.lahoriagency.cikolive.Classes.BackgroundListener;
-import com.lahoriagency.cikolive.Classes.ChatHelper;
-import com.lahoriagency.cikolive.Classes.DialogsManager;
+import com.lahoriagency.cikolive.Classes.ImageLoader;
 import com.lahoriagency.cikolive.Classes.QBDialogsHolderImpl;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
+import com.lahoriagency.cikolive.NewPackage.ChatHelperCon;
+import com.lahoriagency.cikolive.NewPackage.DialogsManagerCon;
 import com.lahoriagency.cikolive.R;
 import com.quickblox.auth.session.QBSettings;
 import com.quickblox.conference.ConferenceConfig;
@@ -48,14 +49,16 @@ public class AppConference extends MultiDexApplication {
     private SharedPrefsHelper sharedPrefsHelper;
     private QBUsersHolder qbUsersHolder;
     private QBDialogsHolder qbDialogsHolder;
-    private ChatHelper chatHelper;
-    private DialogsManager dialogsManager;
+    private ChatHelperCon chatHelper;
+    private DialogsManagerCon dialogsManager;
+    private static ImageLoader imageLoader;
 
     @Override
     public void onCreate() {
         super.onCreate();
         ActivityLifecycle.init(this);
         checkAppCredentials();
+        imageLoader = new ImageLoader();
         checkChatSettings();
         initCredentials();
         initConferenceConfig();
@@ -66,6 +69,9 @@ public class AppConference extends MultiDexApplication {
         initDialogsManager();
 
         ProcessLifecycleOwner.get().getLifecycle().addObserver(new BackgroundListener());
+    }
+    public static ImageLoader getImageLoader() {
+        return imageLoader;
     }
 
     private void initSharedPreferences() {
@@ -93,18 +99,18 @@ public class AppConference extends MultiDexApplication {
     }
 
     private void initChatHelper() {
-        chatHelper = new ChatHelper(getApplicationContext());
+        chatHelper = new ChatHelperCon(getApplicationContext());
     }
 
-    public ChatHelper getChatHelper() {
+    public ChatHelperCon getChatHelper() {
         return chatHelper;
     }
 
     private void initDialogsManager() {
-        dialogsManager = new DialogsManager(getApplicationContext());
+        dialogsManager = new DialogsManagerCon(getApplicationContext());
     }
 
-    public DialogsManager getDialogsManager() {
+    public DialogsManagerCon getDialogsManager() {
         return dialogsManager;
     }
 

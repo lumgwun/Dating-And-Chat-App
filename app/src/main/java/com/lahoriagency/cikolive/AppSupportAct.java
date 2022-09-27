@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -16,14 +17,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Classes.Consts;
 import com.lahoriagency.cikolive.Classes.KeyboardUtils;
+import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.ToastUtils;
+import com.lahoriagency.cikolive.Classes.UserProfileInfo;
 import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.auth.session.QBSettings;
 import com.quickblox.core.QBEntityCallback;
@@ -36,6 +42,7 @@ import com.quickblox.messages.model.QBNotificationType;
 import com.quickblox.messages.services.QBPushManager;
 import com.quickblox.messages.services.SubscribeService;
 import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +52,7 @@ import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
 import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
 import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
+@SuppressWarnings("deprecation")
 public class AppSupportAct extends BaseActivity implements TextWatcher {
     private final String TAG = getClass().getSimpleName();
 
@@ -56,6 +64,18 @@ public class AppSupportAct extends BaseActivity implements TextWatcher {
     private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
     private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
     private static final String SERVER_URL = "";
+    Button btnSendPush;
+    private static final String PREF_NAME = "Ciko";
+    Gson gson, gson1;
+    String json, json1, nIN;
+    SharedPreferences userPreferences;
+    private QBUser cloudUser;
+    private  QBUser currentUser;
+    private SavedProfile savedProfile;
+    Gson gson2,gson3;
+    int profileID;
+    String json2,json3, profileName,userName,password;
+    private UserProfileInfo userProfileInfo;
 
     private List<String> receivedPushes;
 
@@ -72,7 +92,7 @@ public class AppSupportAct extends BaseActivity implements TextWatcher {
     };
 
     public static void start(Context context, String message) {
-        Intent intent = new Intent(context, MessagesActivity.class);
+        Intent intent = new Intent(context, AppSupportAct.class);
         intent.putExtra(Consts.EXTRA_FCM_MESSAGE, message);
         context.startActivity(intent);
     }
@@ -87,6 +107,26 @@ public class AppSupportAct extends BaseActivity implements TextWatcher {
         boolean enable = QBSettings.getInstance().isEnablePushNotification();
         String subtitle = getSubtitleStatus(enable);
         setActionbarSubTitle(subtitle);
+        currentUser= new QBUser();
+        savedProfile= new SavedProfile();
+        gson = new Gson();
+        gson= new Gson();
+        gson1= new Gson();
+        gson2= new Gson();
+        gson3= new Gson();
+        userProfileInfo= new UserProfileInfo();
+        userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = userPreferences.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = userPreferences.getString("LastQBUserUsed", "");
+        currentUser = gson1.fromJson(json1, QBUser.class);
+        json2 = userPreferences.getString("LastUserProfileInfoUsed", "");
+        userProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
+        profileID = userPreferences.getInt("SAVED_PROFILE_ID", 0);
+        userName = userPreferences.getString("SAVED_PROFILE_EMAIL", "");
+        password = userPreferences.getString("SAVED_PROFILE_PASSWORD", "");
+        profileName = userPreferences.getString("SAVED_PROFILE_NAME", "");
+
 
         receivedPushes = new ArrayList<>();
         initUI();
@@ -152,14 +192,24 @@ public class AppSupportAct extends BaseActivity implements TextWatcher {
 
 
     private void initUI() {
-        progressBar = findViewById(R.id.progress_bar);
-        outgoingMessageEditText = findViewById(R.id.edit_message_out);
+        progressBar = findViewById(R.id.list_progress);
+        outgoingMessageEditText = findViewById(R.id.edit_message_Now);
         outgoingMessageEditText.addTextChangedListener(this);
+        btnSendPush = findViewById(R.id.push_sendM);
+        btnSendPush.setOnClickListener(this::doPushMessage);
 
-        ListView incomingMessagesListView = findViewById(R.id.list_messages);
+        btnSendPush.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendPushMessage();
+            }
+        });
+
+
+        ListView incomingMessagesListView = findViewById(R.id.supportList);
         adapter = new ArrayAdapter<>(this, R.layout.list_item_message, R.id.item_message, receivedPushes);
         incomingMessagesListView.setAdapter(adapter);
-        incomingMessagesListView.setEmptyView(findViewById(R.id.text_empty_messages));
+        incomingMessagesListView.setEmptyView(findViewById(R.id.emtpty_list));
     }
 
     private void registerReceiver() {
@@ -176,7 +226,8 @@ public class AppSupportAct extends BaseActivity implements TextWatcher {
     private void sendPushMessage() {
         String outMessage = outgoingMessageEditText.getText().toString().trim();
         if (!isValidData(outMessage)) {
-            ToastUtils.longToast(R.string.error_field_is_empty);
+            Toast.makeText(AppSupportAct.this, R.string.error_field_is_empty , Toast.LENGTH_LONG).show();
+            //ToastUtils.longToast(R.string.error_field_is_empty);
             invalidateOptionsMenu();
             return;
         }
@@ -295,5 +346,8 @@ public class AppSupportAct extends BaseActivity implements TextWatcher {
             }
         });
 
+    }
+
+    public void doPushMessage(View view) {
     }
 }

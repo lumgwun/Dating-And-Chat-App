@@ -5,7 +5,7 @@ import static com.lahoriagency.cikolive.Classes.AppServerUser.QBUSER_TABLE;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_ID;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_TABLE;
 
-public class DiamondHistory {
+public class DiamondTransfer {
     private String dH_From;
     private String dH_Date;
     private int dH_Count;
@@ -27,12 +27,12 @@ public class DiamondHistory {
             "PRIMARY KEY(" + DH_ID + "), " +"FOREIGN KEY(" + DH_SAVED_QBUSER_ID  + ") REFERENCES " + QBUSER_TABLE + "(" + QBUSER_ID + "),"+ "FOREIGN KEY(" + DH_SAVED_PROF_ID + ") REFERENCES " + SAVED_PROFILE_TABLE + "(" + SAVED_PROFILE_ID + "))";
 
 
-    public DiamondHistory() {
+    public DiamondTransfer() {
         super();
 
     }
 
-    public DiamondHistory(String dH_From, String dH_Date, int dH_Count) {
+    public DiamondTransfer(String dH_From, String dH_Date, int dH_Count) {
         this.dH_From = dH_From;
         this.dH_Date = dH_Date;
         this.dH_Count = dH_Count;

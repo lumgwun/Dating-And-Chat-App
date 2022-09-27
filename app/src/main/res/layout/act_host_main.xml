@@ -21,7 +21,7 @@
             android:paddingHorizontal="20dp">
 
             <ImageView
-                android:id="@+id/btn_back"
+                android:id="@+id/btn_backa"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_marginEnd="20dp"
@@ -83,7 +83,6 @@
                             android:id="@+id/tv_count"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-
                             android:layout_weight="1"
                             android:ellipsize="end"
                             android:fontFamily="@font/gilroy_bold"
@@ -165,7 +164,7 @@
                             android:checked="true"
                             android:id="@+id/avail_for_call"
                             android:gravity="center_vertical"
-                            app:track="@drawable/rect6"
+                            app:track="@drawable/rect6da"
 
                             />
 
@@ -193,8 +192,6 @@
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
-
                         android:fontFamily="@font/gilroy_extra_bold"
                         android:gravity="center"
                         android:letterSpacing=".06"
@@ -220,8 +217,6 @@
                         android:orientation="horizontal">
 
                         <TextView
-
-
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -263,7 +258,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/tv_Wallet"
+                        android:id="@+id/tv_WalletD"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/lout_top"
@@ -273,13 +268,13 @@
                         android:text="23987"
                         android:textAllCaps="true"
                         android:textColor="@color/black"
-                        android:textSize="24sp" />
+                        android:textSize="14sp" />
 
                     <RelativeLayout
                         android:id="@+id/lout_progress"
                         android:layout_width="match_parent"
                         android:layout_height="10dp"
-                        android:layout_below="@id/tv_Wallet"
+                        android:layout_below="@id/tv_WalletD"
                         android:layout_marginTop="10dp">
 
                         <View
@@ -310,9 +305,10 @@
                         android:textSize="12sp" />
 
                     <Button
-                        android:id="@+id/btn_redeem"
+                        android:id="@+id/btn_redeemT"
                         android:layout_width="140dp"
                         android:layout_height="43dp"
+                        android:onClick="redeemDo"
                         android:layout_below="@id/tv_min"
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="25dp"
@@ -320,7 +316,7 @@
                         android:background="@drawable/bg_gradiant_500"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="@string/redeem"
-                        android:textColor="@color/black"
+                        android:textColor="@color/white"
                         android:textSize="14sp" />
 
                 </RelativeLayout>
@@ -345,7 +341,7 @@
                         android:maxLines="1"
                         android:text="@string/total_collection"
                         android:textColor="@color/gray"
-                        android:textSize="15sp" />
+                        android:textSize="14sp" />
 
 
                     <TextView
@@ -359,7 +355,16 @@
                         android:text="23987"
                         android:textAllCaps="true"
                         android:textColor="@color/gray_dark"
-                        android:textSize="24sp" />
+                        android:textSize="14sp" />
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="50dp"
+                        android:id="@+id/card_l1"
+                        app:cardBackgroundColor="#f3f5f7"
+                        android:layout_height="wrap_content">
+
+                    </androidx.cardview.widget.CardView>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -367,6 +372,7 @@
                         android:layout_below="@id/tv_colectiont"
                         android:layout_marginTop="15dp"
                         android:weightSum="2"
+                        android:backgroundTint="@color/red_brown_dark"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -375,29 +381,32 @@
                             android:layout_height="43dp"
                             android:layout_marginEnd="20dp"
                             android:layout_weight="1"
-                            android:background="@drawable/rect6h"
-                            android:backgroundTint="@color/gray_10"
+                            android:onClick="getDiamondHistory"
+                            android:id="@+id/diamond_History"
+                            android:background="@drawable/bg_gradiant_500"
                             android:fontFamily="@font/gilroy_semi_bold"
                             android:gravity="center"
                             android:text="@string/history"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/black"
                             android:textSize="14sp" />
 
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="0dp"
                             android:layout_height="43dp"
                             android:layout_weight="1"
-                            android:background="@drawable/rect6h"
-                            android:backgroundTint="@color/gray_10"
+                            android:id="@+id/redeem_Btn_Request"
+                            android:background="@drawable/bg_gradiant_500"
                             android:fontFamily="@font/gilroy_semi_bold"
                             android:gravity="center"
+                            android:onClick="goToRedeemReq"
                             android:text="@string/redeem_requests"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/black"
                             android:textSize="14sp" />
                     </LinearLayout>
 
 
                 </RelativeLayout>
+                <include layout="@layout/dialog_start_live_"/>
 
             </LinearLayout>
         </ScrollView>

@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Adapters.UsersAdapter;
 import com.lahoriagency.cikolive.AppInfoActivity;
 import com.lahoriagency.cikolive.BaseActivity;
@@ -22,11 +24,13 @@ import com.lahoriagency.cikolive.CallActivity;
 import com.lahoriagency.cikolive.Classes.CallService;
 import com.lahoriagency.cikolive.Classes.CollectionsUtils;
 import com.lahoriagency.cikolive.Classes.Consts;
+import com.lahoriagency.cikolive.Classes.Diamond;
 import com.lahoriagency.cikolive.Classes.LoginService;
 import com.lahoriagency.cikolive.Classes.PermissionsChecker;
 import com.lahoriagency.cikolive.Classes.PushNotificationSender;
 import com.lahoriagency.cikolive.Classes.QBResRequestExecutor;
 import com.lahoriagency.cikolive.Classes.QbUsersDbManager;
+import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.ToastUtils;
 import com.lahoriagency.cikolive.Classes.UsersUtils;
@@ -34,6 +38,7 @@ import com.lahoriagency.cikolive.Classes.WebRtcSessionManager;
 import com.lahoriagency.cikolive.R;
 import com.lahoriagency.cikolive.SettingsActivity;
 import com.lahoriagency.cikolive.SignInActivity;
+import com.quickblox.auth.session.QBSettings;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
@@ -49,6 +54,11 @@ import com.quickblox.videochat.webrtc.QBRTCTypes;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
 public class OpponentsActivity extends BaseActivity {
     private static final String TAG = OpponentsActivity.class.getSimpleName();
@@ -66,6 +76,19 @@ public class OpponentsActivity extends BaseActivity {
     private Boolean hasNextPage = true;
 
     private QbUsersDbManager dbManager;
+    private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
+    private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
+    private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
+    private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
+    private static final String SERVER_URL = "";
+    public static final String userId = "userId";
+    SharedPreferences sharedPref;
+    Bundle userExtras;
+    private SavedProfile savedProfile;
+    private static final String PREF_NAME = "Ciko";
+    Gson gson, gson1,gson2;
+    String json, json1, json2;
+    private QBUser qbUser;
 
     private PermissionsChecker checker;
     private SharedPrefsHelper sharedPrefsHelper;
@@ -83,10 +106,22 @@ public class OpponentsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_opponents);
-
+        setTitle("Opponents Activity");
+        QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
         currentUser = SharedPrefsHelper.getInstance().getQbUser();
         dbManager = QbUsersDbManager.getInstance(getApplicationContext());
         checker = new PermissionsChecker(getApplicationContext());
+        savedProfile= new SavedProfile();
+        gson= new Gson();
+        gson1= new Gson();
+        gson2= new Gson();
+        qbUser= new QBUser();
+        sharedPref= getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = sharedPref.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = sharedPref.getString("LastQBUserUsed", "");
+        qbUser = gson1.fromJson(json1, QBUser.class);
 
         initDefaultActionBar();
         initUi();
@@ -95,6 +130,16 @@ public class OpponentsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        savedProfile= new SavedProfile();
+        gson= new Gson();
+        gson1= new Gson();
+        gson2= new Gson();
+        qbUser= new QBUser();
+        sharedPref= getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = sharedPref.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = sharedPref.getString("LastQBUserUsed", "");
+        qbUser = gson1.fromJson(json1, QBUser.class);
         boolean isIncomingCall = SharedPrefsHelper.getInstance().get(Consts.EXTRA_IS_INCOMING_CALL, false);
         if (isCallServiceRunning(CallService.class)) {
             Log.d(TAG, "CallService is running now");
@@ -264,8 +309,18 @@ public class OpponentsActivity extends BaseActivity {
     }
 
     private void startLoginService() {
+        savedProfile= new SavedProfile();
+        gson= new Gson();
+        gson1= new Gson();
+        gson2= new Gson();
+        qbUser= new QBUser();
+        sharedPref= getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = sharedPref.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = sharedPref.getString("LastQBUserUsed", "");
+        qbUser = gson1.fromJson(json1, QBUser.class);
         if (sharedPrefsHelper.hasQbUser()) {
-            QBUser qbUser = sharedPrefsHelper.getQbUser();
+            //QBUser qbUser = sharedPrefsHelper.getQbUser();
             LoginService.start(this, qbUser);
         }
     }

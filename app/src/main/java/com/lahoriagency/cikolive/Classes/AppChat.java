@@ -33,7 +33,7 @@ import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
 public class AppChat extends MultiDexApplication {
     public static final String TAG = AppChat.class.getSimpleName();
-
+    Context context;
     private static AppChat instance;
     public static final String USER_DEFAULT_PASSWORD = "quickblox";
     public static final int CHAT_PORT = 5223;
@@ -65,6 +65,10 @@ public class AppChat extends MultiDexApplication {
         checkChatSettings();
         initCredentials();
         ProcessLifecycleOwner.get().getLifecycle().addObserver(new BackgroundListener());
+    }
+    public AppChat (Context context){
+        this.context=context;
+
     }
     private void initApplication() {
         instance = this;

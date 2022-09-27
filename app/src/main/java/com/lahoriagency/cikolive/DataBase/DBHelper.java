@@ -6,20 +6,29 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import com.lahoriagency.cikolive.Classes.ModelItem;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-import static com.lahoriagency.cikolive.Classes.DiamondHistory.CREATE_DIAMOND_HISTORY_TABLE;
-import static com.lahoriagency.cikolive.Classes.DiamondHistory.DH_TABLE;
+import static com.lahoriagency.cikolive.Classes.DiamondTransfer.CREATE_DIAMOND_HISTORY_TABLE;
+import static com.lahoriagency.cikolive.Classes.DiamondTransfer.DH_TABLE;
 import static com.lahoriagency.cikolive.Classes.ModelItem.CREATE_MODEL_TYPE_TABLE;
 import static com.lahoriagency.cikolive.Classes.ModelItem.MODEL_ACTOR_IMAGE;
 import static com.lahoriagency.cikolive.Classes.ModelItem.MODEL_ACTOR_NAME;
@@ -34,7 +43,11 @@ import static com.lahoriagency.cikolive.Classes.AppServerUser.CREATE_QB_USER_TAB
 import static com.lahoriagency.cikolive.Classes.AppServerUser.QBUSER_TABLE;
 import static com.lahoriagency.cikolive.Classes.RedeemRequest.CREATE_REDEEM_REQUEST_TABLE;
 import static com.lahoriagency.cikolive.Classes.RedeemRequest.REDEEM_REQUEST_TABLE;
+import static com.lahoriagency.cikolive.Classes.SavedProfile.CREATE_PIXTURE_TABLE;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.CREATE_SAVED_PROFILES_TABLE;
+import static com.lahoriagency.cikolive.Classes.SavedProfile.PICTURE_TABLE;
+import static com.lahoriagency.cikolive.Classes.SavedProfile.PICTURE_URI;
+import static com.lahoriagency.cikolive.Classes.SavedProfile.PROFILE_PIC_SAVEDPROF_ID;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_COUNTRY;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_DEVICEID;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_EMAIL;
@@ -52,6 +65,9 @@ import static java.lang.String.valueOf;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static DBHelper instance;
+    private SQLiteDatabase sqLiteDatabase;
+    private Context context;
+    public static String DB_PATH = "/data/D";
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "ciko_live_db";
     private static final String TABLE_STUDENTS = "students";
@@ -85,6 +101,73 @@ public class DBHelper extends SQLiteOpenHelper {
             // Enable foreign key constraints
             db.execSQL("PRAGMA foreign_keys=ON;");
         }
+    }
+    public void openDataBase() throws SQLException {
+        String myPath = DB_PATH + DATABASE_NAME;
+        sqLiteDatabase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
+        sqLiteDatabase.execSQL("PRAGMA foreign_keys=ON");
+    }
+    public SQLiteDatabase openDataBase(SQLiteDatabase db) {
+        if(db.isOpen()){
+            sqLiteDatabase.execSQL("PRAGMA foreign_keys=ON");
+            return sqLiteDatabase;
+        }
+        //sqLiteDatabase = db.getWritableDatabase();
+        sqLiteDatabase.execSQL("PRAGMA foreign_keys=ON");
+        return sqLiteDatabase;
+    }
+
+
+    public void createDataBase() throws IOException {
+        boolean dbExist = checkDataBase();
+
+        if (dbExist) {
+            openDataBase();
+        } else {
+            this.getReadableDatabase();
+            try {
+                copyDataBase();
+            } catch (IOException e) {
+                Log.e("App - create", e.getMessage());
+            }
+        }
+
+    }
+    private boolean checkDataBase() {
+        SQLiteDatabase tempDB = null;
+        try {
+            String myPath = DB_PATH + DATABASE_NAME;
+            tempDB = SQLiteDatabase.openDatabase(myPath, null,
+                    SQLiteDatabase.OPEN_READWRITE);
+        } catch (SQLiteException e) {
+            Log.e("Skylight App - check", e.getMessage());
+        }
+        if (tempDB != null)
+            //tempDB.close();
+            return tempDB != null ? true : false;
+        return false;
+    }
+
+    public void copyDataBase() throws IOException {
+        try {
+            InputStream myInput = context.getAssets().open(DATABASE_NAME);
+            String outputFileName = DB_PATH + DATABASE_NAME;
+            OutputStream myOutput = new FileOutputStream(outputFileName);
+
+            byte[] buffer = new byte[1024];
+            int length;
+
+            while ((length = myInput.read(buffer)) > 0) {
+                myOutput.write(buffer, 0, length);
+            }
+
+            myOutput.flush();
+            myOutput.close();
+            myInput.close();
+        } catch (Exception e) {
+            Log.e("tle99 - copyDatabase", e.getMessage());
+        }
+
     }
 
     public int getDatabaseVersion() {
@@ -139,6 +222,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_ACCOUNT_TIMELINE_TABLE);
         db.execSQL(CREATE_DIAMOND_HISTORY_TABLE);
         db.execSQL(CREATE_REDEEM_REQUEST_TABLE);
+        db.execSQL(CREATE_PIXTURE_TABLE);
 
 
 
@@ -156,6 +240,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(" DROP TABLE IF EXISTS "+ TIMELINE_TABLE);
         db.execSQL(" DROP TABLE IF EXISTS "+ DH_TABLE);
         db.execSQL(" DROP TABLE IF EXISTS "+ REDEEM_REQUEST_TABLE);
+        db.execSQL(" DROP TABLE IF EXISTS "+ PICTURE_TABLE);
 
         onCreate(db);
     }
@@ -387,6 +472,100 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return count;
 
+    }
+    public ArrayList<String> getProfPictures(int savedProfID) {
+        ArrayList<String> array_list = new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = PROFILE_PIC_SAVEDPROF_ID + "=?";
+        String[] selectionArgs = new String[]{valueOf(savedProfID)};
+
+        try (Cursor cursor = db.query(PICTURE_TABLE, null, selection, selectionArgs, null,
+                null, null)) {
+            if (null != cursor)
+                if (cursor.getCount() > 0) {
+                    while (!cursor.isAfterLast()) {
+                        array_list.add(cursor.getString(2));
+                        cursor.moveToNext();
+                    }
+                    db.close();
+                }
+        }
+
+        return array_list;
+    }
+    public ArrayList<String> getPictures() {
+        ArrayList<String> array_list = new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try (Cursor res = db.rawQuery("select * from PICTURE_TABLE", null)) {
+            res.moveToFirst();
+
+            while (!res.isAfterLast()) {
+                array_list.add(res.getString(3));
+                res.moveToNext();
+            }
+        }
+        return array_list;
+    }
+    public Bitmap getProfilePicture(int userId) {
+        String picturePath=null;
+        Bitmap profilePicture=null;
+
+        picturePath = getPicturePath(userId);
+        if (picturePath == null || picturePath.length() == 0){
+            return null;
+        }else {
+            profilePicture = BitmapFactory.decodeFile(picturePath);
+        }
+
+
+
+        return (profilePicture);
+    }
+
+    private String getPicturePath(int profileId) {
+        SQLiteDatabase db = getReadableDatabase();
+        String selection = PROFILE_PIC_SAVEDPROF_ID + "=?";
+        String[] selectionArgs = new String[]{valueOf(profileId)};
+
+        @SuppressLint("Recycle") Cursor pictureCursor = db.query(PICTURE_TABLE,
+                null,
+                selection, selectionArgs,
+                null,
+                null,
+                null);
+        pictureCursor.moveToNext();
+
+        String picturePath = pictureCursor.getString(0);
+
+        return (picturePath);
+    }
+    public void deletePicture(int userId) {
+        String picturePath = getPicturePath(userId); // See above
+        if (picturePath != null && picturePath.length() != 0) {
+            File reportFilePath = new File(picturePath);
+            reportFilePath.delete();
+        }
+
+        SQLiteDatabase db = getWritableDatabase();
+        String selection = PROFILE_PIC_SAVEDPROF_ID + "=?";
+        String[] selectionArgs = new String[]{valueOf(userId)};
+
+        db.delete(PICTURE_TABLE,
+                selection, selectionArgs);
+
+    }
+    public long insertProfilePicture(int profileID,  Uri profilePicture) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PROFILE_PIC_SAVEDPROF_ID, profileID);
+        contentValues.put(PICTURE_URI, valueOf(profilePicture));
+        return sqLiteDatabase.insert(PICTURE_TABLE, null, contentValues);
+    }
+    public long insertProfilePicture(Uri profilePicture) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PICTURE_URI, valueOf(profilePicture));
+        return sqLiteDatabase.insert(PICTURE_TABLE, null, contentValues);
     }
 
 

@@ -2,27 +2,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_explore"
-        android:title="Explore"
+        android:id="@+id/menu_main_main"
+        android:title="Home"
         android:menuCategory="system"
-        android:icon="@drawable/ic_home"
+        android:icon="@drawable/home2"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_match"
-        android:title="Match"
+        android:id="@+id/menu_host_main"
+        android:title="Host Act"
         android:icon="@drawable/gallery_fg"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_chat_"
-        android:title="Chat"
-        android:icon="@drawable/ic_chats"
+        android:id="@+id/menu_Contents"
+        android:title="My Contents"
+        android:icon="@drawable/ic_admin_user"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_find_match"
+        android:title="Find Match"
+        app:cnb_iconTintMode="src_in"
+        app:cnb_iconColor="#FF9800"
+        android:icon="@drawable/ic_admin_panel"/>
 
     <item
-        android:id="@+id/menu_profile"
-        android:title="Profile"
-        android:icon="@drawable/ic_profile"
-        app:showAsAction="always" />
+        android:id="@+id/menu_matched_chat"
+        android:title="Matched Chat"
+        app:cnb_backgroundColor="@color/colorPrimaryDark"
+        app:cnb_iconTintMode="src_in"
+        app:cnb_iconColor="#2196F3"
+        android:icon="@drawable/users_fg"/>
+
+
 </menu>

@@ -2,7 +2,6 @@ package com.lahoriagency.cikolive;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -14,7 +13,7 @@ import android.view.View;
 import com.google.android.material.snackbar.Snackbar;
 import com.lahoriagency.cikolive.Classes.CityName;
 import com.lahoriagency.cikolive.Classes.Comments;
-import com.lahoriagency.cikolive.Classes.DiamondHistory;
+import com.lahoriagency.cikolive.Classes.DiamondTransfer;
 import com.lahoriagency.cikolive.Classes.ErrorUtils;
 import com.lahoriagency.cikolive.Classes.Gift;
 import com.lahoriagency.cikolive.Classes.Notification;
@@ -49,7 +48,7 @@ public abstract class BaseActNew extends CoreBaseActivity {
     public final List<PurchaseDiamond> listOfPurchaseDiamond = new ArrayList<>();
     public final List<Gift> giftList = new ArrayList<>();
     public final List<RedeemRequest> listOfRedeems = new ArrayList<>();
-    public final List<DiamondHistory> listOfDiamondHistory = new ArrayList<>();
+    public final List<DiamondTransfer> listOfDiamondTransfer = new ArrayList<>();
     public final List<CityName> cityList = new ArrayList<>();
     public final List<SavedProfile> savedProfileList = new ArrayList<>();
     public final List<Comments> commentsList = new ArrayList<>();

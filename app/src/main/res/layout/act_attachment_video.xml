@@ -1,0 +1,20 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_root_Video"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <VideoView
+        android:id="@+id/video_full_viewC"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar_video"
+        style="@style/WrapContent"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+</RelativeLayout>

@@ -1,5 +1,6 @@
 package com.lahoriagency.cikolive.Classes;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
@@ -10,6 +11,11 @@ import androidx.annotation.StringRes;
 
 @SuppressWarnings("deprecation")
 public class ResourceUtils {
+    private  Context context;
+    public ResourceUtils (Context context){
+        this.context=context;
+
+    }
     public static String getString(@StringRes int stringId) {
         return AppChat.getInstance().getString(stringId);
     }

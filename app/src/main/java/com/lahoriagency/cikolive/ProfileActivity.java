@@ -20,6 +20,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.ybq.parallaxviewpager.ParallaxViewPager;
+import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Adapters.UserSwipeProfileAdapter;
 import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.AppE;
@@ -54,6 +55,8 @@ public class ProfileActivity extends AppCompatActivity {
     private String userName,password,profileName;
     private int profileID;
     private static final String PREF_NAME = "Ciko";
+    Gson gson2,gson3,gson,gson1;
+    String json2,json3, json,json1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +68,20 @@ public class ProfileActivity extends AppCompatActivity {
         imageLoader = AppE.getImageLoader();
         userProfileInfo= new UserProfileInfo();
         currentUser= new QBUser();
+        gson = new Gson();
+        gson= new Gson();
+        gson1= new Gson();
+        gson2= new Gson();
+        gson3= new Gson();
+        userProfileInfo= new UserProfileInfo();
         savedProfile= new SavedProfile();
         userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = userPreferences.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = userPreferences.getString("LastQBUserUsed", "");
+        currentUser = gson1.fromJson(json1, QBUser.class);
+        json2 = userPreferences.getString("LastUserProfileInfoUsed", "");
+        userProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
         profileID = userPreferences.getInt("SAVED_PROFILE_ID", 0);
         userName = userPreferences.getString("SAVED_PROFILE_EMAIL", "");
         password = userPreferences.getString("SAVED_PROFILE_PASSWORD", "");
@@ -94,7 +109,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (!swipeViewSource) {
             TextView matchValue = findViewById(R.id.profile_match_text_view);
-            matchValue.setText("match in " + userProfileInfo.getMatchValue() + "%!");
+            if(userProfileInfo !=null){
+                matchValue.setText("match in " + userProfileInfo.getMatchValue() + "%!");
+
+            }
+
             matchValue.setVisibility(View.VISIBLE);
             ImageView profileMatchHeart = findViewById(R.id.profile_match_heart);
             profileMatchHeart.setVisibility(View.VISIBLE);
@@ -178,7 +197,13 @@ public class ProfileActivity extends AppCompatActivity {
 
             @Override
             public int getCount() {
-                return (null != userProfileInfo.getPhotoLinks() ? userProfileInfo.getPhotoLinks().size() : 0);
+                try {
+                    return (null != userProfileInfo.getPhotoLinks() ? userProfileInfo.getPhotoLinks().size() : 0);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+
+                return 0;
             }
         };
         try {

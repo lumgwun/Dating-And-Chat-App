@@ -17,10 +17,12 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -35,14 +37,21 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.multidex.BuildConfig;
 import androidx.navigation.ui.AppBarConfiguration;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import com.facebook.CallbackManager;
 import com.google.android.gms.common.ConnectionResult;
@@ -66,13 +75,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.FirebaseApp;
 import com.google.gson.Gson;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 import com.lahoriagency.cikolive.Adapters.AddImageAdapter;
+import com.lahoriagency.cikolive.Adapters.TimelineAdapter;
 import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.AppServerUser;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
+import com.lahoriagency.cikolive.Classes.Diamond;
 import com.lahoriagency.cikolive.Classes.GPSLocationListener;
 import com.lahoriagency.cikolive.Classes.LoginReply;
 import com.lahoriagency.cikolive.Classes.MyPreferences;
@@ -80,8 +92,10 @@ import com.lahoriagency.cikolive.Classes.PreferencesManager;
 import com.lahoriagency.cikolive.Classes.QBUserCustomData;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
+import com.lahoriagency.cikolive.Classes.TimeLine;
 import com.lahoriagency.cikolive.Classes.UserProfileInfo;
 import com.lahoriagency.cikolive.DataBase.DBHelper;
+import com.lahoriagency.cikolive.DataBase.TimeLineDAO;
 import com.lahoriagency.cikolive.Fragments.ContentFragment;
 import com.lahoriagency.cikolive.Fragments.DialogsFragment;
 import com.lahoriagency.cikolive.Fragments.EmptyLoginFragment;
@@ -89,8 +103,12 @@ import com.lahoriagency.cikolive.Fragments.MatchFragment;
 import com.lahoriagency.cikolive.Fragments.SwipeFragment;
 import com.lahoriagency.cikolive.Fragments.TestFragment;
 import com.lahoriagency.cikolive.Fragments.UserFragment;
+import com.lahoriagency.cikolive.Interfaces.GcmConsts;
 import com.lahoriagency.cikolive.Interfaces.OnChangeViewListener;
 import com.lahoriagency.cikolive.Interfaces.OnLoginChangeView;
+import com.lahoriagency.cikolive.NewPackage.ChatDialogActivity;
+import com.lahoriagency.cikolive.NewPackage.ChatMatchAct;
+import com.lahoriagency.cikolive.NewPackage.ConfChatAct;
 import com.lahoriagency.cikolive.Utils.SessionManager;
 import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.auth.session.QBSettings;
@@ -159,17 +177,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 Geocoder newGeocoder = new Geocoder(MainActivity.this, Locale.ENGLISH);
                 List<Address> newAddresses = newGeocoder.getFromLocation(latitude, longitude, 1);
                 StringBuilder street = new StringBuilder();
-                if (Geocoder.isPresent()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+                    if (Geocoder.isPresent()) {
 
-                    Address newAddress = newAddresses.get(0);
+                        Address newAddress = newAddresses.get(0);
 
-                    localityString = newAddress.getLocality();
+                        localityString = newAddress.getLocality();
 
-                    street.append(localityString).append("");
+                        street.append(localityString).append("");
 
-                    Toast.makeText(MainActivity.this, street,
-                            Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, street,
+                                Toast.LENGTH_SHORT).show();
 
+                    }
                 }
 
 
@@ -229,8 +249,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Gson gson, gson1;
     String json, json1, nIN;
     public  Boolean locationPermissionGranted;
-
-
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     SharedPreferences userPreferences;
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 20; // 20 minutes
@@ -264,6 +282,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
     private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
     private static final String SERVER_URL = "";
+    Gson gson2,gson3;
+    String json2,json3, name;
+    private  UserProfileInfo userProfileInfo;
+    private Bundle activityBundle;
+    private TimelineAdapter timelineAdapter;
+    private TimeLineDAO timeLineDAO;
+    private RecyclerView timeLineRecyclerView;
+    private ArrayList<TimeLine> timeLineArrayList;
+    private int savedProfileID;
+    private Diamond diamond;
+    int diamondCount,diamondID;
+    private int collections,qbUserID;
+    private FloatingActionButton settingsFab;
+    MainActivity mainActivity;
 
     private MatchFragment matchDialogFragment;
     private List<UserProfileInfo> matchDialogQueue;
@@ -298,10 +330,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private void askNotificationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NOTIFICATION_POLICY) ==
                 PackageManager.PERMISSION_GRANTED) {
-        } else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_NOTIFICATION_POLICY)) {
-
         } else {
-            requestPermissionLauncher.launch(Manifest.permission.ACCESS_NOTIFICATION_POLICY);
+            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_NOTIFICATION_POLICY)) {
+
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_NOTIFICATION_POLICY);
+            }
         }
     }
 
@@ -316,42 +350,106 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkInternetConnection();
         FirebaseApp.initializeApp(this);
         QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
-        setTitle("Main Selection Arena");
+        setTitle("CIKO Dating and Video chat App");
+        changeFragment(this);
         cloudUser= new QBUser();
+        timeLineArrayList= new ArrayList<>();
+        timeLineDAO= new TimeLineDAO(this);
+        timeLineRecyclerView = findViewById(R.id.timeLine_Main);
         currentUser= new QBUser();
         savedProfile= new SavedProfile();
+        activityBundle= new Bundle();
+        settingsFab = findViewById(R.id._navig_settings);
         chipNavigationBar = findViewById(R.id.bottom_nav_barC);
+
         //FragmentManager fm = getSupportFragmentManager();
         calendar=Calendar.getInstance();
 
         currentUser = SharedPrefsHelper.getInstance().getQbUser();
         gson = new Gson();
+        gson= new Gson();
+        gson1= new Gson();
+        gson2= new Gson();
+        gson3= new Gson();
+        userProfileInfo= new UserProfileInfo();
+        savedProfile= new SavedProfile();
         //fm.beginTransaction().add(R.id.main_content, fbLoginFragment).commit();
         loadPermissions(Manifest.permission.ACCESS_FINE_LOCATION, REQUEST_FINE_LOCATION);
         userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = userPreferences.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = userPreferences.getString("LastQBUserUsed", "");
+        currentUser = gson1.fromJson(json1, QBUser.class);
+        json2 = userPreferences.getString("LastUserProfileInfoUsed", "");
+        userProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
         profileID = userPreferences.getInt("SAVED_PROFILE_ID", 0);
         userName = userPreferences.getString("SAVED_PROFILE_EMAIL", "");
         password = userPreferences.getString("SAVED_PROFILE_PASSWORD", "");
         profileName = userPreferences.getString("SAVED_PROFILE_NAME", "");
 
-
-        userName = userPreferences.getString("PROFILE_USERNAME", "");
-        password = userPreferences.getString("PROFILE_PASSWORD", "");
-
         whereText = findViewById(R.id.whereText);
+        settingsFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                overridePendingTransition(R.anim.slide_in_right,
+                        R.anim.slide_out_left);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                myIntent.putExtras(activityBundle);
+                startActivity(myIntent);
+
+            }
+        });
         userExtras=getIntent().getExtras();
-        if(userExtras !=null){
-            userLocation=userExtras.getString("UserLocation");
-            cloudUser=userExtras.getParcelable("SavedProfile");
+        if(currentUser==null){
+            if(userExtras !=null){
+                userLocation=userExtras.getString("UserLocation");
+                currentUser=userExtras.getParcelable("QBUser");
+                savedProfile=userExtras.getParcelable("SavedProfile");
+                userProfileInfo=userExtras.getParcelable("UserProfileInfo");
+            }
+
         }
+        if(savedProfile !=null){
+            savedProfileID=savedProfile.getSavedProfID();
+
+        }
+
         matchDialogFragment = new MatchFragment();
         matchDialogFragment.setActionsListener(this);
 
         matchDialogQueue = new ArrayList<>();
         userExtras= new Bundle();
+        if(currentUser !=null){
+            qbUserID=currentUser.getId();
+        }
+        if(diamond !=null){
+            diamondCount=diamond.getDiamondCount();
+            diamondID=diamond.getDiamondWalletID();
+            collections=diamond.getDiamondCollections();
+
+        }
+        try {
+            if(timeLineArrayList.size() >0){
+                timeLineArrayList=timeLineDAO.getTimeLineByProfID(savedProfileID);
+
+            }
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+
+
+        timelineAdapter = new TimelineAdapter(MainActivity.this, timeLineArrayList);
+        SnapHelper snapHelper = new PagerSnapHelper();
+        timeLineRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        snapHelper.attachToRecyclerView(timeLineRecyclerView);
+        timeLineRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+        timeLineRecyclerView.setAdapter(timelineAdapter);
 
         //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         //StrictMode.setThreadPolicy(policy);
@@ -406,7 +504,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                                 String localityString = newAddress.getLocality();
                                 whereText = findViewById(R.id.whereText);
-
+                                whereText.setVisibility(View.VISIBLE);
                                 street.append(localityString).append("");
 
                                 whereText.setText(MessageFormat.format("Where you are:  {0}",  localityString));
@@ -439,7 +537,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         BottomNavigationView bottomNavigationView=findViewById(R.id.main_navigation);
 
-        bottomNavigationView.setSelectedItemId(R.id.home);
+        //bottomNavigationView.setSelectedItemId(R.id.home);
 
         chipNavigationBar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -447,44 +545,60 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             }
         });
+        activityBundle.putParcelable("UserLocation",this.location);
+        activityBundle.putParcelable("QBUser", (Parcelable) currentUser);
+        activityBundle.putParcelable("SavedProfile",savedProfile);
+        activityBundle.putParcelable("UserProfileInfo",userProfileInfo);
+        activityBundle.putInt("SAVED_PROFILE_ID",profileID);
         chipNavigationBar.setOnItemSelectedListener
                 (new ChipNavigationBar.OnItemSelectedListener() {
+                    @SuppressLint("NonConstantResourceId")
                     @Override
                     public void onItemSelected(int i) {
                         //Fragment fragment = null;
                         switch (i){
-                            case R.id.menu_explore:
-                                Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
+                            case R.id.menu_purchaseD:
+                                Intent myIntent = new Intent(MainActivity.this, PurchaseDiamondActivity.class);
                                 overridePendingTransition(R.anim.slide_in_right,
                                         R.anim.slide_out_left);
                                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                myIntent.putExtras(activityBundle);
                                 startActivity(myIntent);
 
-                            case R.id.menu_match:
+                            case R.id.menu_chat_dialog:
 
-                                Intent myIntentTeller4 = new Intent(MainActivity.this, FindMatchActivity.class);
-                                myIntentTeller4.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(myIntentTeller4);
-                                overridePendingTransition(R.anim.slide_in_right,
-                                        R.anim.slide_out_left);
-                                myIntentTeller4.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                myIntentTeller4.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                            case R.id.menu_chat_:
-
-                                showTest();
-                                overridePendingTransition(0,0);
+                                Intent myIntentChatDialog = new Intent(MainActivity.this, ChatDialogActivity.class);
+                                myIntentChatDialog.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                myIntentChatDialog.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                myIntentChatDialog.putExtras(activityBundle);
+                                startActivity(myIntentChatDialog);
                                 overridePendingTransition(R.anim.slide_in_right,
                                         R.anim.slide_out_left);
 
-                            case R.id.menu_profile:
-                                Intent payoutIntent = new Intent(MainActivity.this, ProfileActivity.class);
-                                payoutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                overridePendingTransition(R.anim.slide_in_right,
-                                        R.anim.slide_out_left);
-                                payoutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(payoutIntent);
+
+                            case R.id.menu_dialog2:
+                                Intent dialogIntent = new Intent(MainActivity.this, DialogsActivity.class);
+                                dialogIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
+                                    overridePendingTransition(R.anim.slide_in_right,
+                                            R.anim.slide_out_left);
+                                }
+                                dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                dialogIntent.putExtras(activityBundle);
+                                startActivity(dialogIntent);
+
+
+                            case R.id.menu_conf:
+                                Intent confChatIntent = new Intent(MainActivity.this, ConfChatAct.class);
+                                confChatIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
+                                    overridePendingTransition(R.anim.slide_in_right,
+                                            R.anim.slide_out_left);
+                                }
+                                confChatIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                confChatIntent.putExtras(activityBundle);
+                                startActivity(confChatIntent);
 
 
                         }
@@ -500,22 +614,66 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 switch(item.getItemId())
                 {
-                    case R.id.menu_explore:
-                        startActivity(new Intent(MainActivity.this,MainActivity.class));
-                        overridePendingTransition(0,0);
+                    case R.id.menu_main_main:
+
+                        Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
+                            overridePendingTransition(R.anim.slide_in_right,
+                                    R.anim.slide_out_left);
+                        }
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        myIntent.putExtras(activityBundle);
+                        startActivity(myIntent);
                         return true;
-                    case R.id.menu_match:
-                        startActivity(new Intent(MainActivity.this,FindMatchActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.menu_chat_:
-                        showTest();
-                        overridePendingTransition(0,0);
+                    case R.id.menu_host_main:
+                        Intent redeemIntent = new Intent(MainActivity.this, HostMainActivity.class);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
+                            overridePendingTransition(R.anim.slide_in_right,
+                                    R.anim.slide_out_left);
+                        }
+                        redeemIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        redeemIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        redeemIntent.putExtras(activityBundle);
+                        startActivity(redeemIntent);
+
                         return true;
 
-                    case R.id.menu_profile:
-                        startActivity(new Intent(MainActivity.this,ProfileActivity.class));
-                        overridePendingTransition(0,0);
+                    case R.id.menu_find_match:
+                        Intent findMatchIntent = new Intent(MainActivity.this, FindMatchActivity.class);
+                        overridePendingTransition(R.anim.slide_in_right,
+                                R.anim.slide_out_left);
+                        findMatchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        findMatchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        findMatchIntent.putExtras(activityBundle);
+                        startActivity(findMatchIntent);
+
+                        return true;
+
+
+                    case R.id.menu_matched_chat:
+                        Intent chatMatchIntent = new Intent(MainActivity.this, ChatMatchAct.class);
+                        chatMatchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        overridePendingTransition(R.anim.slide_in_right,
+                                R.anim.slide_out_left);
+                        chatMatchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        chatMatchIntent.putExtras(activityBundle);
+                        startActivity(chatMatchIntent);
+
+                        return true;
+
+
+                    case R.id.menu_Contents:
+                        Intent contentIntent = new Intent(MainActivity.this, ContentAct.class);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
+                            overridePendingTransition(R.anim.slide_in_right,
+                                    R.anim.slide_out_left);
+                        }
+                        contentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        contentIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        contentIntent.putExtras(activityBundle);
+                        startActivity(contentIntent);
+
                         return true;
 
                 }
@@ -537,6 +695,69 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_act_up, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.menu_profileA:
+                Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
+                overridePendingTransition(R.anim.slide_in_right,
+                        R.anim.slide_out_left);
+                profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                profileIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                profileIntent.putExtras(activityBundle);
+                startActivity(profileIntent);
+
+                return true;
+
+            case R.id.menu_set_main:
+                Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                overridePendingTransition(R.anim.slide_in_right,
+                        R.anim.slide_out_left);
+                settingsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                settingsIntent.putExtras(activityBundle);
+                startActivity(settingsIntent);
+
+                return true;
+
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public boolean hasInternetConnection() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        @SuppressLint("MissingPermission") NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    public boolean checkInternetConnection() {
+        boolean hasInternetConnection = hasInternetConnection();
+        if (!hasInternetConnection) {
+            showWarningDialog("Internet connection failed");
+        }
+
+        return hasInternetConnection;
+    }
+
+    public void showWarningDialog(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message);
+        builder.setPositiveButton(R.string.button_ok, null);
+        builder.show();
+    }
+    @Override
     protected void onResume() {
         super.onResume();
         /*SharedPreferences sharedPreferences =
@@ -549,6 +770,31 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onPause();
         userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         userPreferences.unregisterOnSharedPreferenceChangeListener(this);
+    }
+    public void changeFragment(MainActivity mainActivity) {
+        if (firstVisit) {
+            firstVisit = false;
+            FragmentTransaction fragmentTransaction = mainActivity.getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.main_content, new TestFragment());
+            fragmentTransaction.commit();
+        } else {
+            ContentFragment contentFragment = new ContentFragment();
+            contentFragment.setOnMatchCreatedListener(mainActivity);
+            if (mainActivity.getIntent() != null && mainActivity.getIntent().getExtras() != null) {
+                if (mainActivity.getIntent().getExtras().getString(GcmConsts.EXTRA_GCM_DIALOG_ID) != null) {
+                    contentFragment.setDialogId(mainActivity.getIntent().getExtras().getString(GcmConsts.EXTRA_GCM_DIALOG_ID));
+                    contentFragment.setRecipientId(Integer.valueOf(mainActivity.getIntent().getExtras().getString(GcmConsts.EXTRA_GCM_RECIPIENT_ID)));
+                } else if (mainActivity.getIntent().getExtras().getString(GcmConsts.EXTRA_GCM_NEW_PAIR) != null) {
+                    contentFragment.setDialogId(mainActivity.getIntent().getExtras().getString(GcmConsts.EXTRA_GCM_NEW_PAIR));
+                }
+            }
+
+            mainActivity.setContentFragment(contentFragment);
+            FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.main_content, contentFragment);
+            transaction.commit();
+        }
     }
 
     private void startLogin(boolean logFromSession) {
@@ -712,7 +958,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         try {
                             status.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         break;
@@ -753,7 +999,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CHECK_SETTINGS) {
             if (resultCode != RESULT_OK) {
-                locationDialog();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT) {
+                    locationDialog();
+                }
             }
         } else if (requestCode == REQUEST_DIALOG_ID_FOR_UPDATE) {
             Fragment fragment = contentFragment.getFragmentForPosition(2);
@@ -929,6 +1177,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         newLat[0] = location.getLatitude();
                         newLng[0] = location.getLongitude();
 
+
                     } else {
                         Log.d(TAG, "Current location is null. Using defaults.");
                         Log.e(TAG, "Exception: %s", task.getException());
@@ -948,22 +1197,27 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Geocoder newGeocoder = new Geocoder(MainActivity.this, Locale.ENGLISH);
             List<Address> newAddresses = newGeocoder.getFromLocation(newLat[0], newLng[0], 1);
             StringBuilder street = new StringBuilder();
-            if (Geocoder.isPresent()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+                if (Geocoder.isPresent()) {
 
-                //txtLoc.setVisibility(View.VISIBLE);
+                    //txtLoc.setVisibility(View.VISIBLE);
 
-                Address newAddress = newAddresses.get(0);
+                    Address newAddress = newAddresses.get(0);
 
-                String localityString = newAddress.getLocality();
+                    String localityString = newAddress.getLocality();
+                    whereText = findViewById(R.id.whereText);
+                    whereText.setVisibility(View.VISIBLE);
 
-                street.append(localityString).append("");
+                    street.append(localityString).append("");
+                    whereText.setText("Where you are"+localityString);
 
-                Toast.makeText(MainActivity.this, street,
-                        Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, street,
+                            Toast.LENGTH_SHORT).show();
 
-            } else {
-                whereText.setVisibility(View.GONE);
-                //go
+                } else {
+                    whereText.setVisibility(View.GONE);
+                    //go
+                }
             }
 
 
@@ -1014,7 +1268,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     Intent intent = new Intent();
                     intent.setAction(
                             Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    Uri uri = Uri.fromParts("Skylight App",
+                    Uri uri = Uri.fromParts("Awajima App",
                             BuildConfig.APPLICATION_ID, null);
                     intent.setData(uri);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1057,7 +1311,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         try {
 
                             address = addresses.get(0).getAddressLine(0);
-                            //txtLoc.setVisibility(View.VISIBLE);
+                            String city = addresses.get(0).getLocality();
+                            whereText = findViewById(R.id.whereText);
+                            whereText.setVisibility(View.VISIBLE);
+
+                            whereText.setText("Where you are"+city);
 
 
 
@@ -1065,7 +1323,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                             e.printStackTrace();
                         }
                     }
-                    String city = addresses.get(0).getAdminArea();
+
 
                     //txtLoc.setText(MessageFormat.format("My Loc:{0},{1}/{2}", latitude, longitude, city));
 
@@ -1084,7 +1342,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
             if (requestCode == REQUEST_FINE_LOCATION) {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    locationDialog();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT) {
+                        locationDialog();
+                    }
                 }
             }
 
