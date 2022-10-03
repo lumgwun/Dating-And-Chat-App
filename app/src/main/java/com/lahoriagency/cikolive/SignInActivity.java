@@ -63,6 +63,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.FirebaseApp;
 import com.google.gson.Gson;
 import com.lahoriagency.cikolive.BottomSheets.WebBottomSheet;
 import com.lahoriagency.cikolive.Classes.AppChat;
@@ -164,8 +165,9 @@ public class SignInActivity extends BaseActivity {
     private SharedPreferences userPreferences;
     private int profileID;
     private Gson gson,gson1;
-    private String json,json1;
+    private String json,json1,userName,pass;
     private QBUser qbUser;
+    private Bundle bundle;
     private boolean logFromSession;
 
 
@@ -197,16 +199,30 @@ public class SignInActivity extends BaseActivity {
         setActionBarTitle(R.string.title_login_activity);
         QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+        FirebaseApp.initializeApp(this);
         savedProfile=new SavedProfile();
+        bundle=new Bundle();
         qbUser= new QBUser();
         //appChat= new AppChat();
         userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         gson = new Gson();
         gson1= new Gson();
+        bundle=getIntent().getExtras();
         json = userPreferences.getString("LastSavedProfileUsed", "");
         json1 = userPreferences.getString("LastQBUserUsed", "");
         savedProfile = gson.fromJson(json, SavedProfile.class);
         qbUser = gson.fromJson(json1, QBUser.class);
+        if(bundle !=null){
+            qbUser=bundle.getParcelable("QBUser");
+            savedProfile=bundle.getParcelable("SavedProfile");
+            message = getIntent().getExtras().getString(Consts.EXTRA_FCM_MESSAGE);
+
+        }
+        if(savedProfile !=null){
+            userName=savedProfile.getSavedPEmail();
+            pass=savedProfile.getSavedPPassword();
+
+        }
 
         edtPassword = findViewById(R.id.password_signin);
         edtUser = findViewById(R.id.userName);
@@ -216,12 +232,6 @@ public class SignInActivity extends BaseActivity {
         edtPassword.addTextChangedListener(new LoginEditTextWatcher(edtPassword));
 
         callbackManager = CallbackManager.Factory.create();
-
-        //setProfileTracker();
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            message = getIntent().getExtras().getString(Consts.EXTRA_FCM_MESSAGE);
-        }
 
         if(qbUser !=null){
             startLoginService(qbUser);
@@ -325,8 +335,8 @@ public class SignInActivity extends BaseActivity {
         relUserName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userName = edtUser.getText().toString().trim();
-                String pass = edtPassword.getText().toString().trim();
+                userName = edtUser.getText().toString().trim();
+                pass = edtPassword.getText().toString().trim();
 
                 if (!Patterns.EMAIL_ADDRESS.matcher(userName).matches()) {
                     edtUser.setError("Invalid Email");

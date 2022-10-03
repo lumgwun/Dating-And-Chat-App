@@ -12,19 +12,20 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/img_model_2" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ciko Dating App"
-        android:textSize="45sp"
-        android:gravity="top"
-        android:visibility="gone"
-        android:id="@+id/landingText"
+        android:text="Where you are:"
+        android:textSize="16sp"
+        android:onClick="goAdmin"
+        android:paddingStart="20dp"
         android:layout_alignParentTop="true"
+        android:id="@+id/whereText"
+        android:gravity="center_horizontal"
         android:textColor="@color/white"
-        android:textStyle="bold"
-        android:layout_centerInParent="true"/>
+        android:textStyle="bold" />
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:id="@+id/timeLine_Main"
@@ -32,22 +33,26 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/timeline_list_row"
         android:layout_marginBottom="20dp"
+        android:layout_below="@id/whereText"
         android:listSelector="@android:color/holo_blue_dark"
-        android:layout_alignParentTop="true"
         android:layout_height="wrap_content"/>
-
-    <TextView
-        android:layout_width="wrap_content"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_ex"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="34dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="end"
+        android:layout_above="@id/bottomCoord"
+        android:foregroundGravity="center_horizontal"
+        app:fab_colorRipple="@color/white"
         android:layout_height="wrap_content"
-        android:text="Where you are:"
-        android:textSize="20sp"
-        android:visibility="gone"
-        android:id="@+id/whereText"
-        android:gravity="center_horizontal"
-        android:layout_below="@id/landingText"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:layout_centerInParent="true"/>
+        app:fab_colorNormal="@color/white"
+        app:backgroundTint="@color/white"
+        app:fab_showAnimation="@anim/bottom_animation"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/icon_grp" />
+
+
     <androidx.fragment.app.FragmentContainerView
         android:layout_width="match_parent"
         android:id="@+id/main_content"
@@ -55,11 +60,12 @@
         android:layout_height="wrap_content"/>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:id="@+id/bottomCoord"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="20dp"
         android:layout_height="wrap_content">
+
         <com.google.android.material.bottomappbar.BottomAppBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,7 +78,7 @@
                 android:id="@+id/bottom_nav_barC"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/shape_layer1d"
                 app:itemIconSize="@dimen/_10sdp"
                 android:layout_alignParentBottom="true"
@@ -84,13 +90,15 @@
                 android:fadingEdge="horizontal"
                 app:cnb_orientationMode="vertical"
                 app:cnb_addBottomInset="true"
+                android:layout_marginBottom="30dp"
                 app:cnb_addLeftInset="false"
                 app:cnb_addRightInset="false"
                 app:cnb_addTopInset="true"
                 app:cnb_unselectedColor="@color/red_brown_dark"
                 app:cnb_badgeColor="@color/dark_and_red"
-                app:cnb_radius="8dp"
-                app:cnb_iconSize="24dp"
+                app:cnb_radius="80dp"
+                app:cnb_iconSize="20dp"
+                app:layout_anchor="@id/main_navigation"
                 app:cnb_menuResource="@menu/bottom_menu" />
 
         </com.google.android.material.bottomappbar.BottomAppBar>
@@ -101,19 +109,20 @@
             app:backgroundTint="@color/white"
             android:id="@+id/_navig_settings"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/settings_fg"
+            android:src="@drawable/ic_vertical"
             app:layout_anchor="@id/bottom_nav_barC" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/main_navigation"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginTop="10dp"
-        app:itemIconSize="@dimen/_10sdp"
+        app:itemIconSize="30dp"
+        app:itemBackground="@drawable/messenger_bubble_large_white"
         android:layout_alignParentBottom="true"
-        app:itemBackground="@drawable/shape_layer_1a"
         app:itemRippleColor="@color/primary_purple"
         app:itemIconTint="@color/red_brown_dark"
         app:itemTextColor="@color/color_red"

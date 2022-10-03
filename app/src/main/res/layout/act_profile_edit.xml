@@ -12,7 +12,9 @@
         android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginLeft="@dimen/_8sdp"
         android:layout_marginRight="@dimen/_8sdp"
+        android:padding="10dp"
         android:layout_width="match_parent"
+        android:background="@drawable/shape_layer1d"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -37,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_12sdp"
-            app:cardCornerRadius="@dimen/_1sdp"
+            app:cardCornerRadius="10dp"
             app:cardElevation="@dimen/_1sdp"
             app:cardUseCompatPadding="true">
             <EditText
@@ -50,7 +52,7 @@
                 android:inputType="textNoSuggestions|textMultiLine"
                 android:fontFamily="@font/proxima_soft_regular"
                 android:textColor="@color/black_profile_description"
-                android:textSize="@dimen/_16sdp"
+                android:textSize="16sp"
                 android:paddingLeft="@dimen/_16sdp"
                 android:paddingRight="@dimen/_16sdp"
                 android:paddingTop="@dimen/_12sdp"

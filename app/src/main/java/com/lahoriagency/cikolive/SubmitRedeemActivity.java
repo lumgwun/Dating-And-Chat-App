@@ -1,5 +1,6 @@
 package com.lahoriagency.cikolive;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -37,6 +38,11 @@ public class SubmitRedeemActivity extends BaseActivity {
     private int profileID;
     private String strgAmount;
     private long amount;
+    public static void start(Context context) {
+        Intent intent = new Intent(context, SubmitRedeemActivity.class);
+        context.startActivity(intent);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

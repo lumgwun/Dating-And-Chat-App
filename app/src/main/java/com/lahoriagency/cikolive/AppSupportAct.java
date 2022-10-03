@@ -96,6 +96,11 @@ public class AppSupportAct extends BaseActivity implements TextWatcher {
         intent.putExtra(Consts.EXTRA_FCM_MESSAGE, message);
         context.startActivity(intent);
     }
+    public static void start(Context context) {
+        Intent intent = new Intent(context, AppSupportAct.class);
+        context.startActivity(intent);
+
+    }
 
 
     @Override

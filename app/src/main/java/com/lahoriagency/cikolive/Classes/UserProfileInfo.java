@@ -1,5 +1,6 @@
 package com.lahoriagency.cikolive.Classes;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -19,6 +20,7 @@ public class UserProfileInfo implements Parcelable {
     private String name;
     private List<String> photoLinks;
     private ArrayList<String> photoLinkArray;
+    private ArrayList<Uri> profileMediaFiles;
     private String upiPhoto;
     private int age;
     private int matchValue;
@@ -257,5 +259,13 @@ public class UserProfileInfo implements Parcelable {
 
     public void setUpiPhoto(String upiPhoto) {
         this.upiPhoto = upiPhoto;
+    }
+
+    public ArrayList<Uri> getProfileMediaFiles() {
+        return profileMediaFiles;
+    }
+
+    public void setProfileMediaFiles(ArrayList<Uri> profileMediaFiles) {
+        this.profileMediaFiles = profileMediaFiles;
     }
 }

@@ -8,10 +8,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ClipData;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,9 +28,12 @@ import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.os.RemoteException;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -35,12 +41,10 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -64,14 +68,17 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.multidex.BuildConfig;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import com.android.installreferrer.api.InstallReferrerClient;
 import com.android.installreferrer.api.InstallReferrerStateListener;
@@ -87,11 +94,14 @@ import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
 import com.lahoriagency.cikolive.Adapters.AddImageAdapter;
+import com.lahoriagency.cikolive.Adapters.ProfMediaAdapter;
 import com.lahoriagency.cikolive.Classes.Consts;
 import com.lahoriagency.cikolive.Classes.Diamond;
 import com.lahoriagency.cikolive.Classes.LoginReply;
@@ -123,6 +133,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -181,12 +192,15 @@ public class CreateProfileActivity extends BaseActivity {
                 if (Geocoder.isPresent()) {
 
                     Address newAddress = newAddresses.get(0);
+                    txtLoc = findViewById(R.id.where_You_Are);
+                    txtLoc.setVisibility(View.VISIBLE);
 
                     localityString = newAddress.getLocality();
                     country=newAddress.getCountryName();
                     cityStrg= newAddress.getCountryName();
 
                     String city = localityString+","+country;
+
                     if(city !=null){
                         txtLoc.setText(MessageFormat.format("My Loc:{0}",  city));
 
@@ -209,8 +223,8 @@ public class CreateProfileActivity extends BaseActivity {
 
     AddImageAdapter addImageAdapter;
     SessionManager sessionManager;
-    private EditText edtEmail, edtPassword, edtName;
-    private Button mRegister,btnUpdate;
+    //private EditText edtEmail, edtPassword, edtName;
+    //private Button mRegister,btnUpdate;
     private TextView existaccount;
     private ProgressDialog progressDialog;
     int profileID;
@@ -298,11 +312,12 @@ public class CreateProfileActivity extends BaseActivity {
     Location location;
     private int userGender;
     private CancellationTokenSource cancellationTokenSource;
+    //map_API_key": "AIzaSyDfJ4j1Cuo_rBSN3zxa4tXm3FprvSGsId4"
 
     String joinedDate, localityString,profileName;
     private View mTarget;
     //private DrawView mHistory;
-    private EditText edtEmailAddress, passwordTextView;
+    private AppCompatEditText edtEmailAddress, passwordTextView;
     private AppCompatButton fireBaseBtn;
     private ContentLoadingProgressBar progressbar;
     private FirebaseAuth mAuth;
@@ -311,8 +326,9 @@ public class CreateProfileActivity extends BaseActivity {
     int timeOfDay;
     private static boolean isPersistenceEnabled = false;
     private LinearLayoutCompat layoutUp;
-    private ScrollView layoutDown;
+    private ScrollView scrollLayoutDown;
     SharedPreferences userPreferences;
+    private List<Uri> mediaPathList;
 
     String[] PERMISSIONS = {
             Manifest.permission.CAMERA,
@@ -333,9 +349,9 @@ public class CreateProfileActivity extends BaseActivity {
     String referrer = "";
     String[] PERMISSIONS33 = {
             Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS, Manifest.permission.SEND_SMS
+            Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.BLUETOOTH, Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,Manifest.permission.BLUETOOTH, Manifest.permission.SEND_SMS
     };
-    AppCompatTextView txtLoc,textReturnedEmail;
+    AppCompatTextView txtLoc, textReturnedWelcome;
     AppCompatEditText edtAge,et_interests,et_aboutC,edt_Name,et_Password, edtFirstName,edtPhone;
     private CountryCodePicker countryCodePicker;
     private long referrerClickTime,appInstallTime;
@@ -343,7 +359,7 @@ public class CreateProfileActivity extends BaseActivity {
     private SavedProfile LastProfileUsed;
     private String deviceID;
     private QBUser qbUser;
-    private AppCompatButton btnSignUp;
+    private AppCompatButton btnSignUp,btnFinal;
     private RecyclerView recyclerViewPhoto, recyclerViewVideo;
     private QBResRequestExecutor requestExecutor ;
     private CheckBox checkBox;
@@ -371,17 +387,122 @@ public class CreateProfileActivity extends BaseActivity {
     private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
     private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
     private static final String SERVER_URL = "";
+    RecyclerView picVideoRecyView;
+    private int resultCode;
+    int PICK_IMAGE_MULTIPLE = 2;
+    String realImagePath;
+    private Bitmap bitmap;
+    private ProfMediaAdapter profMediaAdapter;
+    ArrayList<Uri> mArrayUri;
+    private Uri profileImageUri;
     String machineUser, office,state,role,userLocation,passwordStg,emailStrg,gender;
+    public static void start(Context context) {
+        Intent intent = new Intent(context, CreateProfileActivity.class);
+        context.startActivity(intent);
+
+    }
+    ActivityResultLauncher<Intent> mGetPixContent = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    switch (result.getResultCode()) {
+                        case Activity.RESULT_OK:
+                            resultCode=result.getResultCode();
+                            Intent data = result.getData();
+                            //mImageUri = data.getData();
+                            userProfileInfo= new UserProfileInfo();
+
+                            if (data.getData() != null) {
+
+                                profileImageUri = data.getData();
+                                //ex_one.setImageURI(contentURI);
+
+                                Log.d(TAG, "onActivityResult: " + profileImageUri.toString());
+                                try {
+
+                                    bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), profileImageUri);
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                profile_image_.setImageBitmap(bitmap);
+
+                            } else {
+
+                                if (data.getClipData() != null) {
+                                    ClipData mClipData = data.getClipData();
+                                    mArrayUri = new ArrayList<Uri>();
+                                    for (int i = 0; i < mClipData.getItemCount(); i++) {
+
+                                        ClipData.Item item = mClipData.getItemAt(i);
+                                        profileImageUri = item.getUri();
+
+                                        userProfileInfo.setProfileMediaFiles(mArrayUri);
+                                        profMediaAdapter = new ProfMediaAdapter(mArrayUri);
+                                        LinearLayoutManager layoutManager
+                                                = new LinearLayoutManager(CreateProfileActivity.this, LinearLayoutManager.HORIZONTAL, false);
+                                        recyclerViewPhoto.setLayoutManager(layoutManager);
+                                        recyclerViewPhoto.setItemAnimator(new DefaultItemAnimator());
+                                        SnapHelper snapHelper = new PagerSnapHelper();
+                                        snapHelper.attachToRecyclerView(recyclerViewPhoto);
+                                        recyclerViewPhoto.setAdapter(profMediaAdapter);
+                                        try {
+                                            bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), profileImageUri);
+                                            profile_image_.setImageBitmap(bitmap);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+                                }
+
+                            }
+
+                            if(data.getClipData() != null) {
+                                int count = data.getClipData().getItemCount(); //evaluate the count before the for loop --- otherwise, the count is evaluated every loop.
+                                for(int i = 0; i < count; i++) {
+                                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                                    //do something with the image (save it to some directory or whatever you need to do with it here)
+                                }
+                            }
+
+                            Toast.makeText(CreateProfileActivity.this, "Image picking returned successful", Toast.LENGTH_SHORT).show();
+                            //doProcessing();
+                            break;
+                        case Activity.RESULT_CANCELED:
+                            Toast.makeText(CreateProfileActivity.this, "Activity canceled", Toast.LENGTH_SHORT).show();
+                            //finish();
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + result.getResultCode());
+                    }
+                }
+                /*@Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        finish();
+                    }
+                }*/
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_create_profile);
+        if (!hasPermissions(CreateProfileActivity.this, PERMISSIONS33)) {
+            ActivityCompat.requestPermissions(CreateProfileActivity.this, PERMISSIONS33, PERMISSION_ALL33);
+        }
         checkInternetConnection();
+        FirebaseApp.initializeApp(this);
         QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
         init();
+        mArrayUri = new ArrayList<Uri>();
         getDeviceID(deviceID);
+        calendar = Calendar.getInstance();
         loginReply= new LoginReply();
 
         //listeners();
@@ -402,7 +523,7 @@ public class CreateProfileActivity extends BaseActivity {
         gson3= new Gson();
         userProfileInfo= new UserProfileInfo();
         savedProfile= new SavedProfile();
-        sharedPref= getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        userPreferences= getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         sessionManager = new SessionManager(this);
         requestExecutor = new QBResRequestExecutor();
         //addImageAdapter = new AddImageAdapter();
@@ -429,14 +550,18 @@ public class CreateProfileActivity extends BaseActivity {
         edtEmailAddress = findViewById(R.id.et_emailC);
         et_Password = findViewById(R.id.et_PasswordC);
         radioSexGroup=(RadioGroup)findViewById(R.id.sexgroup);
+
         btnSignUp = findViewById(R.id.btn_submit);
+        //btnUpdate = findViewById(R.id.btn_submit);
         spnGender = findViewById(R.id.spn_Gender);
         txtSignIn = findViewById(R.id.txt_Btn_SignIn);
         btn_back = findViewById(R.id.btn_back);
         fireBaseBtn = findViewById(R.id.btn_Firebase);
         layoutUp = findViewById(R.id.layoutTop);
-        layoutDown = findViewById(R.id.layoutDown);
-        textReturnedEmail = findViewById(R.id.WelcomeE);
+        scrollLayoutDown = findViewById(R.id.layoutDown);
+        textReturnedWelcome = findViewById(R.id.WelcomeE);
+        picVideoRecyView = findViewById(R.id.rv_picP);
+
         if(savedProfile !=null){
             savedProfileID=savedProfile.getSavedProfID();
 
@@ -450,9 +575,15 @@ public class CreateProfileActivity extends BaseActivity {
             collections=diamond.getDiamondCollections();
 
         }
+        activityBundle.putParcelable("QBUser", (Parcelable) currentUser);
+        activityBundle.putParcelable("SavedProfile",savedProfile);
+        activityBundle.putParcelable("UserProfileInfo",userProfileInfo);
+
+        Animation translater22 = AnimationUtils.loadAnimation(this, R.anim.bounce);
 
 
         btnSignUp.setOnClickListener(this::registerUser);
+        btnSignUp.setAnimation(translater22);
 
         profileID = ThreadLocalRandom.current().nextInt(122, 1631);
         profile_image_ = findViewById(R.id.takePhoto);
@@ -463,7 +594,7 @@ public class CreateProfileActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent chatIntent = new Intent(CreateProfileActivity.this, SignInActivity.class);
-                chatIntent.putExtras(bundle);
+                chatIntent.putExtras(activityBundle);
                 chatIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                         Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(chatIntent);
@@ -530,11 +661,18 @@ public class CreateProfileActivity extends BaseActivity {
         profile_image_.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!hasPermissions(CreateProfileActivity.this, PERMISSIONS)) {
-                    ActivityCompat.requestPermissions(CreateProfileActivity.this, PERMISSIONS, PERMISSION_ALL);
+                if (!hasPermissions(CreateProfileActivity.this, PERMISSIONS33)) {
+                    ActivityCompat.requestPermissions(CreateProfileActivity.this, PERMISSIONS, PERMISSION_ALL33);
                 }
+                Intent intent = new Intent();
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                //intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                mGetPixContent.launch(intent);
 
-                final PopupMenu popup = new PopupMenu(CreateProfileActivity.this, profile_image_);
+                /*final PopupMenu popup = new PopupMenu(CreateProfileActivity.this, profile_image_);
                 popup.getMenuInflater().inflate(R.menu.profile_pix, popup.getMenu());
                 setTitle("Photo selection in Progress...");
 
@@ -559,7 +697,7 @@ public class CreateProfileActivity extends BaseActivity {
                         return true;
                     }
                 });
-                popup.show();//showing popup menu
+                popup.show();//showing popup menu*/
 
 
             }
@@ -573,20 +711,32 @@ public class CreateProfileActivity extends BaseActivity {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         joinedDate = mdformat.format(calendar.getTime());
 
-        fireBaseBtn.setOnClickListener(this::verifyEmail);
+        fireBaseBtn.setOnClickListener(this::doFireBase);
         progressbar = findViewById(R.id.progressBarC);
 
 
         progressDialog = new ProgressDialog(this);
+        profileID = ThreadLocalRandom.current().nextInt(1125, 10400);
+        ActionCodeSettings actionCodeSettings =
+                ActionCodeSettings.newBuilder()
+                        .setUrl("https://cikolive.page.link/")
+                        .setHandleCodeInApp(true)
+                        .setAndroidPackageName(
+                                "com.lahoriagency.cikolive",
+                                true, /* installIfNotAvailable */
+                                "12"    /* minimumVersion */)
+                        .build();
 
 
-
+//https://cikolive.page.link/finishSignUp?SAVED_PROFILE_ID="+profileID
         fireBaseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String email, password;
                 email = edtEmailAddress.getText().toString();
-                password = edtPassword.getText().toString();
+                password = et_Password.getText().toString();
+                name=edt_Name.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(CreateProfileActivity.this,
@@ -602,16 +752,26 @@ public class CreateProfileActivity extends BaseActivity {
                             .show();
                     return;
                 }
+                if (TextUtils.isEmpty(name)) {
+                    Toast.makeText(CreateProfileActivity.this,
+                            "Please enter Your Name!!",
+                            Toast.LENGTH_LONG)
+                            .show();
+                    return;
+                }
 
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     edtEmailAddress.setError("Invalid Email");
                     edtEmailAddress.setFocusable(true);
-                } else if (password.length() < 2) {
-                    passwordTextView.setError("Length Must be greater than 2 character");
+                } else if (password.length() < 4) {
+                    passwordTextView.setError("Length Must be greater than 4 character");
                     passwordTextView.setFocusable(true);
                 } else {
-                    progressDialog.setMessage("Register");
-                    registerNewUser(email, password,joinedDate);
+                    scrollLayoutDown.setVisibility(View.VISIBLE);
+                    layoutUp.setVisibility(View.GONE);
+                    //registerNewUser(email, password,joinedDate,name);
+                    registerNewFireBaseUser(email, password,joinedDate,name,actionCodeSettings,profileID);
+
                 }
 
 
@@ -619,18 +779,20 @@ public class CreateProfileActivity extends BaseActivity {
             }
         });
 
-        btnUpdate.setOnClickListener(new View.OnClickListener() {
+
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //onBackPressed();
                 getDeviceID(deviceID);
                 emailStrg = edtEmailAddress.getText().toString();
-                passwordStg = edtPassword.getText().toString();
+                passwordStg = et_Password.getText().toString();
+                name=edt_Name.getText().toString();
                 myAge = edtAge.getText().toString();
                 myIntrest = et_interests.getText().toString();
                 aboutMe = et_aboutC.getText().toString();
                 getUserCountry(CreateProfileActivity.this);
-                textReturnedEmail.setText("Welcome Back"+" "+emailStrg);
+                textReturnedWelcome.setText("Welcome Back"+" "+name);
                 //passwordTextView.setText("Your Password: passwordStg");
                 profileName = edt_Name.getText().toString();
                 RadioButton radioButton = (RadioButton) findViewById(radioSexGroup.getCheckedRadioButtonId());
@@ -657,14 +819,10 @@ public class CreateProfileActivity extends BaseActivity {
                             "Please enter Your About Me!!",
                             Toast.LENGTH_LONG)
                             .show();
-                }if (TextUtils.isEmpty(profileName)) {
-                    Toast.makeText(CreateProfileActivity.this,
-                            "Please enter Name!!",
-                            Toast.LENGTH_LONG)
-                            .show();
                 } else {
                     myAgeInt= Integer.parseInt(myAge);
-                    LastProfileUsed= new SavedProfile(profileName,emailStrg,passwordStg,aboutMe,myIntrest,myAge,userGender,gender,joinedDate,country,cityStrg,mImageUri);
+                    mImageUri= profileImageUri;
+                    LastProfileUsed= new SavedProfile(profileID,profileName,emailStrg,passwordStg,aboutMe,myIntrest,myAge,userGender,gender,joinedDate,country,cityStrg,mImageUri);
                     qbUser= new QBUser();
                     qbUser.setCustomData(myAge);
                     qbUser.setEmail(emailStrg);
@@ -673,7 +831,7 @@ public class CreateProfileActivity extends BaseActivity {
                     qbUser.setFullName(profileName);
                     qbUser.setExternalId(String.valueOf(profileID));
                     //finishRegisteration(qbUser, LastProfileUsed);
-                    startSignUpNewUser(qbUser,LastProfileUsed,myAgeInt,aboutMe,myIntrest,country,selectedGender,mImageUri);
+                    startSignUpNewUser(profileID,qbUser,LastProfileUsed,myAgeInt,aboutMe,myIntrest,country,selectedGender,mImageUri);
 
                 }
 
@@ -682,23 +840,210 @@ public class CreateProfileActivity extends BaseActivity {
             }
         });
     }
+
+    private void registerNewFireBaseUser(String email, String password, String joinedDate, String name, ActionCodeSettings actionCodeSettings, int profileID) {
+        showProgressDialog(R.string.dlg_creating_new_user);
+        mAuth.sendSignInLinkToEmail(email, actionCodeSettings)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            hideProgressDialog();
+                            Log.d(TAG, "Email sent.");
+                            Toast.makeText(CreateProfileActivity.this,
+                                    "Registration Successful!!"
+                                            + " Congratulations!",
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                            status="Verified";
+                            layoutUp = findViewById(R.id.layoutTop);
+                            textReturnedWelcome = findViewById(R.id.WelcomeE);
+                            scrollLayoutDown = findViewById(R.id.layoutDown);
+                            layoutUp.setVisibility(View.GONE);
+                            scrollLayoutDown.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                            textReturnedWelcome.setText("Continue"+""+name);
+                            saveToDB(email, password, status, joinedDate, country,deviceID,name,profileID);
+
+                        }
+                    }
+                });
+
+    }
+
+    private void registerNewUser(String email, String password, String joinedDate, String name) {
+
+        progressbar.setVisibility(View.VISIBLE);
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task)
+            {
+                if (task.isSuccessful()) {
+                    status="Verified";
+                    layoutUp = findViewById(R.id.layoutTop);
+                    textReturnedWelcome = findViewById(R.id.WelcomeE);
+                    scrollLayoutDown = findViewById(R.id.layoutDown);
+                    layoutUp.setVisibility(View.GONE);
+                    scrollLayoutDown.setVisibility(View.VISIBLE);
+                    Toast.makeText(CreateProfileActivity.this,
+                            "Account creation started!",
+                            Toast.LENGTH_LONG)
+                            .show();
+                    //saveToDB(email,password,status,joinedDate,country,deviceID);
+
+                    progressBar.setVisibility(View.GONE);
+                    textReturnedWelcome.setText("Continue"+""+name);
+
+
+
+                }
+                else {
+
+                    // Registration failed
+                    Toast.makeText(CreateProfileActivity.this,
+                            "Registration failed!!"
+                                    + " Please try again later",
+                            Toast.LENGTH_LONG)
+                            .show();
+
+                    // hide the progress bar
+                    progressBar.setVisibility(View.GONE);
+                    Intent intent
+                            = new Intent(CreateProfileActivity.this,
+                            SignInActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+    }
+    @SuppressLint("Range")
+    public void getImageFilePath(Uri uri) {
+
+        File file = new File(uri.getPath());
+        String[] filePath = file.getPath().split(":");
+        String image_id = filePath[filePath.length - 1];
+
+        Cursor cursor = getContentResolver().query(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, MediaStore.Images.Media._ID + " = ? ", new String[]{image_id}, null);
+        if (cursor!=null) {
+            cursor.moveToFirst();
+            realImagePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            mediaPathList.add(Uri.parse(realImagePath));
+            cursor.close();
+        }
+    }
+    public static String getPath(final Context context, final Uri uri) {
+        // DocumentProvider
+        if (DocumentsContract.isDocumentUri(context, uri)) {
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+
+                // TODO handle non-primary volumes
+            }
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.parseLong(id));
+
+                return getDataColumn(context, contentUri, null, null);
+            }
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[]{
+                        split[1]
+                };
+
+                return getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            return getDataColumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+
+        return null;
+    }
+    public static String getDataColumn(Context context, Uri uri, String selection,
+                                       String[] selectionArgs) {
+
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {
+                column
+        };
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int column_index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(column_index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
     private void saveDrafts() {
         edtEmailAddress = findViewById(R.id.et_emailC);
         et_Password = findViewById(R.id.et_PasswordC);
         emailStrg = edtEmailAddress.getText().toString();
-        passwordStg = edtPassword.getText().toString();
+        passwordStg = et_Password.getText().toString();
         SharedPrefsHelper.getInstance().save("SAVED_PROFILE_EMAIL", emailStrg);
         SharedPrefsHelper.getInstance().save("SAVED_PROFILE_PASSWORD", passwordStg);
     }
 
-    private void saveToDB(String email, String password, String status, String joinedDate, String country,String deviceID) {
+    private void saveToDB(String email, String password, String status, String joinedDate, String country, String deviceID, String name, int profileID) {
         SavedProfileDAO dbHelper = new SavedProfileDAO(this);
-        if(profileID>0){
-            profileIDLong=profileID;
+        if(this.profileID >0){
+            profileIDLong= this.profileID;
 
         }
-        dbHelper.open();
-        profileIDLong= dbHelper.insertFirstSavedProfile(email,password,joinedDate,deviceID,country,status);
+        if (sqLiteDatabase == null || !sqLiteDatabase.isOpen()) {
+            dbHelper.open();
+            sqLiteDatabase = dbHelper.getWritableDatabase();
+            profileIDLong= dbHelper.insertFirstSavedProfile(email,password,joinedDate,deviceID,country,status,name,profileID);
+
+        }
     }
     private void SignUpUser(final QBUser newUser, final SavedProfile lastProfileUsed) {
         newUser.setCustomDataClass(lastProfileUsed.getClass());
@@ -715,7 +1060,7 @@ public class CreateProfileActivity extends BaseActivity {
         });
     }
 
-    private void startSignUpNewUser(final QBUser newUser, SavedProfile lastProfileUsed, int myAge, String aboutMe, String myIntrest, String country, String selectedGender, Uri mImageUri) {
+    private void startSignUpNewUser(int profileID, final QBUser newUser, SavedProfile lastProfileUsed, int myAge, String aboutMe, String myIntrest, String country, String selectedGender, Uri mImageUri) {
         Log.d(TAG, "SignUp New User");
         showProgressDialog(R.string.dlg_creating_new_user);
         Bundle userBundle=new Bundle();
@@ -729,25 +1074,31 @@ public class CreateProfileActivity extends BaseActivity {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
                 saveUserData(qbUser);
+                hideProgressDialog();
                 loginReply.setStatus(responseString);
                 loginReply.setSexChoice(selectedGender);
                 if(lastProfileUsed !=null){
-                    profileID=lastProfileUsed.getSavedProfID();
+                    CreateProfileActivity.this.profileID =lastProfileUsed.getSavedProfID();
                 }
-                if(profileID>0){
+                if(CreateProfileActivity.this.profileID >0){
 
                     if(qbUser !=null){
-                        qbUserID=qbUser.getFileId();
+                        qbUserID=qbUser.getId();
 
                     }
-                    dbHelper.updateProfileQBUserID(Math.toIntExact(profileID),qbUserID);
+                    if (sqLiteDatabase == null || !sqLiteDatabase.isOpen()) {
+                        dbHelper.open();
+                        sqLiteDatabase = dbHelper.getWritableDatabase();
+                        dbHelper.updateProfileQBUserID(Math.toIntExact(profileID),qbUserID);
+                    }
 
-                    userProfileInfo= new UserProfileInfo(qbUserID,profileID, myAge,name,aboutMe,myIntrest, country,selectedGender,mImageUriString);
+
+                    userProfileInfo= new UserProfileInfo(qbUserID, profileID, myAge,name,aboutMe,myIntrest, country,selectedGender,mImageUriString);
                     lastProfileUsed.setSavedPUserProfileInfo(userProfileInfo);
                     lastProfileUsed.setLoginReply(loginReply);
 
                 }
-                finishRegisteration(qbUser,lastProfileUsed,userProfileInfo,loginReply);
+                finishRegisteration(qbUser,lastProfileUsed,userProfileInfo,loginReply, profileID, name, passwordStg, emailStrg);
                 signIn(qbUser,userProfileInfo,loginReply);
 
 
@@ -803,7 +1154,7 @@ public class CreateProfileActivity extends BaseActivity {
 
     }
 
-    private void finishRegisteration(QBUser qbUser, SavedProfile lastProfileUsed, UserProfileInfo userProfileInfo, LoginReply loginReply) {
+    private void finishRegisteration(QBUser qbUser, SavedProfile lastProfileUsed, UserProfileInfo userProfileInfo, LoginReply loginReply, int profileID, String name, String passwordStg, String emailStrg) {
 
         dbHelper= new DBHelper(this);
         gson1= new Gson();
@@ -819,7 +1170,7 @@ public class CreateProfileActivity extends BaseActivity {
             json2 = gson2.toJson(userProfileInfo);
             if(lastProfileUsed !=null){
                 deviceID = lastProfileUsed.getSavedPDeviceID();
-                name =lastProfileUsed.getSavedPName();
+                this.name =lastProfileUsed.getSavedPName();
                 country =lastProfileUsed.getSavedPCountry();
                 lookingFor =lastProfileUsed.getSavedPLookingFor();
                 aboutMe =lastProfileUsed.getSavedPAboutMe();
@@ -836,7 +1187,7 @@ public class CreateProfileActivity extends BaseActivity {
             }
 
             prefsEditor.putBoolean("rememberMe", true);
-            prefsEditor.putString("SAVED_PROFILE_NAME", name);
+            prefsEditor.putString("SAVED_PROFILE_NAME", this.name);
             prefsEditor.putInt("SAVED_PROFILE_ID", savedProfID);
             prefsEditor.putString("SAVED_PROFILE_LOC", UserLocation);
             prefsEditor.putString("SAVED_PROFILE_PHOTO", String.valueOf(profilePicture));
@@ -859,18 +1210,16 @@ public class CreateProfileActivity extends BaseActivity {
 
             Bundle userBundle = new Bundle();
             if(LastProfileUsed !=null){
-                profileID=LastProfileUsed.getSavedProfID();
+                this.profileID =LastProfileUsed.getSavedProfID();
             }
-            finishRegisteration(qbUser, lastProfileUsed, userProfileInfo, loginReply);
 
-            userBundle.putString("SAVED_PROFILE_NAME", name);
-            userBundle.putInt("SAVED_PROFILE_ID", Math.toIntExact(profileID));
+            userBundle.putString("SAVED_PROFILE_NAME", this.name);
+            userBundle.putInt("SAVED_PROFILE_ID", Math.toIntExact(this.profileID));
             userBundle.putString("SAVED_PROFILE_LOC", cityStrg);
             userBundle.putString("SAVED_PROFILE_PHOTO", String.valueOf(mImageUri));
-            userBundle.putString("SAVED_PROFILE_EMAIL", emailStrg);
+            userBundle.putString("SAVED_PROFILE_EMAIL", this.emailStrg);
             userBundle.putString("SAVED_PROFILE_GENDER", gender);
-            userBundle.putString("SAVED_PROFILE_GENDER", gender);
-            userBundle.putString("SAVED_PROFILE_PASSWORD", passwordStg);
+            userBundle.putString("SAVED_PROFILE_PASSWORD", this.passwordStg);
             userBundle.putString("SAVED_PROFILE_DEVICEID", deviceID);
             userBundle.putString("SAVED_PROFILE_COUNTRY", country);
             userBundle.putString("SAVED_PROFILE_REFERRER", referrer);
@@ -899,52 +1248,7 @@ public class CreateProfileActivity extends BaseActivity {
         SharedPrefsHelper sharedPrefsHelper = SharedPrefsHelper.getInstance();
         sharedPrefsHelper.saveQbUser(qbUser);
     }
-    private void registerNewUser(String email, String password, String joinedDate) {
 
-        progressbar.setVisibility(View.VISIBLE);
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task)
-            {
-                if (task.isSuccessful()) {
-                    status="Verified";
-                    layoutUp = findViewById(R.id.layoutTop);
-                    textReturnedEmail = findViewById(R.id.WelcomeE);
-                    layoutDown = findViewById(R.id.layoutDown);
-                    layoutUp.setVisibility(View.GONE);
-                    layoutDown.setVisibility(View.VISIBLE);
-                    Toast.makeText(CreateProfileActivity.this,
-                            "Account creation started!",
-                            Toast.LENGTH_LONG)
-                            .show();
-                    saveToDB(email,password,status,joinedDate,country,deviceID);
-
-                    progressBar.setVisibility(View.GONE);
-                    textReturnedEmail.setText("Continue"+""+email);
-
-
-
-                }
-                else {
-
-                    // Registration failed
-                    Toast.makeText(CreateProfileActivity.this,
-                            "Registration failed!!"
-                                    + " Please try again later",
-                            Toast.LENGTH_LONG)
-                            .show();
-
-                    // hide the progress bar
-                    progressBar.setVisibility(View.GONE);
-                    Intent intent
-                            = new Intent(CreateProfileActivity.this,
-                            SignInActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-    }
     private void checkUserExist(){
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -986,6 +1290,10 @@ public class CreateProfileActivity extends BaseActivity {
             }
         },SPLASH_SCREEN);
     }
+
+    public void doFireBase(View view) {
+    }
+
     private class TextWatcherListener implements TextWatcher {
         private EditText editText;
         private Timer timer = new Timer();
@@ -1067,12 +1375,17 @@ public class CreateProfileActivity extends BaseActivity {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        m.update(m_szLongID.getBytes(),0,m_szLongID.length());
+
+        try {
+            deviceID = m+ m_szWLANMAC + m_szBTMAC+wm;
+            m.update(deviceID.getBytes(),0,deviceID.length());
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
 
 
 
-        m_szLongID = m+ m_szWLANMAC + m_szBTMAC;
-        deviceID=m_szLongID;
+        //deviceID=m_szLongID;
     }
 
     public void loadImageCenterCrop(String url, ImageView imageView,
@@ -1381,6 +1694,8 @@ public class CreateProfileActivity extends BaseActivity {
             if (Geocoder.isPresent()) {
 
                 //txtLoc.setVisibility(View.VISIBLE);
+                txtLoc = findViewById(R.id.where_You_Are);
+                txtLoc.setVisibility(View.VISIBLE);
 
                 Address newAddress = newAddresses.get(0);
 
@@ -1388,6 +1703,7 @@ public class CreateProfileActivity extends BaseActivity {
                 country=newAddress.getCountryName();
 
                 street.append(localityString).append("");
+                txtLoc.setText("Where you are:"+""+localityString);
 
                 Toast.makeText(CreateProfileActivity.this, street,
                         Toast.LENGTH_SHORT).show();
@@ -1595,8 +1911,9 @@ public class CreateProfileActivity extends BaseActivity {
                         try {
 
                             address = addresses.get(0).getAddressLine(0);
-                            //txtLoc.setVisibility(View.VISIBLE);
+                            txtLoc.setVisibility(View.VISIBLE);
                             cityStrg= addresses.get(0).getLocality();
+                            txtLoc.setText("Where you are:"+""+cityStrg);
 
 
 
@@ -1606,6 +1923,7 @@ public class CreateProfileActivity extends BaseActivity {
                     }
                     String city = addresses.get(0).getLocality()+","+addresses.get(0).getCountryName();
                     if(city !=null){
+                        txtLoc.setVisibility(View.VISIBLE);
                         txtLoc.setText(MessageFormat.format("My Loc:{0}",  city));
 
                     }

@@ -2,6 +2,7 @@ package com.lahoriagency.cikolive;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -30,8 +31,10 @@ import com.lahoriagency.cikolive.Classes.ProfileDeletePhotoRequest;
 import com.lahoriagency.cikolive.Classes.ProfilePhotoData;
 import com.lahoriagency.cikolive.Classes.ProfileUpdateRequest;
 import com.lahoriagency.cikolive.Classes.QBUserCustomData;
+import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.SimpleItemTouchHelperCallback;
+import com.lahoriagency.cikolive.Classes.UserProfileInfo;
 import com.lahoriagency.cikolive.Interfaces.OnStartDragListener;
 import com.lahoriagency.cikolive.Interfaces.PhotoUploadService;
 
@@ -67,11 +70,19 @@ public class ProfileEditActivity extends AppCompatActivity implements OnStartDra
 
     private PreferencesManager preferencesManager;
     private MyPreferences myPreferences;
-
+    private static final String PREF_NAME = "Ciko";
     private PhotosRecyclerViewAdapter photosAdapter;
     private ItemTouchHelper mItemTouchHelper;
 
     private PhotoUploadService photoUploadService;
+    SharedPreferences sharedPref;
+    Bundle userExtras;
+    private SavedProfile savedProfile;
+    Gson gson, gson1,gson2;
+    String json, json1, json2;
+    private QBUser qbUser;
+    private UserProfileInfo userProfileInfo;
+    public static final String userId = "userId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +91,23 @@ public class ProfileEditActivity extends AppCompatActivity implements OnStartDra
         preferencesManager = AppE.getPreferencesManager();
         myPreferences = AppE.getPreferences();
         setActionBarSettings();
+        preferencesManager = AppE.getPreferencesManager();
+        myPreferences = AppE.getPreferences();
+        savedProfile= new SavedProfile();
+        userProfileInfo= new UserProfileInfo();
+        gson= new Gson();
+        gson1= new Gson();
+        gson2= new Gson();
+        qbUser= new QBUser();
+        myPreferences= new MyPreferences();
+        preferencesManager=new PreferencesManager(this);
+        sharedPref= getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = sharedPref.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = sharedPref.getString("LastQBUserUsed", "");
+        qbUser = gson1.fromJson(json1, QBUser.class);
+        json2 = sharedPref.getString("LastUserProfileInfoUsed", "");
+        userProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
 
         descriptionEditText = findViewById(R.id.profile_edit_description_edit_text);
         descriptionEditText.setText(myPreferences.getDescription());

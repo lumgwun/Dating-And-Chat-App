@@ -7,21 +7,34 @@ import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.users.model.QBUser;
 
 public class SharedPrefsHelper {
-    private static final String SHARED_PREFS_NAME = "ciko";
+    private static final String PREF_NAME = "Ciko";
+
 
     private static final String QB_USER_ID = "qb_user_id";
     private static final String QB_USER_LOGIN = "qb_user_login";
     private static final String QB_USER_PASSWORD = "qb_user_password";
     private static final String QB_USER_FULL_NAME = "qb_user_full_name";
     private static final String QB_USER_TAGS = "qb_user_tags";
+    private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
 
     private static SharedPrefsHelper instance;
     AppChat appChat;
 
     private SharedPreferences sharedPreferences;
+    private boolean firstTimeLaunch;
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
 
     public SharedPrefsHelper(Context context) {
-        sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    }
+    public void setFirstTimeLaunch(boolean isFirstTime) {
+        editor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
+        editor.commit();
+    }
+
+    public boolean isFirstTimeLaunch() {
+        return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
 
 
@@ -161,4 +174,6 @@ public class SharedPrefsHelper {
     private SharedPreferences.Editor getEditor() {
         return sharedPreferences.edit();
     }
+
+
 }

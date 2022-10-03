@@ -708,5 +708,6 @@
     <!-- App Info Screen -->
     <string name="appinfo_janus_server">Janus server:</string>
     <string name="reconnecting">Reconnecting...</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

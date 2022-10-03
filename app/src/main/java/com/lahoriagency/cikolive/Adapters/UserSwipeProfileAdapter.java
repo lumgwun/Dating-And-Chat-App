@@ -37,6 +37,15 @@ public class UserSwipeProfileAdapter extends ArrayAdapter<UserProfileInfo> {
         this.imageLoader = AppE.getImageLoader();
     }
 
+    /*public UserSwipeProfileAdapter(Context context) {
+        super(context, 0);
+        this.fragmentActivity = (FragmentActivity) context;
+    }*/
+    public UserSwipeProfileAdapter(Context context) {
+        super(context, 0);
+        this.context = context;
+    }
+
     @NonNull
     @Override
     public View getView(int position, View contentView, @NonNull ViewGroup parent) {

@@ -20,7 +20,7 @@
             android:layout_gravity="bottom"
             app:fabCradleMargin="1dp"
             app:fabCradleRoundedCornerRadius="10dp"
-            app:fabCradleVerticalOffset="10dp">
+            app:fabCradleVerticalOffset="1dp">
 
             <com.ismaeldivita.chipnavigation.ChipNavigationBar
                 android:id="@+id/bottom_chatCon"
@@ -32,8 +32,8 @@
                 android:layout_above="@id/bottomCHatoord"
                 android:fadingEdge="horizontal"
                 app:cnb_orientationMode="horizontal"
-                app:cnb_addBottomInset="true"
-                app:cnb_addLeftInset="false"
+                app:cnb_addBottomInset="false"
+                app:cnb_addLeftInset="true"
                 app:cnb_addRightInset="false"
                 app:cnb_addTopInset="true"
                 app:cnb_unselectedColor="@color/red_brown_dark"
@@ -48,7 +48,11 @@
             android:layout_width="wrap_content"
             android:layout_marginBottom="34dp"
             android:layout_marginEnd="10dp"
+            app:fab_colorRipple="@color/white"
             android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:backgroundTint="@color/white"
+            app:fab_showAnimation="@anim/bottom_animation"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_home"
             app:layout_anchor="@id/bottom_chatCon" />

@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <LinearLayout
             android:id="@+id/topBar"
             android:layout_width="match_parent"
@@ -42,7 +41,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/gilroy_black"
                 android:letterSpacing=".08"
-                android:text="@string/apply_for_host"
+                android:text="Create Profile"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
@@ -53,11 +52,14 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:id="@+id/layoutTop"
+            android:background="@drawable/rect6da"
+            android:visibility="visible"
             android:layout_height="wrap_content">
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:visibility="gone"
                 android:fontFamily="@font/gilroy_extra_bold"
                 android:maxLines="1"
                 android:id="@+id/where_You_Are"
@@ -65,7 +67,7 @@
                 android:layout_marginBottom="10dp"
                 android:gravity="center_horizontal"
                 android:text="Where you are:"
-                android:textColor="@color/gray_dark"
+                android:textColor="@color/red_brown_dark"
                 android:textSize="17sp" />
 
             <LinearLayout
@@ -87,7 +89,7 @@
                     android:layout_marginStart="10dp"
                     android:text="@string/original_full_name"
                     android:textAllCaps="true"
-                    android:textColor="@color/gray_dark"
+                    android:textColor="@color/gray"
                     android:textSize="17sp" />
 
 
@@ -99,6 +101,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rect6h"
                 android:padding="20dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="3dp"
                 android:backgroundTint="@color/bg_chats"
                 android:fontFamily="@font/gilroy_semi_bold"
                 android:hint="@string/your_full_name"
@@ -107,7 +111,7 @@
                 android:paddingVertical="12dp"
                 android:textColor="@color/gray_light"
                 android:textColorHint="@color/gray_light_pro"
-                android:textSize="14sp" />
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -126,7 +130,7 @@
                     android:layout_marginBottom="5dp"
                     android:text="@string/contact_email"
                     android:textAllCaps="true"
-                    android:textColor="@color/gray_dark"
+                    android:textColor="@color/gray"
                     android:textSize="17sp" />
 
 
@@ -138,6 +142,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rect6h"
                 android:padding="20dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="3dp"
                 android:backgroundTint="@color/bg_chats"
                 android:fontFamily="@font/gilroy_regular"
                 android:hint="@string/email_address"
@@ -147,7 +153,7 @@
                 android:paddingVertical="12dp"
                 android:textColor="@color/gray_light"
                 android:textColorHint="@color/gray_light_pro"
-                android:textSize="14sp" />
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -168,7 +174,7 @@
                     android:maxLines="1"
                     android:text="Email Password"
                     android:textAllCaps="true"
-                    android:textColor="@color/gray_dark"
+                    android:textColor="@color/gray"
                     android:textSize="17sp" />
 
                 <TextView
@@ -179,7 +185,7 @@
                     android:ellipsize="end"
                     android:fontFamily="@font/gilroy_semi_bold"
                     android:maxLines="1"
-                    android:text="(Google)"
+                    android:text="(Use a strong paasword)"
                     android:textColor="@color/gray_light"
                     android:textSize="16sp" />
 
@@ -191,33 +197,36 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rect6h"
                 android:padding="20dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="3dp"
                 android:backgroundTint="@color/bg_chats"
                 android:fontFamily="@font/gilroy_regular"
-                android:hint="@string/your_address"
+                android:hint="Password"
+                android:inputType="textPassword"
                 android:imeOptions="actionNext"
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="12dp"
-                android:maxLines="5"
+                android:maxLines="2"
                 android:scrollbars="vertical"
                 android:textColor="@color/gray_light"
                 android:textColorHint="@color/gray_light_pro"
-                android:textSize="14sp" />
+                android:textSize="20sp" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_Firebase"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:onClick="registerUser"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="30dp"
+                android:layout_height="wrap_content"
+                android:onClick="doFireBase"
+                android:padding="20dp"
+                android:textStyle="normal"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/black"
                 android:background="@drawable/bg_gradiant_10"
                 android:fontFamily="@font/gilroy_bold"
                 android:text="Verify Email Address"
-                android:textSize="15sp" />
-
-
-
-
+                android:textSize="18sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
         <androidx.core.widget.ContentLoadingProgressBar
             android:layout_width="wrap_content"
@@ -231,6 +240,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:id="@+id/layoutDown"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp">
 
@@ -276,6 +286,7 @@
                         android:ellipsize="end"
                         android:fontFamily="@font/gilroy_extra_bold"
                         android:maxLines="1"
+                        android:marqueeRepeatLimit="marquee_forever"
                         android:text="@string/photos"
                         android:textAllCaps="true"
                         android:textColor="@color/gray_dark"
@@ -295,33 +306,34 @@
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_images"
-                    android:visibility="gone"
+                    android:id="@+id/rv_picP"
+                    android:visibility="visible"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_add_images" />
 
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="10dp"
-                    android:gravity="center_vertical"
-                    android:visibility="gone"
+                    android:gravity="center_horizontal"
+                    android:visibility="visible"
                     android:orientation="horizontal">
 
                     <TextView
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
-
                         android:ellipsize="end"
                         android:fontFamily="@font/gilroy_extra_bold"
                         android:maxLines="1"
+                        android:marqueeRepeatLimit="marquee_forever"
                         android:text="@string/videos"
                         android:textAllCaps="true"
                         android:textColor="@color/gray_dark"
@@ -331,13 +343,11 @@
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
-
                         android:layout_marginStart="5dp"
                         android:ellipsize="end"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:maxLines="1"
-                        android:text="@string/minimum_2_videos_of_yourself"
+                        android:text="Video of Yourself"
 
                         android:textColor="@color/gray_light"
                         android:textSize="16sp" />
@@ -345,9 +355,11 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_videos"
-                    android:visibility="gone"
+                    android:visibility="visible"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_add_images" />
@@ -365,8 +377,6 @@
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
-
                         android:ellipsize="end"
                         android:fontFamily="@font/gilroy_extra_bold"
                         android:maxLines="1"

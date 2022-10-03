@@ -1,10 +1,22 @@
 package com.lahoriagency.cikolive.Classes;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 
+
 public class MyPreferences implements Serializable {
+    SharedPreferences pref;
+    private static final String TAG = MyPreferences.class.getSimpleName();
+    SharedPreferences.Editor editor;
+    Context _context;
+    private static MyPreferences instance;
+    // shared pref mode
+    int PRIVATE_MODE = 0;
     private Long userId;
     private Long fbId;
     private String firstName;
@@ -25,6 +37,14 @@ public class MyPreferences implements Serializable {
     private double latitude;
     private Date birthday;
     private Date QBTokenExpiration;
+    private static final String PREF_NAME = "Ciko";
+    @SuppressLint("CommitPrefEdits")
+    public MyPreferences(Context context) {
+        this._context = context;
+        pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        //pref = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        editor = pref.edit();
+    }
 
     public MyPreferences() {
         empty();

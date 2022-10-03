@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lahoriagency.cikolive.Adapters.ChatsAdapter;
@@ -32,14 +34,12 @@ public class HostChatsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.fragment_host_chats, container, false);
+        rvChats = rootView.findViewById(R.id.r_host_chats);
+        btnBack = rootView.findViewById(R.id.btn_back_From_Host);
         createChatsList();
         init();
         listeners();
         return rootView;
-
-
-
-
 
 
     }
@@ -89,9 +89,10 @@ public class HostChatsFragment extends Fragment {
     }
 
     private void init() {
-
+        rvChats.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         chatsAdapter = new ChatsAdapter();
         rvChats.setAdapter(chatsAdapter);
+        rvChats.setItemAnimator(new DefaultItemAnimator());
         chatsAdapter.updateItems(chatsList);
 
 

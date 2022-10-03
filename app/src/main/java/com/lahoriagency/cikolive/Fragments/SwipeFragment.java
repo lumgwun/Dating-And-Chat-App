@@ -24,6 +24,7 @@ import com.lahoriagency.cikolive.Classes.UserProfileInfoHolder;
 import com.lahoriagency.cikolive.Classes.UserProfileInfoModel;
 import com.lahoriagency.cikolive.Classes.UserProfileInfoReply;
 import com.lahoriagency.cikolive.Classes.UserSwipeReply;
+import com.lahoriagency.cikolive.ContentAct;
 import com.lahoriagency.cikolive.Interfaces.ServerMethodsConsts;
 import com.lahoriagency.cikolive.MainActivity;
 import com.lahoriagency.cikolive.R;
@@ -60,7 +61,8 @@ public class SwipeFragment extends Fragment implements SwipeStack.SwipeStackList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View viewRoot = inflater.inflate(R.layout.fragment_swipe, container, false);
-        MainActivity mainActivity = (MainActivity) getContext();
+        //MainActivity mainActivity = (MainActivity) getContext();
+        //ContentAct contentAct = (ContentAct) getContext();
         qbUser= new QBUser();
         userPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("LastQBUserUsed", MODE_PRIVATE);
         Gson gson = new Gson();
@@ -71,7 +73,7 @@ public class SwipeFragment extends Fragment implements SwipeStack.SwipeStackList
             qbUserID=qbUser.getId();
         }
         getSwipeUsers = new GetSwipeUsers(ServerMethodsConsts.USERSTOSWIPE + "/" + qbUserID);
-        userSwipeProfileAdapter = new UserSwipeProfileAdapter(getContext(), mainActivity);
+        userSwipeProfileAdapter = new UserSwipeProfileAdapter(getContext());
         swipeDislikeButtonLayout = viewRoot.findViewById(R.id.swipe_dislike_button_layout);
         swipeLikeButtonLayout = viewRoot.findViewById(R.id.swipe_like_button_layout);
 

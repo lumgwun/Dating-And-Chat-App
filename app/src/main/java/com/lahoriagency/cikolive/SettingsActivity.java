@@ -2,6 +2,7 @@ package com.lahoriagency.cikolive;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
@@ -25,11 +26,9 @@ import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
-import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
-import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarChangeListener;
 import com.facebook.login.LoginManager;
 import com.google.android.material.slider.RangeSlider;
-import com.google.android.material.slider.Slider;
+
 import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
@@ -38,7 +37,6 @@ import com.lahoriagency.cikolive.Classes.MyPreferences;
 import com.lahoriagency.cikolive.Classes.PreferencesManager;
 import com.lahoriagency.cikolive.Classes.QbDialogHolder;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
-import com.lahoriagency.cikolive.Classes.SettingsRangeSeekbar;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.UpdateSettingsRequest;
 import com.lahoriagency.cikolive.Classes.UserProfileInfo;
@@ -97,6 +95,12 @@ public class SettingsActivity extends AppCompatActivity {
     private int minDistance,minValue,ageRangeMin,ageRangeMax,distanceSelected;
     private TextView txtDistanceProgress,txtMatch_progress,txtAgeProgress;
     private String sexChoice = "";
+    public static void start(Context context) {
+        Intent intent = new Intent(context, SettingsActivity.class);
+        context.startActivity(intent);
+
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +117,16 @@ public class SettingsActivity extends AppCompatActivity {
         gson1= new Gson();
         gson2= new Gson();
         qbUser= new QBUser();
+        myPreferences= new MyPreferences();
+        preferencesManager=new PreferencesManager(this);
+        sharedPref= getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = sharedPref.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = sharedPref.getString("LastQBUserUsed", "");
+        qbUser = gson1.fromJson(json1, QBUser.class);
+        json2 = sharedPref.getString("LastUserProfileInfoUsed", "");
+        userProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
+
         menSwitch = findViewById(R.id.sex_preference_men_switch);
         womenSwitch = findViewById(R.id.sex_preference_women_switch);
         sexPreferenceTextView = findViewById(R.id.sex_preference_textview);
@@ -128,13 +142,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         CardView logoutCardView = findViewById(R.id.logout_cardview);
         CardView startTestCardView = findViewById(R.id.start_test_cardview);
-        sharedPref= getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        json = sharedPref.getString("LastSavedProfileUsed", "");
-        savedProfile = gson.fromJson(json, SavedProfile.class);
-        json1 = sharedPref.getString("LastQBUserUsed", "");
-        qbUser = gson1.fromJson(json1, QBUser.class);
-        json2 = sharedPref.getString("LastQBUserUsed", "");
-        userProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
         if(qbUser !=null){
             qbUserFieldID=qbUser.getFileId();
             qbUserID=qbUser.getFileId();
@@ -187,19 +194,29 @@ public class SettingsActivity extends AppCompatActivity {
 
         });
 
-        if (menSwitch.isChecked())
+        if (menSwitch.isChecked()){
             sexChoice += "M";
-        myPreferences.setGender("Men");
-        preferencesManager.savePreferences();
-        if (womenSwitch.isChecked())
-            sexChoice += "F";
-        myPreferences.setGender("Women");
-        preferencesManager.savePreferences();
+            myPreferences.setGender("Men");
+            preferencesManager.savePreferences();
 
-        if (myPreferences.getSexChoice().contains("M"))
+        }
+
+        if (womenSwitch.isChecked()){
+            sexChoice += "F";
+            myPreferences.setGender("Women");
+            preferencesManager.savePreferences();
+
+        }
+
+        if (myPreferences.getSexChoice().contains("M")){
             menSwitch.setChecked(true);
-        if (myPreferences.getSexChoice().contains("W"))
+
+        }
+
+        if (myPreferences.getSexChoice().contains("W")){
             womenSwitch.setChecked(true);
+        }
+
         /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             distanceSeekbar.setMin(myPreferences.getRadious());
         }

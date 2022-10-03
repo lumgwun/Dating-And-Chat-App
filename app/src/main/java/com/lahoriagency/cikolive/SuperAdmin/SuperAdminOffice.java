@@ -25,6 +25,7 @@ import com.github.clans.fab.FloatingActionButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
@@ -39,6 +40,7 @@ import com.lahoriagency.cikolive.BaseActNew;
 import com.lahoriagency.cikolive.Classes.QbUsersHolder;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.Transaction;
+import com.lahoriagency.cikolive.CreateProfileActivity;
 import com.lahoriagency.cikolive.DataBase.TransactionDAO;
 import com.lahoriagency.cikolive.Interfaces.ItemClickListener;
 import com.lahoriagency.cikolive.ListUsersActivity;
@@ -91,13 +93,17 @@ public class SuperAdminOffice extends BaseActNew implements NavigationView.OnNav
     private TransactionDAO transactionDAO;
     private TranxAdapter tranxAdapter;
     TranxAdapter.OnItemsClickListener onItemsClickListener;
+    public static void start(Context context) {
+        Intent intent = new Intent(context, SuperAdminOffice.class);
+        context.startActivity(intent);
 
-
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_super_admin_office);
+        FirebaseApp.initializeApp(this);
         gson = new Gson();
         gson1 = new Gson();
         transactionDAO= new TransactionDAO(this);
@@ -128,7 +134,7 @@ public class SuperAdminOffice extends BaseActNew implements NavigationView.OnNav
         transactionArrayList=transactionDAO.getAllTranX();
 
 
-        FirebaseMessaging.getInstance().getToken()
+        /*FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
                     public void onComplete(@NonNull Task<String> task) {
@@ -140,7 +146,7 @@ public class SuperAdminOffice extends BaseActNew implements NavigationView.OnNav
                         String token = task.getResult();
 
                     }
-                });
+                });*/
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -244,7 +250,7 @@ public class SuperAdminOffice extends BaseActNew implements NavigationView.OnNav
         transactionArrayList=transactionDAO.getAllTranX();
 
 
-        FirebaseMessaging.getInstance().getToken()
+        /*FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
                     public void onComplete(@NonNull Task<String> task) {
@@ -256,7 +262,7 @@ public class SuperAdminOffice extends BaseActNew implements NavigationView.OnNav
                         String token = task.getResult();
 
                     }
-                });
+                });*/
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

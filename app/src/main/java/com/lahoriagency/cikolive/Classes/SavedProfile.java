@@ -87,6 +87,23 @@ public class SavedProfile implements Parcelable, Serializable {
     public SavedProfile() {
         super();
     }
+
+    public SavedProfile(int profileID, String profileName, String emailStrg, String passwordStg, String aboutMe, String myIntrest, String myAge, int userGender, String gender, String joinedDate, String country, String cityStrg, Uri mImageUri) {
+        this.savedProfID =profileID;
+        this.savedPName =profileName;
+        this.savedPEmail =emailStrg;
+        this.savedPPassword =passwordStg;
+        this.savedPAge = myAge;
+        this.savedPAboutMe = aboutMe;
+        this.savedPMyInterest = myIntrest;
+        this.savedPGender =userGender;
+        this.savedPLookingFor = gender;
+        this.savedPDateJoined = joinedDate;
+        this.savedPCountry = country;
+        this.savedPLocation =cityStrg;
+        this.savedPImage =mImageUri;
+    }
+
     public void addRedeemRequest(int id, String date, int type, int diamondCount, String amount) {
         redeemRequests = new ArrayList<>();
         RedeemRequest redeemRequest = new RedeemRequest(id,date, type, diamondCount,amount);
@@ -151,12 +168,14 @@ public class SavedProfile implements Parcelable, Serializable {
 
     public SavedProfile(String surname, String emailStrg, String passwordStg, String savedPAboutMe, String savedPMyInterest, String savedPAge, int myGender, String savedPLookingFor, String savedPDateJoined, String savedPCountry, String cityStrg, Uri mImageUri) {
      this.savedPName =surname;
-        this.savedPName =surname;
         this.savedPEmail =emailStrg;
         this.savedPPassword =passwordStg;
         this.savedPAge = savedPAge;
-        this.savedPAge = savedPAboutMe;
-        this.savedPAge = savedPMyInterest;
+        this.savedPEmail =emailStrg;
+        this.savedPPassword =passwordStg;
+        this.savedPAboutMe = savedPAboutMe;
+        this.savedPMyInterest = savedPMyInterest;
+
         this.savedPGender =myGender;
         this.savedPLookingFor = savedPLookingFor;
         this.savedPDateJoined = savedPDateJoined;

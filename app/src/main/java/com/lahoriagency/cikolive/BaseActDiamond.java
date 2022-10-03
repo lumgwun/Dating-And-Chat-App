@@ -2,6 +2,8 @@ package com.lahoriagency.cikolive;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +32,11 @@ public class BaseActDiamond extends AppCompatActivity {
     public final List<CityName> cityList = new ArrayList<>();
     public final List<SavedProfile> savedProfileList = new ArrayList<>();
     public final List<Comments> commentsList = new ArrayList<>();
+    public static void start(Context context) {
+        Intent intent = new Intent(context, BaseActDiamond.class);
+        context.startActivity(intent);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

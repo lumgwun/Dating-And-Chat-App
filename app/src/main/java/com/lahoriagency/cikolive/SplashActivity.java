@@ -21,6 +21,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -38,6 +39,7 @@ import com.lahoriagency.cikolive.Classes.ToastUtils;
 import com.lahoriagency.cikolive.NewPackage.ChatMainAct;
 import com.lahoriagency.cikolive.NewPackage.ConfChatAct;
 import com.lahoriagency.cikolive.NewPackage.SignUpActivity;
+import com.lahoriagency.cikolive.SuperAdmin.SuperAdminOffice;
 import com.lahoriagency.cikolive.Utils.SessionManager;
 import com.quickblox.users.model.QBUser;
 
@@ -71,9 +73,12 @@ public class SplashActivity extends AppCompatActivity {
     private String json,json1;
     private QBUser qbUser;
     private static final String PREF_NAME = "Ciko";
-    Animation top_anim,bottom_anim;
+    Animation top_anim,bottom_anim,dim_anim;
     ImageView logo;
     RobotoTextView appName;
+    RobotoTextView txtDimDim;
+    VideoView videoview;
+
     /*@Override
     public void onClick(View v) {
         handler.removeCallbacks(this);
@@ -86,23 +91,37 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.act_splash);
-        savedProfile=new SavedProfile();
+        setTitle("Welcome to CIKO Live");
+        sharedPrefsHelper= new SharedPrefsHelper(this);
+        videoview = (VideoView) findViewById(R.id.videoView_Splash);
+        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.ciko_video);
+        videoview.setVideoURI(uri);
+        videoview.start();
+
         qbUser= new QBUser();
+        savedProfile=new SavedProfile();
         userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         gson = new Gson();
         gson1= new Gson();
         json = userPreferences.getString("LastSavedProfileUsed", "");
         json1 = userPreferences.getString("LastQBUserUsed", "");
         savedProfile = gson.fromJson(json, SavedProfile.class);
-        qbUser = gson.fromJson(json1, QBUser.class);
+        qbUser = gson1.fromJson(json1, QBUser.class);
+        /*if (!sharedPrefsHelper.isFirstTimeLaunch()) {
+            launchHomeScreen();
+            finish();
+        }*/
+
         top_anim = AnimationUtils.loadAnimation(this,R.anim.top_animation);
         bottom_anim = AnimationUtils.loadAnimation(this,R.anim.bottom_animation);
+        dim_anim = AnimationUtils.loadAnimation(this,R.anim.fab_slide_out_to_right);
+
         if (qbUser !=null) {
             //LoginService.start(SplashActivity.this, sharedPrefsHelper.getQbUser());
             Bundle userBundle=new Bundle();
             userBundle.putParcelable("SavedProfile",savedProfile);
             userBundle.putParcelable("QBUser", (Parcelable) qbUser);
-            Intent helpIntent = new Intent(SplashActivity.this, CreateProfileActivity.class);
+            Intent helpIntent = new Intent(SplashActivity.this, MainActivity.class);
             overridePendingTransition(R.anim.slide_in_right,
                     R.anim.slide_out_left);
             helpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -112,12 +131,14 @@ public class SplashActivity extends AppCompatActivity {
 
         }
 
+        txtDimDim = findViewById(R.id.dim);
         appName = findViewById(R.id.text_splash_app_title);
         loadingBar = (ImageView) findViewById(R.id.logoSplash);
         loadingBar.setBackgroundResource(R.xml.loading);
         loadingAnimation = (AnimationDrawable) loadingBar.getBackground();
         loadingBar.setAnimation(top_anim);
         appName.setAnimation(bottom_anim);
+        txtDimDim.setAnimation(dim_anim);
 
         findViewById(R.id.splash_root).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +160,37 @@ public class SplashActivity extends AppCompatActivity {
 
         }
 
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        videoview = (VideoView) findViewById(R.id.videoView_Splash);
+        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.ciko_video);
+        videoview.setVideoURI(uri);
+        videoview.start();
+
+
+    }
+    private void launchHomeScreen() {
+        qbUser= new QBUser();
+        savedProfile=new SavedProfile();
+        userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        gson = new Gson();
+        gson1= new Gson();
+        json = userPreferences.getString("LastSavedProfileUsed", "");
+        json1 = userPreferences.getString("LastQBUserUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        qbUser = gson1.fromJson(json1, QBUser.class);
+        sharedPrefsHelper.setFirstTimeLaunch(false);
+        Bundle activityBundle= new Bundle();
+        activityBundle.putParcelable("QBUser", (Parcelable) qbUser);
+        activityBundle.putParcelable("SavedProfile",savedProfile);
+        Intent chatIntent = new Intent(SplashActivity.this, MainActivity.class);
+        chatIntent.putExtras(activityBundle);
+        chatIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(chatIntent);
+        finish();
     }
     public void tintStatusBar(int color) {
 
@@ -168,7 +220,7 @@ public class SplashActivity extends AppCompatActivity {
             Bundle userBundle = new Bundle();
             userBundle.putParcelable("SavedProfile", savedProfile);
             userBundle.putParcelable("QBUser", (Parcelable) qbUser);
-            Intent helpIntent = new Intent(SplashActivity.this, SettingsActivity.class);
+            Intent helpIntent = new Intent(SplashActivity.this, MainActivity.class);
             overridePendingTransition(R.anim.slide_in_right,
                     R.anim.slide_out_left);
             helpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -183,7 +235,7 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     loadingAnimation.stop();
-                    SignInActivity.start(SplashActivity.this);
+                    CreateProfileActivity.start(SplashActivity.this);
                     finish();
                 }
             }, SPLASH_DELAY);

@@ -67,8 +67,8 @@ public class DBHelper extends SQLiteOpenHelper {
     private static DBHelper instance;
     private SQLiteDatabase sqLiteDatabase;
     private Context context;
-    public static String DB_PATH = "/data/D";
-    private static final int DATABASE_VERSION = 1;
+    public static String DB_PATH = "/data/Ciko";
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "ciko_live_db";
     private static final String TABLE_STUDENTS = "students";
     private static final String ID = "id";

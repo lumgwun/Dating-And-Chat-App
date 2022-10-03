@@ -15,4 +15,27 @@
         android:icon="@drawable/settings_fg"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/me_chatting"
+        android:title="Chattings"
+        android:iconTintMode="src_in"
+        android:iconTint="@color/white"
+        android:icon="@drawable/settings_fg"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_chat"
+        android:title="Chats"
+        android:iconTintMode="src_in"
+        android:iconTint="@color/white"
+        android:icon="@drawable/icons_chat"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_set_chat_info"
+        android:title="Chat Info"
+        android:iconTintMode="src_in"
+        android:iconTint="@color/white"
+        android:icon="@drawable/icon_grp"
+        app:showAsAction="always" />
+
 </menu>

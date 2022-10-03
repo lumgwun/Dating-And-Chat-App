@@ -20,6 +20,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -27,6 +29,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Classes.Diamond;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
+import com.lahoriagency.cikolive.Fragments.HostChatsFragment;
+import com.lahoriagency.cikolive.Fragments.TestFragment;
 import com.lahoriagency.cikolive.NewPackage.ChatMatchAct;
 import com.quickblox.auth.session.QBSettings;
 import com.quickblox.users.model.QBUser;
@@ -87,6 +91,10 @@ public class HostMainActivity extends AppCompatActivity {
         QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
         savedProfile= new SavedProfile();
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frag_Host, new HostChatsFragment());
+        fragmentTransaction.commit();
         gson= new Gson();
         gson1= new Gson();
         gson2= new Gson();

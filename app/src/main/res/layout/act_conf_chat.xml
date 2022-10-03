@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_chat_container"
     style="@style/MatchParent"
-    tools:ignore="RtlHardcoded">
+    tools:ignore="RtlHardcoded"
+    tools:context="com.lahoriagency.cikolive.NewPackage.ConfChatAct">
     <include
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -18,6 +19,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:id="@+id/scroll_chat_mesC"
+        android:background="@drawable/shape_layer1d"
         android:layout_below="@+id/app_bar"
         android:layout_height="wrap_content">
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -35,6 +37,7 @@
 
             <ProgressBar
                 android:id="@+id/progress_chatCon"
+                android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"/>
@@ -93,13 +96,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="12dp"
+                    android:visibility="gone"
                     android:clipToPadding="false"
                     android:layout_marginRight="12dp"
                     android:gravity="center_vertical"
                     app:layout_behavior="com.ajaysinghdewari.floatingactionbuttonmenu.activities.utils.MoveUpwardBehavior"
                     android:layout_marginBottom="12dp"
-                    android:layout_gravity="bottom|end"
-                    android:visibility="visible">
+                    android:layout_gravity="bottom|end">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -138,12 +141,14 @@
                     <com.melnykov.fab.FloatingActionButton
                         android:id="@+id/fab_AllChats"
                         app:fab_type="mini"
+                        android:foregroundTint="@color/white"
+                        app:fab_showAnimation="@anim/bounce"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         app:srcCompat="@drawable/ic_chats"
                         android:tint="@android:color/white"
-                        app:fabSize="mini"/>
+                        app:fabSize="normal"/>
                 </LinearLayout>
 
 
@@ -176,8 +181,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/chat_edit_text_hint"
-                    android:inputType="textShortMessage"
+                    android:inputType="textMultiLine"
                     android:textSize="15sp"
+                    android:gravity="center_horizontal"
                     android:padding="30dp"
                     android:textColor="#333333"
                     android:background="@color/transparent"
@@ -210,6 +216,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         layout="@layout/chat_con_bottom">
+
+    </include>
+
+    <include
+        android:id="@+id/bottom_chat_sheet"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        layout="@layout/conf_chat_sheet_matched">
 
     </include>
 </RelativeLayout>

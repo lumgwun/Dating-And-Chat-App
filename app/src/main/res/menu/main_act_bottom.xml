@@ -5,19 +5,19 @@
         android:id="@+id/menu_main_main"
         android:title="Home"
         android:menuCategory="system"
-        android:icon="@drawable/home2"
+        android:icon="@drawable/ic_home"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_host_main"
         android:title="Host Act"
-        android:icon="@drawable/gallery_fg"
+        android:icon="@drawable/ic_host"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_Contents"
         android:title="My Contents"
-        android:icon="@drawable/ic_admin_user"
+        android:icon="@drawable/ic_phone_hangup_fg"
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_find_match"

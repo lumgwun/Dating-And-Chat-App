@@ -108,7 +108,7 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
         FragmentManager fm = getSupportFragmentManager();
         QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
-        setTitle("CIKO Dating Find Match Mate");
+        setTitle("Find Match Mate");
         currentUser= new QBUser();
         savedProfile= new SavedProfile();
         userProfileInfo= new UserProfileInfo();

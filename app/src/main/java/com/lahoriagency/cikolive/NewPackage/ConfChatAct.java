@@ -1,8 +1,10 @@
 package com.lahoriagency.cikolive.NewPackage;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.widget.NestedScrollView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -38,6 +40,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -45,6 +48,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
@@ -140,6 +144,7 @@ import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
 import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 import static com.lahoriagency.cikolive.Fragments.DialogsFragment.REQUEST_DIALOG_ID_FOR_UPDATE;
 
+@SuppressWarnings("deprecation")
 public class ConfChatAct extends BaseActCon implements OnMediaPickedListener,DialogsManager.ManagingDialogsCallbacks, QBMessageStatusListener,View.OnClickListener {
     private static final String TAG = ChatMatchAct.class.getSimpleName();
 
@@ -247,7 +252,11 @@ public class ConfChatAct extends BaseActCon implements OnMediaPickedListener,Dia
     private QBIncomingMessagesManager incomingMessagesManager;
     private DialogsManager dialogsManager;
     private DialogsManagerCon dialogsManagerCon;
-    private FloatingActionButton fabAllChats,fabMatchedProfile;
+    private com.melnykov.fab.FloatingActionButton fabAllChats,fabMatchedProfile;
+    BottomSheetBehavior behavior;
+    RecyclerView recyclerViewAllChats,recyclerViewAllMatch;
+    LinearLayoutCompat layoutAllChat,layoutMatch;
+    private ImageButton btnCloseSheet;
 
 
     public static void startForResultFromCall(Activity activity, int code, String dialogId, boolean isOpenFromCall) {
@@ -271,6 +280,7 @@ public class ConfChatAct extends BaseActCon implements OnMediaPickedListener,Dia
         getSharedPrefsHelper().delete(IS_IN_BACKGROUND);
         extras= new Bundle();
         date= new Date();
+        initHorizontalRecyclerView();
         QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
         googlePlayServicesHelper = new GooglePlayServicesHelper();
@@ -284,8 +294,32 @@ public class ConfChatAct extends BaseActCon implements OnMediaPickedListener,Dia
         homeFab = findViewById(R.id.fabConGoHome);
         fabAllChats = findViewById(R.id.fab_AllChats);
         fabMatchedProfile = findViewById(R.id.fab_matched);
+        layoutAllChat = findViewById(R.id.l_all_chatN);
+        layoutMatch = findViewById(R.id.l_match);
+        btnCloseSheet = findViewById(R.id.close_sheet);
+        //LinearLayoutCompat layoutROOT = findViewById(R.id.chat_bottom_sheet);
 
+        View bottomSheet = findViewById(R.id.chat_bottom_sheet);
+        behavior = BottomSheetBehavior.from(bottomSheet);
+        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
 
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                // React to dragging events
+            }
+        });
+        btnCloseSheet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+            }
+        });
+        btnCloseSheet.setOnClickListener(this::closeBottomShhet);
         extras = getIntent().getExtras();
         savedProfile= new SavedProfile();
         gson= new Gson();
@@ -302,6 +336,45 @@ public class ConfChatAct extends BaseActCon implements OnMediaPickedListener,Dia
         Bundle bundle= new Bundle();
         bundle.putParcelable("SavedProfile",savedProfile);
         bundle.putParcelable("QBUser", (Parcelable) qbUser);
+        fabMatchedProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                layoutAllChat.setVisibility(View.GONE);
+                layoutMatch.setVisibility(View.VISIBLE);
+
+            }
+        });
+        fabMatchedProfile.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                layoutMatch.setVisibility(View.GONE);
+                layoutAllChat.setVisibility(View.GONE);
+
+                return false;
+            }
+        });
+        fabAllChats.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheet.setVisibility(View.VISIBLE);
+                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                layoutAllChat.setVisibility(View.VISIBLE);
+                layoutMatch.setVisibility(View.GONE);
+
+            }
+        });
+        fabAllChats.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                bottomSheet.setVisibility(View.GONE);
+                behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                layoutAllChat.setVisibility(View.GONE);
+                layoutMatch.setVisibility(View.GONE);
+                return false;
+            }
+        });
         homeFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -499,19 +572,26 @@ public class ConfChatAct extends BaseActCon implements OnMediaPickedListener,Dia
                                         fragment).commit();*/
                     }
                 });
-
-
     }
     private void initHorizontalRecyclerView(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(ConfChatAct.this, LinearLayoutManager.HORIZONTAL, false);
-        horizontalDialogsRecyclerView = findViewById(R.id.list_dialogs_con);
-        horizontalDialogsRecyclerView.setLayoutManager(layoutManager);
+        horizontalDialogsRecyclerView = findViewById(R.id.rv_all_);
         horizontalDialogsAdapter = new HorizontalListDialogsRecyclerViewAdapter(ConfChatAct.this, new ArrayList<>(QbDialogHolder.getInstance().getDialogs().values()) );
         horizontalDialogsAdapter.setHasStableIds(true);
         horizontalDialogsRecyclerView.setAdapter(horizontalDialogsAdapter);
+        horizontalDialogsRecyclerView.setLayoutManager(layoutManager);
         ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(horizontalDialogsAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(horizontalDialogsRecyclerView);
+
+
+
+        LinearLayoutManager layoutManagerMatch = new LinearLayoutManager(ConfChatAct.this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewAllMatch = findViewById(R.id.rv_matched);
+        recyclerViewAllMatch.setLayoutManager(layoutManagerMatch);
+        horizontalDialogsAdapter = new HorizontalListDialogsRecyclerViewAdapter(ConfChatAct.this, new ArrayList<>(QbDialogHolder.getInstance().getDialogs().values()) );
+        horizontalDialogsAdapter.setHasStableIds(true);
+        recyclerViewAllMatch.setAdapter(horizontalDialogsAdapter);
     }
     @Override
     public void onClick(View v) {
@@ -572,6 +652,10 @@ public class ConfChatAct extends BaseActCon implements OnMediaPickedListener,Dia
         AttachmentPreviewAdapterView previewAdapterView = findViewById(R.id.adapter_attachment_preview);
         previewAdapterView.setAdapter(attachmentPreviewAdapter);
     }
+
+    public void closeBottomShhet(View view) {
+    }
+
     private class PushBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -613,6 +697,7 @@ public class ConfChatAct extends BaseActCon implements OnMediaPickedListener,Dia
     private void initFields() {
         extras = getIntent().getExtras();
         savedProfile= new SavedProfile();
+        currentUser= new QBUser();
         gson= new Gson();
         gson1= new Gson();
         gson2= new Gson();
@@ -642,7 +727,7 @@ public class ConfChatAct extends BaseActCon implements OnMediaPickedListener,Dia
             liveAmt=extras.getDouble("LiveAmount");
             liveDuration=extras.getInt("LiveDuration");
         }
-        currentUser = sharedPrefsHelper.getQbUser();
+        currentUser = qbUser;
         dbManager = QbUsersDbManager.getInstance(getApplicationContext());
         webRtcSessionManager = WebRtcSessManagerCon.getInstance();
     }
@@ -938,19 +1023,21 @@ public class ConfChatAct extends BaseActCon implements OnMediaPickedListener,Dia
                      sessionID=session.getSessionID();
                 }
 
-                if (session.getActivePublishers().size() >= MAX_CONFERENCE_OPPONENTS_ALLOWED) {
-                    session.leave();
-                    showInfoSnackbar("Conference Room is full", R.string.dlg_ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            hideSnackbar();
-                        }
-                    });
-                } else {
-                    sessionManager.setCurrentSession(session);
-                    Log.d(TAG, "Session Created Successfully. \n Session ID = " + session.getSessionID() + "\n Dialog ID = " + session.getDialogID());
-                    setCallButtonsDefault();
-                    CallActCon.start(ConfChatAct.this, dialogID, qbChatDialog.getName(), dialogID, occupants, false);
+                if (session != null) {
+                    if (session.getActivePublishers().size() >= MAX_CONFERENCE_OPPONENTS_ALLOWED) {
+                        session.leave();
+                        showInfoSnackbar("Conference Room is full", R.string.dlg_ok, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                hideSnackbar();
+                            }
+                        });
+                    } else {
+                        sessionManager.setCurrentSession(session);
+                        Log.d(TAG, "Session Created Successfully. \n Session ID = " + session.getSessionID() + "\n Dialog ID = " + session.getDialogID());
+                        setCallButtonsDefault();
+                        CallActCon.start(ConfChatAct.this, dialogID, qbChatDialog.getName(), dialogID, occupants, false);
+                    }
                 }
             }
 

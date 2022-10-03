@@ -132,7 +132,7 @@ public class SavedProfileDAO extends DBHelperDAO{
 
         return savedProfID;
     }
-    public long insertFirstSavedProfile(String email,String password,String dateJoined,String deviceID,String country,String status) {
+    public long insertFirstSavedProfile(String email, String password, String dateJoined, String deviceID, String country, String status, String name, int profileID) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         int savedProfID=0;
         ContentValues contentValues = new ContentValues();
@@ -142,6 +142,9 @@ public class SavedProfileDAO extends DBHelperDAO{
         contentValues.put(SAVED_PROFILE_DATE_JOINED, dateJoined);
         contentValues.put(SAVED_PROFILE_COUNTRY, country);
         contentValues.put(SAVED_PROFILE_STATUS, status);
+        contentValues.put(SAVED_PROFILE_PHOTO, country);
+        contentValues.put(SAVED_PROFILE_NAME, name);
+        contentValues.put(SAVED_PROFILE_ID, profileID);
         sqLiteDatabase.insert(USER_PROF_INFO_TABLE, null, contentValues);
 
         return savedProfID;

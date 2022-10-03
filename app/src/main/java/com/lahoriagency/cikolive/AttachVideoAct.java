@@ -61,6 +61,11 @@ public class AttachVideoAct extends BaseActivity {
         intent.putExtra(EXTRA_FILE_NAME, attachmentName);
         context.startActivity(intent);
     }
+    public static void start(Context context) {
+        Intent intent = new Intent(context, AttachVideoAct.class);
+        context.startActivity(intent);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

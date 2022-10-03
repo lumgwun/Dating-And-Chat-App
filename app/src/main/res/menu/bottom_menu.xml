@@ -7,30 +7,34 @@
         android:id="@+id/menu_purchaseD"
         android:title="Puchase Diamond"
         app:cnb_iconTintMode="src_in"
+        app:showAsAction="always"
         app:cnb_iconColor="#F44336"
-        android:icon="@drawable/image_diamond_2"/>
+        android:icon="@drawable/icons_buying"/>
 
     <item
         android:id="@+id/menu_chat_dialog"
         android:title="Chat Dialog"
         app:cnb_iconTintMode="src_in"
         app:cnb_iconColor="#F44336"
-        android:icon="@drawable/settings_fg"/>
+        app:showAsAction="always"
+        android:icon="@drawable/icons_chat"/>
 
     <item
         android:id="@+id/menu_dialog2"
         android:title="Explore Chat"
+        app:showAsAction="always"
         app:cnb_backgroundColor="@color/colorPrimaryDark"
         app:cnb_iconTintMode="src_in"
         app:cnb_iconColor="#2196F3"
-        android:icon="@drawable/users_fg"/>
+        android:icon="@drawable/ic_chats"/>
 
 
     <item
-        android:id="@+id/menu_conf"
+        android:id="@+id/menu_conf66"
         android:title="Conference Chat"
         app:cnb_backgroundColor="@color/colorPrimaryDark"
         app:cnb_iconTintMode="src_in"
+        app:showAsAction="always"
         app:cnb_iconColor="#2196F3"
         android:icon="@drawable/users_fg"/>
 

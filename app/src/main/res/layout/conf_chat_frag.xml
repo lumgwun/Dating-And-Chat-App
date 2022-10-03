@@ -5,7 +5,8 @@
     android:id="@+id/layout_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:ignore="RtlHardcoded,RtlSymmetry">
+    tools:ignore="RtlHardcoded,RtlSymmetry"
+    tools:context="com.lahoriagency.cikolive.NewPackage.ConfChatAct">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/dialogs_scroll_view"
@@ -48,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/proxima_nova_semibold"
                 android:paddingLeft="@dimen/activity_vertical_margin"
-                android:paddingTop="@dimen/_8sdp"
+                android:paddingTop="15dp"
                 android:paddingBottom="@dimen/padding_common"
                 android:text="@string/matched_messages"
                 android:textColor="@color/gray_material"

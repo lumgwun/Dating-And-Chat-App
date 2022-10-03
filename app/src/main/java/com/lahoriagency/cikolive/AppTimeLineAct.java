@@ -2,6 +2,8 @@ package com.lahoriagency.cikolive;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.quickblox.auth.session.QBSettings;
@@ -18,6 +20,11 @@ public class AppTimeLineAct extends AppCompatActivity {
     private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
     private static final String SERVER_URL = "";
     private static final String PREF_NAME = "Ciko";
+    public static void start(Context context) {
+        Intent intent = new Intent(context, AppTimeLineAct.class);
+        context.startActivity(intent);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

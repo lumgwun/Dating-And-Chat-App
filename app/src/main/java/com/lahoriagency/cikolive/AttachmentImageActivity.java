@@ -48,6 +48,11 @@ public class AttachmentImageActivity extends BaseActivity {
         intent.putExtra(EXTRA_URL, url);
         context.startActivity(intent);
     }
+    public static void start(Context context) {
+        Intent intent = new Intent(context, AttachmentImageActivity.class);
+        context.startActivity(intent);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

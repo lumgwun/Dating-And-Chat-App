@@ -7,15 +7,17 @@
     android:background="@color/app_color"
     android:layout_height="match_parent"
     tools:context=".SplashActivity">
+    <include layout="@layout/video_background"/>
 
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:id="@+id/logoSplash"
+        android:layout_marginTop="20dp"
         android:foregroundGravity="center_horizontal"
         android:layout_alignParentTop="true"
-        android:src="@drawable/logo_yellow" />
+        android:src="@mipmap/ciko_logo" />
     <LinearLayout
         style="@style/WrapContent"
         android:layout_centerInParent="true"
@@ -34,18 +36,20 @@
             tools:text="1.0.0" />
     </LinearLayout>
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:id="@+id/dim"
+        android:background="@drawable/rect6h"
+        style="@style/SplashAppVersionStyle"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:padding="40dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
         android:fontFamily="@font/gilroy_bold"
-        android:text="@string/dim_dim"
-        android:id="@+id/dim"
-        android:textColor="@color/black"
-        android:textSize="24sp" />
+        tools:text="Your best Dating App" />
+
     <ImageView
         style="@style/SplashLogoStyle"
         android:layout_below="@id/dim"

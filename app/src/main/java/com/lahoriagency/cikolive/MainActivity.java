@@ -94,6 +94,7 @@ import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.TimeLine;
 import com.lahoriagency.cikolive.Classes.UserProfileInfo;
+import com.lahoriagency.cikolive.Conference.ChatInfoAct;
 import com.lahoriagency.cikolive.DataBase.DBHelper;
 import com.lahoriagency.cikolive.DataBase.TimeLineDAO;
 import com.lahoriagency.cikolive.Fragments.ContentFragment;
@@ -109,6 +110,7 @@ import com.lahoriagency.cikolive.Interfaces.OnLoginChangeView;
 import com.lahoriagency.cikolive.NewPackage.ChatDialogActivity;
 import com.lahoriagency.cikolive.NewPackage.ChatMatchAct;
 import com.lahoriagency.cikolive.NewPackage.ConfChatAct;
+import com.lahoriagency.cikolive.SuperAdmin.SuperAdminOffice;
 import com.lahoriagency.cikolive.Utils.SessionManager;
 import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.auth.session.QBSettings;
@@ -296,6 +298,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private int collections,qbUserID;
     private FloatingActionButton settingsFab;
     MainActivity mainActivity;
+    FloatingActionButton fabConferenceChat;
 
     private MatchFragment matchDialogFragment;
     private List<UserProfileInfo> matchDialogQueue;
@@ -354,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         FirebaseApp.initializeApp(this);
         QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
-        setTitle("CIKO Dating and Video chat App");
+        setTitle("CIKO Dating App");
         changeFragment(this);
         cloudUser= new QBUser();
         timeLineArrayList= new ArrayList<>();
@@ -365,11 +368,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         activityBundle= new Bundle();
         settingsFab = findViewById(R.id._navig_settings);
         chipNavigationBar = findViewById(R.id.bottom_nav_barC);
+        fabConferenceChat = findViewById(R.id.fab_ex);
+
 
         //FragmentManager fm = getSupportFragmentManager();
         calendar=Calendar.getInstance();
 
-        currentUser = SharedPrefsHelper.getInstance().getQbUser();
+        //currentUser = SharedPrefsHelper.getInstance().getQbUser();
         gson = new Gson();
         gson= new Gson();
         gson1= new Gson();
@@ -580,25 +585,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                             case R.id.menu_dialog2:
                                 Intent dialogIntent = new Intent(MainActivity.this, DialogsActivity.class);
                                 dialogIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-                                    overridePendingTransition(R.anim.slide_in_right,
-                                            R.anim.slide_out_left);
-                                }
+                                overridePendingTransition(R.anim.slide_in_right,
+                                        R.anim.slide_out_left);
                                 dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 dialogIntent.putExtras(activityBundle);
                                 startActivity(dialogIntent);
 
 
-                            case R.id.menu_conf:
-                                Intent confChatIntent = new Intent(MainActivity.this, ConfChatAct.class);
-                                confChatIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-                                    overridePendingTransition(R.anim.slide_in_right,
-                                            R.anim.slide_out_left);
-                                }
-                                confChatIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                confChatIntent.putExtras(activityBundle);
-                                startActivity(confChatIntent);
 
 
                         }
@@ -607,6 +600,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                                         fragment).commit();*/
                     }
                 });
+        fabConferenceChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent confChatIntent = new Intent(MainActivity.this, ConfChatAct.class);
+                confChatIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                overridePendingTransition(R.anim.slide_in_right,
+                        R.anim.slide_out_left);
+                confChatIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                confChatIntent.putExtras(activityBundle);
+                startActivity(confChatIntent);
+
+            }
+        });
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -628,10 +634,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         return true;
                     case R.id.menu_host_main:
                         Intent redeemIntent = new Intent(MainActivity.this, HostMainActivity.class);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-                            overridePendingTransition(R.anim.slide_in_right,
-                                    R.anim.slide_out_left);
-                        }
+                        overridePendingTransition(R.anim.slide_in_right,
+                                R.anim.slide_out_left);
                         redeemIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         redeemIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         redeemIntent.putExtras(activityBundle);
@@ -665,10 +669,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                     case R.id.menu_Contents:
                         Intent contentIntent = new Intent(MainActivity.this, ContentAct.class);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-                            overridePendingTransition(R.anim.slide_in_right,
-                                    R.anim.slide_out_left);
-                        }
+                        overridePendingTransition(R.anim.slide_in_right,
+                                R.anim.slide_out_left);
                         contentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         contentIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         contentIntent.putExtras(activityBundle);
@@ -725,6 +727,40 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 startActivity(settingsIntent);
 
                 return true;
+
+            case R.id.me_chatting:
+                Intent chatIntent = new Intent(MainActivity.this, ChattingActivity.class);
+                overridePendingTransition(R.anim.slide_in_right,
+                        R.anim.slide_out_left);
+                chatIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                chatIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                chatIntent.putExtras(activityBundle);
+                startActivity(chatIntent);
+
+                return true;
+            case R.id.menu_chat:
+                Intent cIntent = new Intent(MainActivity.this, ChatAct.class);
+                overridePendingTransition(R.anim.slide_in_right,
+                        R.anim.slide_out_left);
+                cIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                cIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                cIntent.putExtras(activityBundle);
+                startActivity(cIntent);
+
+                return true;
+
+
+            case R.id.menu_set_chat_info:
+                Intent mIntent = new Intent(MainActivity.this, ChatInfoAct.class);
+                overridePendingTransition(R.anim.slide_in_right,
+                        R.anim.slide_out_left);
+                mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mIntent.putExtras(activityBundle);
+                startActivity(mIntent);
+
+                return true;
+
 
             case android.R.id.home:
                 onBackPressed();
@@ -1383,5 +1419,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
 
+    }
+
+    public void goAdmin(View view) {
+        Intent myIntent = new Intent(MainActivity.this, SuperAdminOffice.class);
+        overridePendingTransition(R.anim.slide_in_right,
+                R.anim.slide_out_left);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(myIntent);
     }
 }

@@ -2,6 +2,7 @@ package com.lahoriagency.cikolive;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -132,6 +133,11 @@ public class SelectUsersActivity extends BaseActivity  {
         Intent intent = new Intent(activity, SelectUsersActivity.class);
         intent.putExtra(EXTRA_QB_DIALOG, dialog);
         activity.startActivityForResult(intent, code);
+    }
+    public static void start(Context context) {
+        Intent intent = new Intent(context, SelectUsersActivity.class);
+        context.startActivity(intent);
+
     }
 
     @Override
