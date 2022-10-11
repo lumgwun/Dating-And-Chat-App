@@ -22,9 +22,7 @@
             android:layout_height="wrap_content"/>
 
 
-        <View
-            android:id="@+id/divider_chat_attachments"
-            style="@style/MultiWaveHeader" />
+        <View style="@style/MultiWaveHeader" />
 
         <com.lahoriagency.cikolive.Classes.AttachmentPreviewAdapterView
             android:id="@+id/adapter_attachment_preview"

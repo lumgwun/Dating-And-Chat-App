@@ -2,6 +2,7 @@ package com.lahoriagency.cikolive;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -16,19 +17,27 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.ybq.parallaxviewpager.ParallaxViewPager;
 import com.google.gson.Gson;
+import com.lahoriagency.cikolive.Adapters.PictureAdapter;
 import com.lahoriagency.cikolive.Adapters.UserSwipeProfileAdapter;
-import com.lahoriagency.cikolive.Classes.AppChat;
+import com.lahoriagency.cikolive.Adapters.VideoAdapter;
 import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.ImageLoader;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
+import com.lahoriagency.cikolive.Classes.SpacesItemDecoration;
 import com.lahoriagency.cikolive.Classes.UserProfileInfo;
 import com.quickblox.auth.session.QBSettings;
 import com.quickblox.users.model.QBUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
 import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
@@ -36,13 +45,13 @@ import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
 import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements  PictureAdapter.ItemListener, VideoAdapter.VideoListener {
     private boolean swipeViewSource;
     private ParallaxViewPager parallaxViewPager;
     private ImageLoader imageLoader;
     private FloatingActionButton fab;
     private CardView profileImageCard;
-    private UserProfileInfo userProfileInfo;
+    private UserProfileInfo matchedProfileInfo,myProfileInfo;
     private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
     private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
     private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
@@ -57,6 +66,18 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String PREF_NAME = "Ciko";
     Gson gson2,gson3,gson,gson1;
     String json2,json3, json,json1;
+    private Bundle bundle;
+    private RecyclerView recyclerViewPic,recyclerViewVideos;
+    private int mMargin=5;
+    private int NUM_COLUMNS=3;
+    private PictureAdapter pictureAdapter;
+    private List<String> pictureArrayList;
+    private ArrayList<String> videoArrayList;
+    private PictureAdapter.ItemListener pictureListener;
+    private VideoAdapter videoAdapter;
+    private VideoAdapter.VideoListener videoListener;
+    private double chatDiamondAmt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,15 +86,18 @@ public class ProfileActivity extends AppCompatActivity {
         QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
         setTitle("Main Selection Arena");
+        bundle= new Bundle();
         imageLoader = AppE.getImageLoader();
-        userProfileInfo= new UserProfileInfo();
+        matchedProfileInfo = new UserProfileInfo();
+        myProfileInfo = new UserProfileInfo();
         currentUser= new QBUser();
+        pictureArrayList= new ArrayList<>();
+        videoArrayList= new ArrayList<>();
         gson = new Gson();
         gson= new Gson();
         gson1= new Gson();
         gson2= new Gson();
         gson3= new Gson();
-        userProfileInfo= new UserProfileInfo();
         savedProfile= new SavedProfile();
         userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         json = userPreferences.getString("LastSavedProfileUsed", "");
@@ -81,7 +105,7 @@ public class ProfileActivity extends AppCompatActivity {
         json1 = userPreferences.getString("LastQBUserUsed", "");
         currentUser = gson1.fromJson(json1, QBUser.class);
         json2 = userPreferences.getString("LastUserProfileInfoUsed", "");
-        userProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
+        myProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
         profileID = userPreferences.getInt("SAVED_PROFILE_ID", 0);
         userName = userPreferences.getString("SAVED_PROFILE_EMAIL", "");
         password = userPreferences.getString("SAVED_PROFILE_PASSWORD", "");
@@ -89,28 +113,64 @@ public class ProfileActivity extends AppCompatActivity {
         TextView description = findViewById(R.id.profile_description);
         TextView userDistance = findViewById(R.id.profile_about_distance);
         profileImageCard = findViewById(R.id.user_swipe_card_view);
-        if(userProfileInfo !=null){
+        recyclerViewPic = findViewById(R.id.prof_pix_recy);
+        recyclerViewVideos = findViewById(R.id.prof_video_recy);
+        bundle=getIntent().getExtras();
+
+
+        if(bundle !=null){
+            matchedProfileInfo =bundle.getParcelable("UserProfileInfo");
+        }
+        if(matchedProfileInfo !=null){
             try {
+                videoArrayList= matchedProfileInfo.getVideoLinks();
+                pictureArrayList= matchedProfileInfo.getPhotoLinks();
+                chatDiamondAmt=matchedProfileInfo.getChatDiamondAmount();
                 swipeViewSource = getIntent().getExtras().getBoolean(UserSwipeProfileAdapter.EXTRA_SWIPE_VIEW_SOURCE);
-                userProfileInfo = (UserProfileInfo) getIntent().getExtras().getParcelable(UserSwipeProfileAdapter.EXTRA_USER_PROFILE);
+                matchedProfileInfo = (UserProfileInfo) getIntent().getExtras().getParcelable(UserSwipeProfileAdapter.EXTRA_USER_PROFILE);
             } catch (NullPointerException e) {
                 System.out.println("Oops!");
             }
 
         }
+        for(int i=0;i<10;i++)
+        {
+            pictureArrayList.add("Item - "+i);
+        }
+
+        for(int i=0;i<10;i++)
+        {
+            videoArrayList.add("Item - "+i);
+        }
         parallaxViewPager = findViewById(R.id.parallax_viewpager);
         TextView profileUsername = findViewById(R.id.profile_name);
-        if(userProfileInfo !=null){
-            profileUsername.setText(userProfileInfo.getName() + ", " + userProfileInfo.getAge());
-            userDistance.setText(userProfileInfo.getDistance() + " miles away");
-            description.setText(userProfileInfo.getDescription());
+        if(matchedProfileInfo !=null){
+            profileUsername.setText(matchedProfileInfo.getName() + ", " + matchedProfileInfo.getAge());
+            userDistance.setText(matchedProfileInfo.getDistance() + " miles away"+","+chatDiamondAmt+""+"Diamonds required");
+            description.setText(matchedProfileInfo.getDescription());
+            recyclerViewVideos.addItemDecoration(new SpacesItemDecoration(mMargin));
+            recyclerViewVideos.setLayoutManager(new GridLayoutManager(ProfileActivity.this, NUM_COLUMNS));
+            videoAdapter = new VideoAdapter(ProfileActivity.this,videoArrayList, videoListener);
+            recyclerViewVideos.setItemAnimator(new DefaultItemAnimator());
+            recyclerViewVideos.setAdapter(videoAdapter);
+            recyclerViewVideos.setNestedScrollingEnabled(false);
+            recyclerViewVideos.setClickable(true);
+
+            recyclerViewPic.addItemDecoration(new SpacesItemDecoration(mMargin));
+            recyclerViewPic.setLayoutManager(new GridLayoutManager(ProfileActivity.this, NUM_COLUMNS));
+
+            pictureAdapter = new PictureAdapter(ProfileActivity.this, pictureArrayList,pictureListener);
+            recyclerViewPic.setItemAnimator(new DefaultItemAnimator());
+            recyclerViewPic.setAdapter(pictureAdapter);
+            recyclerViewPic.setNestedScrollingEnabled(false);
+            recyclerViewPic.setClickable(true);
 
         }
 
         if (!swipeViewSource) {
             TextView matchValue = findViewById(R.id.profile_match_text_view);
-            if(userProfileInfo !=null){
-                matchValue.setText("match in " + userProfileInfo.getMatchValue() + "%!");
+            if(matchedProfileInfo !=null){
+                matchValue.setText("match in " + matchedProfileInfo.getMatchValue() + "%!");
 
             }
 
@@ -168,7 +228,7 @@ public class ProfileActivity extends AppCompatActivity {
         getWindow().setEnterTransition(fade);
         getWindow().setExitTransition(fade);
 
-        initViewPager(userProfileInfo);
+        initViewPager(matchedProfileInfo);
     }
 
     private void initViewPager(final UserProfileInfo userProfileInfo) {
@@ -240,6 +300,54 @@ public class ProfileActivity extends AppCompatActivity {
         supportFinishAfterTransition();
         if (swipeViewSource)
             hideFab();
+
+    }
+
+    @Override
+    public void onPictureClick(int position) {
+        Bundle bundle= new Bundle();
+        pictureArrayList= new ArrayList<>();
+        if(matchedProfileInfo !=null){
+            try {
+                pictureArrayList= matchedProfileInfo.getPhotoLinks();
+                swipeViewSource = getIntent().getExtras().getBoolean(UserSwipeProfileAdapter.EXTRA_SWIPE_VIEW_SOURCE);
+                matchedProfileInfo = (UserProfileInfo) getIntent().getExtras().getParcelable(UserSwipeProfileAdapter.EXTRA_USER_PROFILE);
+            } catch (NullPointerException e) {
+                System.out.println("Oops!");
+            }
+
+        }
+        Intent chatIntent = new Intent(ProfileActivity.this, MediaSliderAct.class);
+        bundle.putStringArrayList("Pictures", (ArrayList<String>) pictureArrayList);
+        bundle.putString("mediaFileType","image");
+        chatIntent.putExtras(bundle);
+        chatIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(chatIntent);
+
+    }
+    @Override
+    public void onVideoClick(int position) {
+        Bundle bundle= new Bundle();
+        videoArrayList= new ArrayList<>();
+        if(matchedProfileInfo !=null){
+            try {
+                videoArrayList= matchedProfileInfo.getVideoLinks();
+                chatDiamondAmt=matchedProfileInfo.getChatDiamondAmount();
+                swipeViewSource = getIntent().getExtras().getBoolean(UserSwipeProfileAdapter.EXTRA_SWIPE_VIEW_SOURCE);
+                matchedProfileInfo = (UserProfileInfo) getIntent().getExtras().getParcelable(UserSwipeProfileAdapter.EXTRA_USER_PROFILE);
+            } catch (NullPointerException e) {
+                System.out.println("Oops!");
+            }
+
+        }
+        Intent chatIntent = new Intent(ProfileActivity.this, MediaSliderAct.class);
+        bundle.putString("mediaFileType","image");
+        bundle.putStringArrayList("Videos", (ArrayList<String>) videoArrayList);
+        chatIntent.putExtras(bundle);
+        chatIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(chatIntent);
 
     }
 }

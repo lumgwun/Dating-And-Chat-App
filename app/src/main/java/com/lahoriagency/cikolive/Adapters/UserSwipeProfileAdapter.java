@@ -13,8 +13,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
-import com.lahoriagency.cikolive.Classes.AppChat;
-import com.lahoriagency.cikolive.Classes.AppConference;
 import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.ImageLoader;
 import com.lahoriagency.cikolive.Classes.UserProfileInfo;

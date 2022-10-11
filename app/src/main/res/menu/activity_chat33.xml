@@ -5,6 +5,10 @@
         android:id="@+id/menu_chat_action_info"
         android:title="@string/menu_chat_info"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_chat_payment"
+        android:title="Payment History"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_chat_action_add"

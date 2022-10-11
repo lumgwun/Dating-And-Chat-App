@@ -19,7 +19,6 @@
         android:orientation="vertical"
         android:layout_below="@id/cardReport"
         android:background="@drawable/shape_layer1d"
-        android:id="@+id/layout_TType"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
         android:paddingBottom="20dp"

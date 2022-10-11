@@ -4,17 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="com.lahoriagency.cikolive.NewPackage.ChatMatchAct">
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:id="@+id/bottomCHatoord"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/shape_layer1c"
         android:layout_height="wrap_content">
         <com.google.android.material.bottomappbar.BottomAppBar
-            android:id="@+id/bottomAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -48,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_marginBottom="34dp"
             android:layout_marginEnd="10dp"
+            android:foregroundTint="@color/gray"
             android:layout_height="wrap_content"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_home"

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.SnapHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Adapters.DiamondHisAdapter;
+import com.lahoriagency.cikolive.Classes.Diamond;
 import com.lahoriagency.cikolive.Classes.DiamondTransfer;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.DataBase.DBHelper;
@@ -46,10 +48,12 @@ public class DiamondHistoryAct extends AppCompatActivity {
     int SharedPrefProfileID;
     String SharedPrefSurName,SharedPrefUserName;
     String SharedPrefFirstName;
-    int profileID;
+    int profileID,diamondC,collCount;
     private QBUser qbUser;
     private  Bundle bundle;
     private static final String PREF_NAME = "Ciko";
+    private TextView txtWallet,txtCollection;
+    private Diamond diamond;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +62,13 @@ public class DiamondHistoryAct extends AppCompatActivity {
         dbHelper= new DBHelper(this);
         recyclerView = findViewById(R.id.recycler_my_Dia_His);
         fab = findViewById(R.id.dia_Fab);
-
+        txtCollection = findViewById(R.id.d_Collects);
+        txtWallet = findViewById(R.id.walletD_No);
         bundle = new Bundle();
         gson = new Gson();
         gson1 = new Gson();
         qbUser= new QBUser();
+        diamond= new Diamond();
         savedProfile= new SavedProfile();
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         SharedPrefUserName=sharedPreferences.getString("PROFILE_USERNAME", "");
@@ -89,11 +95,22 @@ public class DiamondHistoryAct extends AppCompatActivity {
                 startActivity(myIntent);
             }
         });
+        if(savedProfile !=null){
+            diamondHistories=savedProfile.getDiamondHistories();
+            diamond=savedProfile.getSavedPDiamond();
 
-        diamondHistories=diamondHisDAO.getDiamondHisByProfID(profileID);
+            //diamondHistories=diamondHisDAO.getDiamondHisByProfID(profileID);
+
+        }
+        if(diamond !=null){
+            diamondC=diamond.getDiamondCount();
+            collCount=diamond.getDiamondCollections();
+
+        }
+        txtCollection.setText("My Collections"+collCount);
+        txtWallet.setText("My Wallet Diamonds"+diamondC);
 
         hisAdapter = new DiamondHisAdapter(this,  diamondHistories);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

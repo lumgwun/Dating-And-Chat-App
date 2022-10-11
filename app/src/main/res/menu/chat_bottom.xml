@@ -10,7 +10,6 @@
         android:icon="@drawable/ic_admin_panel"/>
 
     <item
-        android:id="@+id/cGeneralShop"
         android:title="Dialogs"
         app:cnb_iconTintMode="src_in"
         app:cnb_iconColor="#F44336"

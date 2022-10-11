@@ -1,5 +1,6 @@
 package com.lahoriagency.cikolive.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
+import com.lahoriagency.cikolive.NewPackage.ChatMatchAct;
 import com.lahoriagency.cikolive.R;
 import com.lahoriagency.cikolive.SavedProfileActivity;
 
@@ -35,6 +37,12 @@ public class SavedProfileAdapter extends RecyclerView.Adapter<SavedProfileAdapte
         this.context = savedProfileActivity;
         this.list = savedProfiles;
     }
+
+    public SavedProfileAdapter(Context context, List<SavedProfile> profileArrayList) {
+        this.context = context;
+        this.list = profileArrayList;
+    }
+
 
     @NonNull
     @Override
@@ -71,8 +79,9 @@ public class SavedProfileAdapter extends RecyclerView.Adapter<SavedProfileAdapte
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return (null != list ? list.size() : 0);
     }
+
 
     public void updateItems(List<SavedProfile> list) {
         this.list = list;
@@ -108,5 +117,21 @@ public class SavedProfileAdapter extends RecyclerView.Adapter<SavedProfileAdapte
         }
 
 
+
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    public void setPaymentList(ArrayList<? extends SavedProfile> profile) {
+        list.clear();
+        list.addAll(profile);
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void addLast(SavedProfile profile) {
+        list.add(profile);
+        notifyDataSetChanged();
+    }
+    public interface OnItemsClickListener{
+        void onProfileClick(SavedProfile profile);
     }
 }

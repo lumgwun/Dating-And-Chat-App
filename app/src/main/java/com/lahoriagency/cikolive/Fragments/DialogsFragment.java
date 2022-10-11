@@ -11,12 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -24,9 +26,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.FirebaseApp;
 import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Adapters.DialogAdapter44;
+import com.lahoriagency.cikolive.Adapters.DiamondHisAdapter;
 import com.lahoriagency.cikolive.Adapters.HorizontalListDialogsRecyclerViewAdapter;
 import com.lahoriagency.cikolive.ChatAct;
 import com.lahoriagency.cikolive.Classes.AppChat;
@@ -34,6 +38,7 @@ import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
 import com.lahoriagency.cikolive.Classes.DialogsManager;
+import com.lahoriagency.cikolive.Classes.DiamondTransfer;
 import com.lahoriagency.cikolive.Classes.GooglePlayServicesHelper;
 import com.lahoriagency.cikolive.Classes.ItemTouchHelperCallback;
 import com.lahoriagency.cikolive.Classes.QbChatDialogMessageListenerImp;
@@ -45,6 +50,7 @@ import com.lahoriagency.cikolive.Classes.UserProfileInfoHolder;
 import com.lahoriagency.cikolive.Classes.UserProfileInfoModel;
 import com.lahoriagency.cikolive.Classes.UserProfileInfoReply;
 import com.lahoriagency.cikolive.Classes.UserProfileInfoRequest;
+import com.lahoriagency.cikolive.DataBase.DiamondHisDAO;
 import com.lahoriagency.cikolive.Interfaces.GcmConsts;
 import com.lahoriagency.cikolive.Interfaces.ServerMethodsConsts;
 import com.lahoriagency.cikolive.R;
@@ -78,7 +84,7 @@ import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
 import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
 @SuppressWarnings("deprecation")
-public class DialogsFragment extends Fragment implements DialogsManager.ManagingDialogsCallbacks {
+public class DialogsFragment extends Fragment implements DialogsManager.ManagingDialogsCallbacks,DiamondHisAdapter.OnItemsClickListener {
     private static final String TAG = DialogsFragment.class.getSimpleName();
     public static final int REQUEST_DIALOG_ID_FOR_UPDATE = 165;
 
@@ -93,7 +99,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     private GooglePlayServicesHelper googlePlayServicesHelper;
     private DialogAdapter44 dialogsAdapter;
     private HorizontalListDialogsRecyclerViewAdapter horizontalDialogsAdapter;
-    private RecyclerView dialogsRecyclerView;
+    private RecyclerView dialogsRecyclerView,diamondRecylerV;
     private RecyclerView horizontalDialogsRecyclerView;
     private QBChatDialogMessageListener allDialogsMessagesListener;
     private SystemMessagesListener systemMessagesListener;
@@ -117,6 +123,13 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     private QBUser currentUser;
     private SharedPreferences userPreferences;
     private UserProfileInfoRequest userDialogInfoModel;
+    private DiamondHisAdapter diamondHisAdapter;
+    private ArrayList<DiamondTransfer>diamondTransfers;
+    private ArrayList<DiamondTransfer>diamondTransfersTo;
+    private ArrayList<DiamondTransfer>totalDiamondTransfers;
+    private DiamondHisDAO diamondHisDAO;
+    private int profID;
+    private String toCollector,dialogID;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -157,6 +170,36 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View viewRoot = inflater.inflate(R.layout.fragment_dialogs, container, false);
+        googlePlayServicesHelper = new GooglePlayServicesHelper();
+        pushBroadcastReceiver = new PushBroadcastReceiver();
+        userProfileInfoReply= new UserProfileInfoReply();
+        gson= new Gson();
+        gson1= new Gson();
+        gson2= new Gson();
+        gson3= new Gson();
+        currentUser= new QBUser();
+        userProfileInfo= new UserProfileInfo();
+        savedProfile= new SavedProfile();
+        FirebaseApp.initializeApp(Objects.requireNonNull(getContext()));
+        QBSettings.getInstance().init(getContext(), APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+        userPreferences = getContext().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = userPreferences.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = userPreferences.getString("LastQBUserUsed", "");
+        currentUser = gson1.fromJson(json1, QBUser.class);
+        json2 = userPreferences.getString("LastUserProfileInfoUsed", "");
+        userProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
+
+        json3 = userPreferences.getString("LastUserProfileInfoReplyUsed", "");
+        userProfileInfoReply = gson3.fromJson(json3, UserProfileInfoReply.class);
+
+        allDialogsMessagesListener = new AllDialogsMessageListener();
+        systemMessagesListener = new SystemMessagesListener();
+        dialogsManager = new DialogsManager();
+
+
+        registerQbChatListeners();
         initUi(viewRoot);
         initHorizontalRecyclerView(viewRoot);
         return viewRoot;
@@ -195,6 +238,44 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     }
 
     private void initHorizontalRecyclerView(View viewRoot){
+        diamondTransfers=new ArrayList<>();
+        diamondTransfersTo= new ArrayList<>();
+        totalDiamondTransfers=new ArrayList<>();
+        diamondHisDAO= new DiamondHisDAO(getContext());
+        googlePlayServicesHelper = new GooglePlayServicesHelper();
+        pushBroadcastReceiver = new PushBroadcastReceiver();
+        userProfileInfoReply= new UserProfileInfoReply();
+        gson= new Gson();
+        gson1= new Gson();
+        gson2= new Gson();
+        gson3= new Gson();
+        currentUser= new QBUser();
+        userProfileInfo= new UserProfileInfo();
+        savedProfile= new SavedProfile();
+        FirebaseApp.initializeApp(Objects.requireNonNull(getContext()));
+        QBSettings.getInstance().init(getContext(), APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+        userPreferences = getContext().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = userPreferences.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = userPreferences.getString("LastQBUserUsed", "");
+        currentUser = gson1.fromJson(json1, QBUser.class);
+        json2 = userPreferences.getString("LastUserProfileInfoUsed", "");
+        userProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
+
+        json3 = userPreferences.getString("LastUserProfileInfoReplyUsed", "");
+        userProfileInfoReply = gson3.fromJson(json3, UserProfileInfoReply.class);
+
+        allDialogsMessagesListener = new AllDialogsMessageListener();
+        systemMessagesListener = new SystemMessagesListener();
+        dialogsManager = new DialogsManager();
+        if(savedProfile !=null){
+            profID=savedProfile.getSavedProfID();
+
+        }
+
+
+        registerQbChatListeners();
         LinearLayoutManager layoutManager = new LinearLayoutManager(AppE.getAppContext(), LinearLayoutManager.HORIZONTAL, false);
         horizontalDialogsRecyclerView = viewRoot.findViewById(R.id.list_dialogs_profile_recyclerview);
         horizontalDialogsRecyclerView.setLayoutManager(layoutManager);
@@ -204,6 +285,18 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(horizontalDialogsAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(horizontalDialogsRecyclerView);
+
+        diamondTransfers=diamondHisDAO.getDiamondHisByProfID(profID);
+        diamondTransfersTo=diamondHisDAO.getDiamondHisTo(profID);
+        totalDiamondTransfers.addAll(diamondTransfers);
+        totalDiamondTransfers.addAll(diamondTransfersTo);
+
+        LinearLayoutManager layoutDiamond = new LinearLayoutManager(AppE.getAppContext(), LinearLayoutManager.HORIZONTAL, false);
+        dialogsRecyclerView.setLayoutManager(layoutDiamond);
+        diamondHisAdapter = new DiamondHisAdapter(getActivity(), totalDiamondTransfers);
+        diamondHisAdapter.setHasStableIds(true);
+        dialogsRecyclerView.setAdapter(diamondHisAdapter);
+
     }
 
     private void loadUpdatedDialog(final String dialogId) {
@@ -480,6 +573,42 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onDiamondItemClick(DiamondTransfer diamondTransfer) {
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_d);
+        bottomSheetDialog.show();
+
+        LinearLayoutCompat linearLayoutCompat = bottomSheetDialog.findViewById(R.id.bs_layout);
+        ImageView imgClose=bottomSheetDialog.findViewById(R.id.btn_bs_dialog_close);
+        RecyclerView recyclerView = bottomSheetDialog.findViewById(R.id._h_rv);
+        diamondTransfers=new ArrayList<>();
+        diamondTransfersTo= new ArrayList<>();
+        diamondHisDAO= new DiamondHisDAO(getContext());
+        if(diamondTransfer !=null){
+            dialogID=diamondTransfer.getdH_Dialog_ID();
+        }
+        diamondTransfers=diamondHisDAO.getDiamondHisByDialogID(dialogID);
+
+        LinearLayoutManager layoutDiamond = new LinearLayoutManager(AppE.getAppContext(), LinearLayoutManager.VERTICAL, false);
+        if (recyclerView != null) {
+            recyclerView.setLayoutManager(layoutDiamond);
+        }
+        diamondHisAdapter = new DiamondHisAdapter(getActivity(), diamondTransfers);
+        diamondHisAdapter.setHasStableIds(true);
+        recyclerView.setAdapter(diamondHisAdapter);
+        if (imgClose != null) {
+            imgClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    bottomSheetDialog.dismiss();
+
+                }
+            });
+        }
+
     }
 
     private class PushBroadcastReceiver extends BroadcastReceiver {

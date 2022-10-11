@@ -170,7 +170,7 @@ public class CallActivity extends BaseActivity implements IncomeCallFragmentCall
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_call_act_con);
         checker = new PermissionsChecker(this);
         sharedPrefsHelper= new SharedPrefsHelper();
         currentRoomID = getIntent().getStringExtra(Consts.EXTRA_ROOM_ID);
@@ -179,7 +179,7 @@ public class CallActivity extends BaseActivity implements IncomeCallFragmentCall
         PreferenceManager.setDefaultValues(this, R.xml.preferences_video, false);
         PreferenceManager.setDefaultValues(this, R.xml.preferences_audio, false);
 
-        reconnectingLayout = findViewById(R.id.llReconnecting);
+        reconnectingLayout = findViewById(R.id.llReconnectingCon);
 
         Window w = getWindow();
         w.setStatusBarColor(ContextCompat.getColor(this, R.color.color_new_blue));
@@ -295,14 +295,14 @@ public class CallActivity extends BaseActivity implements IncomeCallFragmentCall
         Fragment fragmentByTag = getSupportFragmentManager().findFragmentByTag(ScreenShareFragment.class.getSimpleName());
         if (!(fragmentByTag instanceof ScreenShareFragment)) {
             ScreenShareFragment screenShareFragment = ScreenShareFragment.newInstance();
-            FragmentExecuotr.addFragment(getSupportFragmentManager(), R.id.fragment_container, screenShareFragment, ScreenShareFragment.class.getSimpleName());
+            FragmentExecuotr.addFragment(getSupportFragmentManager(), R.id.fragment_containerCon, screenShareFragment, ScreenShareFragment.class.getSimpleName());
 
             if (data != null) {
                 callService.startScreenSharing(data);
             }
         }
         ScreenShareFragment screenShareFragment = ScreenShareFragment.newInstance();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_containerCon,
                 screenShareFragment, ScreenShareFragment.class.getSimpleName())
                 .commitAllowingStateLoss();
 
@@ -546,7 +546,7 @@ public class CallActivity extends BaseActivity implements IncomeCallFragmentCall
         ConversationFragment conversationFragment = new ConversationFragment();
         conversationFragment.setArguments(bundle);
         callService.setOnlineParticipantsChangeListener(conversationFragment);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_containerCon,
                 conversationFragment, conversationFragment.getClass().getSimpleName())
                 .commitAllowingStateLoss();
     }
@@ -808,7 +808,7 @@ public class CallActivity extends BaseActivity implements IncomeCallFragmentCall
         Log.d(TAG, "Adding IncomeCallFragment");
         if (callService.currentSessionExist()) {
             IncomeCallFragment fragment = new IncomeCallFragment();
-            FragmentExecuotr.addFragment(getSupportFragmentManager(), R.id.fragment_container, fragment, INCOME_CALL_FRAGMENT);
+            FragmentExecuotr.addFragment(getSupportFragmentManager(), R.id.fragment_containerCon, fragment, INCOME_CALL_FRAGMENT);
         } else {
             Log.d(TAG, "SKIP Adding IncomeCallFragment");
         }
@@ -820,7 +820,7 @@ public class CallActivity extends BaseActivity implements IncomeCallFragmentCall
                         ? new VideoConversationFragment()
                         : new AudioConversationFragment(),
                 isIncomingCall);
-        FragmentExecuotr.addFragment(getSupportFragmentManager(), R.id.fragment_container, conversationFragment, conversationFragment.getClass().getSimpleName());
+        FragmentExecuotr.addFragment(getSupportFragmentManager(), R.id.fragment_containerCon, conversationFragment, conversationFragment.getClass().getSimpleName());
     }
 
     private void showNotificationPopUp(final int text, final boolean show) {
@@ -831,10 +831,10 @@ public class CallActivity extends BaseActivity implements IncomeCallFragmentCall
                 if (show) {
                     ((TextView) connectionView.findViewById(R.id.notification)).setText(text);
                     if (connectionView.getParent() == null) {
-                        ((ViewGroup) CallActivity.this.findViewById(R.id.fragment_container)).addView(connectionView);
+                        ((ViewGroup) CallActivity.this.findViewById(R.id.fragment_containerCon)).addView(connectionView);
                     }
                 } else {
-                    ((ViewGroup) CallActivity.this.findViewById(R.id.fragment_container)).removeView(connectionView);
+                    ((ViewGroup) CallActivity.this.findViewById(R.id.fragment_containerCon)).removeView(connectionView);
                 }
             }
         });

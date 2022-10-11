@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +12,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.FirebaseApp;
+import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
+import com.lahoriagency.cikolive.Classes.Diamond;
+import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.CreateProfileActivity;
 import com.lahoriagency.cikolive.Interfaces.Consts;
 import com.lahoriagency.cikolive.MainActivity;
@@ -44,6 +48,20 @@ public class ChatMainAct extends AppCompatActivity implements View.OnClickListen
 
     private SharedPrefsHelper sharedPrefsHelper;
     private static final String PREF_NAME = "Ciko";
+    private  int qbUserID,qbUserFieldID;
+    static Boolean isTouched = false;
+    private EditText edtLiveAmount;
+    private String strLiveAmount;
+    private double liveAmt;
+    int diamondCount,diamondID;
+    private int collections;
+    private Diamond diamond;
+    Gson gson, gson1,gson2;
+    String json, json1, json2;
+    private QBUser qbUser;
+    private SavedProfile savedProfile;
+    SharedPreferences sharedPref;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +70,17 @@ public class ChatMainAct extends AppCompatActivity implements View.OnClickListen
         FirebaseApp.initializeApp(this);
         QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+        gson= new Gson();
+        savedProfile= new SavedProfile();
+        gson1= new Gson();
+        gson2= new Gson();
+        qbUser= new QBUser();
+        diamond= new Diamond();
+        sharedPref= getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = sharedPref.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = sharedPref.getString("LastQBUserUsed", "");
+        qbUser = gson1.fromJson(json1, QBUser.class);
         initViews();
         setClicks();
 

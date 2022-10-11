@@ -44,7 +44,7 @@ public abstract  class BaseToolBarFragment extends Fragment {
     }
 
     private void initActionBar() {
-        toolbar = getActivity().findViewById(R.id.toolbar_call);
+        toolbar = getActivity().findViewById(R.id.start_audio_call);
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         actionBar = ((AppCompatActivity) getActivity()).getDelegate().getSupportActionBar();

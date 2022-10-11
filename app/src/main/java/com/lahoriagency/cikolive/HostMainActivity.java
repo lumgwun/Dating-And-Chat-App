@@ -70,7 +70,7 @@ public class HostMainActivity extends AppCompatActivity {
     int diamondCount,diamondID;
     private int collections;
     private Diamond diamond;
-    private AppCompatButton btnStartLive;
+    private AppCompatButton btnStartLive,btnTransferToWallet;
     private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
     private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
     private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
@@ -107,6 +107,7 @@ public class HostMainActivity extends AppCompatActivity {
         qbUser = gson1.fromJson(json1, QBUser.class);
         tv_count =findViewById(R.id.tv_count);
         edtLiveAmount =findViewById(R.id.liveAmount);
+        btnTransferToWallet =findViewById(R.id.diamond_transfer);
 
         if(savedProfile !=null){
             diamond=savedProfile.getSavedPDiamond();
@@ -123,6 +124,7 @@ public class HostMainActivity extends AppCompatActivity {
             collections=diamond.getDiamondCollections();
 
         }
+
 
         tv_min =findViewById(R.id.tv_min);
         tv_Wallet =findViewById(R.id.tv_WalletD);
@@ -141,6 +143,16 @@ public class HostMainActivity extends AppCompatActivity {
         btnRedeemReq =findViewById(R.id.redeem_Btn_Request);
         switchAvailOrNot =findViewById(R.id.avail_for_call);
         Bundle bundle= new Bundle();
+        btnTransferToWallet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                diamondCount=diamondCount+collections;
+                collections=0;
+                diamond.setDiamondCount(diamondCount);
+                diamond.setDiamondCollections(collections);
+            }
+        });
+        btnTransferToWallet.setOnClickListener(this::transferDToWallet);
 
         btnStartLive.setOnClickListener(this::doStartLive);
 
@@ -337,5 +349,8 @@ public class HostMainActivity extends AppCompatActivity {
     }
 
     public void doStartLive(View view) {
+    }
+
+    public void transferDToWallet(View view) {
     }
 }

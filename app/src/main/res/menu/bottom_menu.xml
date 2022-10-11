@@ -30,7 +30,6 @@
 
 
     <item
-        android:id="@+id/menu_conf66"
         android:title="Conference Chat"
         app:cnb_backgroundColor="@color/colorPrimaryDark"
         app:cnb_iconTintMode="src_in"

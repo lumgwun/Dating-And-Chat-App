@@ -86,24 +86,33 @@ import com.android.installreferrer.api.ReferrerDetails;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.dynamiclinks.DynamicLink;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
 import com.lahoriagency.cikolive.Adapters.AddImageAdapter;
+import com.lahoriagency.cikolive.Adapters.PictureAdapter;
 import com.lahoriagency.cikolive.Adapters.ProfMediaAdapter;
+import com.lahoriagency.cikolive.Adapters.VideoAdapter;
 import com.lahoriagency.cikolive.Classes.Consts;
 import com.lahoriagency.cikolive.Classes.Diamond;
+import com.lahoriagency.cikolive.Classes.DiamondTransfer;
 import com.lahoriagency.cikolive.Classes.LoginReply;
 import com.lahoriagency.cikolive.Classes.QBResRequestExecutor;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
@@ -128,6 +137,8 @@ import com.quickblox.users.model.QBUser;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -271,7 +282,7 @@ public class CreateProfileActivity extends BaseActivity {
     PreferenceManager preferenceManager;
     private Bundle bundle;
     AppCompatTextView dobText;
-    String uPhoneNumber;
+    String mImageUriString;
     private ProgressBar loadingPB;
     private boolean locationPermissionGranted;
     String managerUserName;
@@ -324,7 +335,7 @@ public class CreateProfileActivity extends BaseActivity {
     int PERMISSION_ALL = 1;
     private CircleImageView profilePix;
     int timeOfDay;
-    private static boolean isPersistenceEnabled = false;
+    private static final boolean isPersistenceEnabled = false;
     private LinearLayoutCompat layoutUp;
     private ScrollView scrollLayoutDown;
     SharedPreferences userPreferences;
@@ -344,15 +355,15 @@ public class CreateProfileActivity extends BaseActivity {
     private WifiManager wm;
     private BluetoothAdapter m_BluetoothAdapter;
     private  String response;
-    private String responseString="registered";
+    private final String responseString="registered";
     private LoginReply loginReply;
     String referrer = "";
     String[] PERMISSIONS33 = {
             Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.BLUETOOTH, Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,Manifest.permission.BLUETOOTH, Manifest.permission.SEND_SMS
+            Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.BLUETOOTH, Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,Manifest.permission.INSTALL_LOCATION_PROVIDER, Manifest.permission.SEND_SMS
     };
     AppCompatTextView txtLoc, textReturnedWelcome;
-    AppCompatEditText edtAge,et_interests,et_aboutC,edt_Name,et_Password, edtFirstName,edtPhone;
+    AppCompatEditText edtAge,et_interests,et_aboutC,edt_Name,et_Password, et_diamond,edtPhone;
     private CountryCodePicker countryCodePicker;
     private long referrerClickTime,appInstallTime;
     private  boolean instantExperienceLaunched;
@@ -390,12 +401,22 @@ public class CreateProfileActivity extends BaseActivity {
     RecyclerView picVideoRecyView;
     private int resultCode;
     int PICK_IMAGE_MULTIPLE = 2;
-    String realImagePath;
+    String realImagePath,giftTime;
     private Bitmap bitmap;
     private ProfMediaAdapter profMediaAdapter;
     ArrayList<Uri> mArrayUri;
-    private Uri profileImageUri;
-    String machineUser, office,state,role,userLocation,passwordStg,emailStrg,gender;
+    Uri deepLink = null;
+    private Uri profileImageUri,profileVideoUri;
+    private FirebaseDynamicLinks firebaseDynamicLinks;
+    private DynamicLink dynamicLink;
+    private VideoAdapter videoAdapter;
+    private VideoAdapter.VideoListener videoListener;
+    String diamondStr, office,state,role,userLocation,passwordStg,emailStrg,gender;
+    private ClipData clipData;
+    private int noOfDiamond;
+    private PictureAdapter pictureAdapter;
+    private PictureAdapter.ItemListener pictureListener;
+    private RadioButton radioBtnFemale,radioBtnMale;
     public static void start(Context context) {
         Intent intent = new Intent(context, CreateProfileActivity.class);
         context.startActivity(intent);
@@ -414,61 +435,121 @@ public class CreateProfileActivity extends BaseActivity {
                             //mImageUri = data.getData();
                             userProfileInfo= new UserProfileInfo();
 
-                            if (data.getData() != null) {
+                            mArrayUri = new ArrayList<Uri>();
+                            ArrayList<String> photoResult = new ArrayList<>();
 
-                                profileImageUri = data.getData();
-                                //ex_one.setImageURI(contentURI);
-
-                                Log.d(TAG, "onActivityResult: " + profileImageUri.toString());
+                            if (data != null) {
+                                clipData = data.getClipData();
+                            }
+                            if(clipData != null) {
+                                for(int i=0;i<clipData.getItemCount();i++) {
+                                    ClipData.Item videoItem = clipData.getItemAt(i);
+                                    Uri photoURI = videoItem.getUri();
+                                    String filePath = getPath(CreateProfileActivity.this, photoURI);
+                                    photoResult.add(filePath);
+                                }
+                                userProfileInfo.setPhotoLinks(photoResult);
+                                pictureAdapter = new PictureAdapter(CreateProfileActivity.this,photoResult,pictureListener);
+                                LinearLayoutManager layoutManager
+                                        = new LinearLayoutManager(CreateProfileActivity.this, LinearLayoutManager.HORIZONTAL, false);
+                                recyclerViewPhoto.setLayoutManager(layoutManager);
+                                recyclerViewPhoto.setItemAnimator(new DefaultItemAnimator());
+                                SnapHelper snapHelper = new PagerSnapHelper();
+                                snapHelper.attachToRecyclerView(recyclerViewPhoto);
+                                recyclerViewPhoto.setAdapter(pictureAdapter);
                                 try {
-
                                     bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), profileImageUri);
-
+                                    profile_image_.setImageBitmap(bitmap);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-                                profile_image_.setImageBitmap(bitmap);
-
-                            } else {
-
-                                if (data.getClipData() != null) {
-                                    ClipData mClipData = data.getClipData();
-                                    mArrayUri = new ArrayList<Uri>();
-                                    for (int i = 0; i < mClipData.getItemCount(); i++) {
-
-                                        ClipData.Item item = mClipData.getItemAt(i);
-                                        profileImageUri = item.getUri();
-
-                                        userProfileInfo.setProfileMediaFiles(mArrayUri);
-                                        profMediaAdapter = new ProfMediaAdapter(mArrayUri);
-                                        LinearLayoutManager layoutManager
-                                                = new LinearLayoutManager(CreateProfileActivity.this, LinearLayoutManager.HORIZONTAL, false);
-                                        recyclerViewPhoto.setLayoutManager(layoutManager);
-                                        recyclerViewPhoto.setItemAnimator(new DefaultItemAnimator());
-                                        SnapHelper snapHelper = new PagerSnapHelper();
-                                        snapHelper.attachToRecyclerView(recyclerViewPhoto);
-                                        recyclerViewPhoto.setAdapter(profMediaAdapter);
-                                        try {
-                                            bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), profileImageUri);
-                                            profile_image_.setImageBitmap(bitmap);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-
-                                    }
-                                }
-
                             }
-
-                            if(data.getClipData() != null) {
-                                int count = data.getClipData().getItemCount(); //evaluate the count before the for loop --- otherwise, the count is evaluated every loop.
-                                for(int i = 0; i < count; i++) {
-                                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
-                                    //do something with the image (save it to some directory or whatever you need to do with it here)
-                                }
+                            else {
+                                Uri videoURI = data.getData();
+                                String filePath = getPath(CreateProfileActivity.this, videoURI);
+                                photoResult.add(filePath);
                             }
 
                             Toast.makeText(CreateProfileActivity.this, "Image picking returned successful", Toast.LENGTH_SHORT).show();
+                            //doProcessing();
+                            break;
+                        case Activity.RESULT_CANCELED:
+                            Toast.makeText(CreateProfileActivity.this, "Activity canceled", Toast.LENGTH_SHORT).show();
+                            //finish();
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + result.getResultCode());
+                    }
+                }
+                /*@Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        finish();
+                    }
+                }*/
+            });
+    ActivityResultLauncher<Intent> mGetVideoContent = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    switch (result.getResultCode()) {
+                        case Activity.RESULT_OK:
+                            resultCode=result.getResultCode();
+                            Intent data = result.getData();
+                            userProfileInfo= new UserProfileInfo();
+                            mArrayUri = new ArrayList<Uri>();
+                            ArrayList<String> videoResult = new ArrayList<>();
+
+                            if (data != null) {
+                                clipData = data.getClipData();
+                            }
+                            if(clipData != null) {
+                                for(int i=0;i<clipData.getItemCount();i++) {
+                                    ClipData.Item videoItem = clipData.getItemAt(i);
+                                    Uri videoURI = videoItem.getUri();
+                                    String filePath = getPath(CreateProfileActivity.this, videoURI);
+                                    videoResult.add(filePath);
+                                }
+                                userProfileInfo.setVideoLinks(videoResult);
+                                videoAdapter = new VideoAdapter(CreateProfileActivity.this, mArrayUri, videoListener);
+                                LinearLayoutManager layoutManager
+                                        = new LinearLayoutManager(CreateProfileActivity.this, LinearLayoutManager.HORIZONTAL, false);
+                                recyclerViewVideo.setLayoutManager(layoutManager);
+                                recyclerViewVideo.setItemAnimator(new DefaultItemAnimator());
+                                SnapHelper snapHelper = new PagerSnapHelper();
+                                snapHelper.attachToRecyclerView(recyclerViewVideo);
+                                recyclerViewVideo.setAdapter(videoAdapter);
+                                recyclerViewVideo.setNestedScrollingEnabled(false);
+                                recyclerViewVideo.setClickable(true);
+                            }
+                            else {
+                                Uri videoURI = data.getData();
+                                String filePath = getPath(CreateProfileActivity.this, videoURI);
+                                videoResult.add(filePath);
+                            }
+
+                            if (data != null && data.getClipData() != null) {
+                                ClipData mClipData = data.getClipData();
+                                //mArrayUri=data.getClipData().
+
+                                int count = data.getClipData().getItemCount(); //evaluate the count before the for loop --- otherwise, the count is evaluated every loop.
+                                for(int i = 0; i < count; i++) {
+                                    Uri videoUri = data.getClipData().getItemAt(i).getUri();
+                                }
+                                for (int i = 0; i < mClipData.getItemCount(); i++) {
+
+                                    ClipData.Item item = mClipData.getItemAt(i);
+                                    profileVideoUri = item.getUri();
+
+
+
+
+                                }
+                            }
+                            Toast.makeText(CreateProfileActivity.this, "Video picking returned successful", Toast.LENGTH_SHORT).show();
                             //doProcessing();
                             break;
                         case Activity.RESULT_CANCELED:
@@ -540,7 +621,7 @@ public class CreateProfileActivity extends BaseActivity {
         profileName = userPreferences.getString("SAVED_PROFILE_NAME", "");
         referrerClient = InstallReferrerClient.newBuilder(this).build();
         txtLoc = findViewById(R.id.where_You_Are);
-        recyclerViewPhoto = findViewById(R.id.rv_images);
+        recyclerViewPhoto = findViewById(R.id.rv_picP);
         recyclerViewVideo = findViewById(R.id.rv_videos);
         edtAge = findViewById(R.id.et_ageC);
         edt_Name = findViewById(R.id.et_nameC);
@@ -549,6 +630,8 @@ public class CreateProfileActivity extends BaseActivity {
         checkBox = findViewById(R.id.checkboxC);
         edtEmailAddress = findViewById(R.id.et_emailC);
         et_Password = findViewById(R.id.et_PasswordC);
+        et_diamond = findViewById(R.id.et_diamond);
+
         radioSexGroup=(RadioGroup)findViewById(R.id.sexgroup);
 
         btnSignUp = findViewById(R.id.btn_submit);
@@ -560,7 +643,28 @@ public class CreateProfileActivity extends BaseActivity {
         layoutUp = findViewById(R.id.layoutTop);
         scrollLayoutDown = findViewById(R.id.layoutDown);
         textReturnedWelcome = findViewById(R.id.WelcomeE);
-        picVideoRecyView = findViewById(R.id.rv_picP);
+        //picVideoRecyView = findViewById(R.id.rv_picP);
+
+        recyclerViewVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!hasPermissions(CreateProfileActivity.this, PERMISSIONS33)) {
+                    ActivityCompat.requestPermissions(CreateProfileActivity.this, PERMISSIONS, PERMISSION_ALL33);
+                }
+                Intent intent = new Intent();
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                //intent.setType("*/*");
+                intent.setType("video/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                mGetVideoContent.launch(intent);
+
+
+
+            }
+
+        });
+        recyclerViewVideo.setOnClickListener(this::getVideos);
 
         if(savedProfile !=null){
             savedProfileID=savedProfile.getSavedProfID();
@@ -666,8 +770,8 @@ public class CreateProfileActivity extends BaseActivity {
                 }
                 Intent intent = new Intent();
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-                //intent.setType("image/*");
+                //intent.setType("*/*");
+                intent.setType("image/*");
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 mGetPixContent.launch(intent);
@@ -713,10 +817,12 @@ public class CreateProfileActivity extends BaseActivity {
 
         fireBaseBtn.setOnClickListener(this::doFireBase);
         progressbar = findViewById(R.id.progressBarC);
+        radioBtnMale = findViewById(R.id.sex_Male);
+        radioBtnFemale = findViewById(R.id.sex_Female);
 
 
         progressDialog = new ProgressDialog(this);
-        profileID = ThreadLocalRandom.current().nextInt(1125, 10400);
+        profileID = ThreadLocalRandom.current().nextInt(1125, 10450);
         ActionCodeSettings actionCodeSettings =
                 ActionCodeSettings.newBuilder()
                         .setUrl("https://cikolive.page.link/")
@@ -726,6 +832,7 @@ public class CreateProfileActivity extends BaseActivity {
                                 true, /* installIfNotAvailable */
                                 "12"    /* minimumVersion */)
                         .build();
+        handleFirebaseDynamicLink(profileID);
 
 
 //https://cikolive.page.link/finishSignUp?SAVED_PROFILE_ID="+profileID
@@ -769,6 +876,7 @@ public class CreateProfileActivity extends BaseActivity {
                 } else {
                     scrollLayoutDown.setVisibility(View.VISIBLE);
                     layoutUp.setVisibility(View.GONE);
+                    completeSignUp(getIntent());
                     //registerNewUser(email, password,joinedDate,name);
                     registerNewFireBaseUser(email, password,joinedDate,name,actionCodeSettings,profileID);
 
@@ -794,9 +902,25 @@ public class CreateProfileActivity extends BaseActivity {
                 getUserCountry(CreateProfileActivity.this);
                 textReturnedWelcome.setText("Welcome Back"+" "+name);
                 //passwordTextView.setText("Your Password: passwordStg");
+                radioBtnMale = findViewById(R.id.sex_Male);
+                radioBtnFemale = findViewById(R.id.sex_Female);
                 profileName = edt_Name.getText().toString();
-                RadioButton radioButton = (RadioButton) findViewById(radioSexGroup.getCheckedRadioButtonId());
-                userGender=radioButton.getText().equals("Male")?0:1;
+                diamondStr = et_diamond.getText().toString();
+
+                RadioGroup radioGroup = findViewById(R.id.sexgroup);
+                noOfDiamond= Integer.parseInt(diamondStr);
+                //RadioButton radioGroup = (RadioButton) findViewById(radioSexGroup.getCheckedRadioButtonId());
+                if (radioGroup != null) {
+                    radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(RadioGroup group, int checkedId) {
+                            gender = (R.id.sex_Male == checkedId) ? "Male" : "Female";
+                            String text = "You selected: " + userGender;
+                            Toast.makeText(CreateProfileActivity.this, text, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                //userGender=radioButton.getText().equals("Male")?0:1;
                 if (TextUtils.isEmpty(gender)) {
                     Toast.makeText(CreateProfileActivity.this,
                             "Please select the Gender!!",
@@ -822,7 +946,7 @@ public class CreateProfileActivity extends BaseActivity {
                 } else {
                     myAgeInt= Integer.parseInt(myAge);
                     mImageUri= profileImageUri;
-                    LastProfileUsed= new SavedProfile(profileID,profileName,emailStrg,passwordStg,aboutMe,myIntrest,myAge,userGender,gender,joinedDate,country,cityStrg,mImageUri);
+                    LastProfileUsed= new SavedProfile(profileID,profileName,emailStrg,passwordStg,aboutMe,myIntrest,myAge,gender,selectedGender,joinedDate,country,cityStrg,mImageUri);
                     qbUser= new QBUser();
                     qbUser.setCustomData(myAge);
                     qbUser.setEmail(emailStrg);
@@ -831,7 +955,7 @@ public class CreateProfileActivity extends BaseActivity {
                     qbUser.setFullName(profileName);
                     qbUser.setExternalId(String.valueOf(profileID));
                     //finishRegisteration(qbUser, LastProfileUsed);
-                    startSignUpNewUser(profileID,qbUser,LastProfileUsed,myAgeInt,aboutMe,myIntrest,country,selectedGender,mImageUri);
+                    startSignUpNewUser(profileID,qbUser,LastProfileUsed,myAgeInt,aboutMe,myIntrest,country,selectedGender,mImageUri,noOfDiamond);
 
                 }
 
@@ -839,6 +963,68 @@ public class CreateProfileActivity extends BaseActivity {
                 //startActivity(new Intent(CreateProfileActivity.this, SignInActivity.class));
             }
         });
+        if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS) {
+            // OK, you can do your job
+        }
+
+    }
+    private void handleFirebaseDynamicLink(int profileID) {
+        try {
+            dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                    .setLink(Uri.parse("https://cikolive.page.link/profile/?SAVED_PROFILE_ID=" + profileID))
+                    .setDomainUriPrefix("https://cikolive.page.link/profile/")
+                    .setAndroidParameters(
+                            new DynamicLink.AndroidParameters.Builder("com.lahoriagency.cikolive").build())
+                    .buildDynamicLink();
+            try {
+                String url = URLDecoder.decode(dynamicLink.getUri().toString(), "UTF-8");
+                Log.d(TAG, "handleFirebaseDynamicLink: " + url);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+    }
+    private void completeSignUp(Intent intent) {
+        if (intent.getAction() != null) {
+            if (intent.getAction().equals(Intent.ACTION_VIEW)) {
+                FirebaseDynamicLinks.getInstance()
+                        .getDynamicLink(intent)
+                        .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                            @Override
+                            public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                                // Get deep link from result (may be null if no link is found)
+                                Uri deepLink = null;
+                                if (pendingDynamicLinkData != null) {
+                                    deepLink = pendingDynamicLinkData.getLink();
+                                    Log.d(TAG, "handleFirebaseDynamicLink: " + deepLink);
+                                } else {
+                                    Log.d(TAG, "handleFirebaseDynamicLink: pendingDynamicLinkData null");
+                                }
+
+
+                                // Handle the deep link. For example, open the linked
+                                // content, or apply promotional credit to the user's
+                                // account.
+                                // ...
+
+                                // ...
+                            }
+                        })
+                        .addOnFailureListener(this, new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "getDynamicLink:onFailure", e);
+                            }
+                        });
+
+            }
+        }
     }
 
     private void registerNewFireBaseUser(String email, String password, String joinedDate, String name, ActionCodeSettings actionCodeSettings, int profileID) {
@@ -1034,10 +1220,6 @@ public class CreateProfileActivity extends BaseActivity {
 
     private void saveToDB(String email, String password, String status, String joinedDate, String country, String deviceID, String name, int profileID) {
         SavedProfileDAO dbHelper = new SavedProfileDAO(this);
-        if(this.profileID >0){
-            profileIDLong= this.profileID;
-
-        }
         if (sqLiteDatabase == null || !sqLiteDatabase.isOpen()) {
             dbHelper.open();
             sqLiteDatabase = dbHelper.getWritableDatabase();
@@ -1060,15 +1242,34 @@ public class CreateProfileActivity extends BaseActivity {
         });
     }
 
-    private void startSignUpNewUser(int profileID, final QBUser newUser, SavedProfile lastProfileUsed, int myAge, String aboutMe, String myIntrest, String country, String selectedGender, Uri mImageUri) {
+    private void startSignUpNewUser(int profileID, final QBUser newUser, SavedProfile lastProfileUsed, int myAge, String aboutMe, String myIntrest, String country, String selectedGender, Uri mImageUri, int noOfDiamond) {
         Log.d(TAG, "SignUp New User");
         showProgressDialog(R.string.dlg_creating_new_user);
         Bundle userBundle=new Bundle();
-        String mImageUriString= String.valueOf(mImageUri);
+        calendar = Calendar.getInstance();
+        if(mImageUri !=null){
+             mImageUriString= String.valueOf(mImageUri);
+
+        }
+
         requestExecutor = new QBResRequestExecutor();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        giftTime = mdformat.format(calendar.getTime());
         newUser.setCustomDataClass(lastProfileUsed.getClass());
         SavedProfileDAO dbHelper = new SavedProfileDAO(this);
         loginReply= new LoginReply();
+        Diamond diamond1= new Diamond();
+        int count =0;
+        diamond1.setDiamondCount(50);
+        DiamondTransfer diamondTransfer= new DiamondTransfer();
+        diamondTransfer.setdH_Count(50);
+        diamondTransfer.setdH_From("Ciko Live Admin");
+        diamondTransfer.setdH_To("You");
+        diamondTransfer.setdH_SProf_ID(profileID);
+        diamondTransfer.setdH_Date(giftTime);
+        diamondTransfer.setdH_Balance(50);
+        lastProfileUsed.setSavedPDiamond(diamond1);
+        lastProfileUsed.addDiamondHistory("Ciko Live Admin",giftTime,50);
 
         QBUsers.signUp(newUser).performAsync(new QBEntityCallback<QBUser>() {
             @Override
@@ -1089,12 +1290,13 @@ public class CreateProfileActivity extends BaseActivity {
                     if (sqLiteDatabase == null || !sqLiteDatabase.isOpen()) {
                         dbHelper.open();
                         sqLiteDatabase = dbHelper.getWritableDatabase();
-                        dbHelper.updateProfileQBUserID(Math.toIntExact(profileID),qbUserID);
+                        dbHelper.updateSavedProf(profileID,qbUserID,myAge,aboutMe,myIntrest, country,selectedGender,mImageUri, noOfDiamond);
                     }
 
 
                     userProfileInfo= new UserProfileInfo(qbUserID, profileID, myAge,name,aboutMe,myIntrest, country,selectedGender,mImageUriString);
                     lastProfileUsed.setSavedPUserProfileInfo(userProfileInfo);
+                    lastProfileUsed.setDefaultDiamond(noOfDiamond);
                     lastProfileUsed.setLoginReply(loginReply);
 
                 }
@@ -1155,12 +1357,11 @@ public class CreateProfileActivity extends BaseActivity {
     }
 
     private void finishRegisteration(QBUser qbUser, SavedProfile lastProfileUsed, UserProfileInfo userProfileInfo, LoginReply loginReply, int profileID, String name, String passwordStg, String emailStrg) {
-
         dbHelper= new DBHelper(this);
         gson1= new Gson();
         gson= new Gson();
         gson2= new Gson();
-        dbHelper.upDateUser(lastProfileUsed);
+        //dbHelper.upDateUser(lastProfileUsed);
         if (userPreferences == null){
 
             userPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
@@ -1170,12 +1371,12 @@ public class CreateProfileActivity extends BaseActivity {
             json2 = gson2.toJson(userProfileInfo);
             if(lastProfileUsed !=null){
                 deviceID = lastProfileUsed.getSavedPDeviceID();
-                this.name =lastProfileUsed.getSavedPName();
+                name =lastProfileUsed.getSavedPName();
                 country =lastProfileUsed.getSavedPCountry();
                 lookingFor =lastProfileUsed.getSavedPLookingFor();
                 aboutMe =lastProfileUsed.getSavedPAboutMe();
                 age =lastProfileUsed.getSavedPAge();
-                myGender =lastProfileUsed.getSavedPGender();
+                gender =lastProfileUsed.getSavedPGender();
                 email =lastProfileUsed.getSavedPEmail();
                 UserLocation =lastProfileUsed.getSavedPLocation();
                 password =lastProfileUsed.getSavedPPassword();
@@ -1183,16 +1384,19 @@ public class CreateProfileActivity extends BaseActivity {
                 profilePicture =lastProfileUsed.getSavedPImage();
                 dateJoined =lastProfileUsed.getSavedPDateJoined();
                 savedProfID =lastProfileUsed.getSavedProfID();
+                noOfDiamond=lastProfileUsed.getDefaultDiamond();
+                qbUserID=lastProfileUsed.getSavedProfQBID();
 
             }
 
             prefsEditor.putBoolean("rememberMe", true);
-            prefsEditor.putString("SAVED_PROFILE_NAME", this.name);
+            prefsEditor.putString("SAVED_PROFILE_NAME", name);
             prefsEditor.putInt("SAVED_PROFILE_ID", savedProfID);
+            prefsEditor.putInt("SAVED_PROFILE_QBID", qbUserID);
             prefsEditor.putString("SAVED_PROFILE_LOC", UserLocation);
             prefsEditor.putString("SAVED_PROFILE_PHOTO", String.valueOf(profilePicture));
             prefsEditor.putString("SAVED_PROFILE_EMAIL", email);
-            prefsEditor.putInt("SAVED_PROFILE_GENDER", myGender);
+            prefsEditor.putString("SAVED_PROFILE_GENDER", gender);
             prefsEditor.putString("SAVED_PROFILE_LOOKING_GENDER", lookingFor);
             prefsEditor.putString("SAVED_PROFILE_PASSWORD", password);
             prefsEditor.putString("SAVED_PROFILE_DEVICEID", deviceID);
@@ -1201,6 +1405,7 @@ public class CreateProfileActivity extends BaseActivity {
             prefsEditor.putString("SAVED_PROFILE_DATE_JOINED", dateJoined);
             prefsEditor.putString("SAVED_PROFILE_ABOUT_ME", aboutMe);
             prefsEditor.putString("SAVED_PROFILE_AGE", age);
+            prefsEditor.putInt("SAVED_PROFILE_DIAMOND", noOfDiamond);
             prefsEditor.putString("SAVED_PROFILE_LOC", referrer);
             prefsEditor.putString("LastQBUserUsed", json1);
             prefsEditor.putString("LastUserProfileInfoUsed", json2);
@@ -1213,17 +1418,19 @@ public class CreateProfileActivity extends BaseActivity {
                 this.profileID =LastProfileUsed.getSavedProfID();
             }
 
-            userBundle.putString("SAVED_PROFILE_NAME", this.name);
-            userBundle.putInt("SAVED_PROFILE_ID", Math.toIntExact(this.profileID));
+            userBundle.putString("SAVED_PROFILE_NAME", name);
+            userBundle.putInt("SAVED_PROFILE_ID", profileID);
+            userBundle.putInt("SAVED_PROFILE_QBID", qbUserID);
             userBundle.putString("SAVED_PROFILE_LOC", cityStrg);
             userBundle.putString("SAVED_PROFILE_PHOTO", String.valueOf(mImageUri));
-            userBundle.putString("SAVED_PROFILE_EMAIL", this.emailStrg);
+            userBundle.putString("SAVED_PROFILE_EMAIL", emailStrg);
             userBundle.putString("SAVED_PROFILE_GENDER", gender);
-            userBundle.putString("SAVED_PROFILE_PASSWORD", this.passwordStg);
+            userBundle.putString("SAVED_PROFILE_PASSWORD", passwordStg);
             userBundle.putString("SAVED_PROFILE_DEVICEID", deviceID);
             userBundle.putString("SAVED_PROFILE_COUNTRY", country);
             userBundle.putString("SAVED_PROFILE_REFERRER", referrer);
-            userBundle.putString("SAVED_PROFILE_AGE", referrer);
+            userBundle.putString("SAVED_PROFILE_AGE", age);
+            userBundle.putInt("SAVED_PROFILE_DIAMOND", noOfDiamond);
 
             Intent intent = new Intent(CreateProfileActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1254,10 +1461,10 @@ public class CreateProfileActivity extends BaseActivity {
             @Override
             public void run() {
 
-                File f = new File("/data/data/" + getPackageName() +  "/shared_prefs/UserDetails.xml");
+                File f = new File("/data/data/" + getPackageName() +  "/shared_prefs/PREF_NAME.xml");
 
                 if (f.exists()){
-                    SharedPreferences sharedPreferences = getSharedPreferences("UserDetails", MODE_PRIVATE);
+                    SharedPreferences sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
                     Boolean is_logged_in = sharedPreferences.getBoolean("is_logged_in", true);
                     if (is_logged_in) {
 
@@ -1294,8 +1501,11 @@ public class CreateProfileActivity extends BaseActivity {
     public void doFireBase(View view) {
     }
 
+    public void getVideos(View view) {
+    }
+
     private class TextWatcherListener implements TextWatcher {
-        private EditText editText;
+        private final EditText editText;
         private Timer timer = new Timer();
 
         private TextWatcherListener(EditText editText) {
@@ -1602,10 +1812,7 @@ public class CreateProfileActivity extends BaseActivity {
 
     public static boolean isOnline(ConnectivityManager cm) {
         @SuppressLint("MissingPermission") NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        }
-        return false;
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
     public void sendTextMessage(String uPhoneNumber, String smsMessage) {
         Bundle smsBundle = new Bundle();
@@ -2024,6 +2231,7 @@ public class CreateProfileActivity extends BaseActivity {
         hashMap.put("image", "");
         Intent mainIntent = new Intent(CreateProfileActivity.this, MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        mainIntent.putExtra("HashMap",hashMap);
         startActivity(mainIntent);
         progressDialog.dismiss();
         finish();

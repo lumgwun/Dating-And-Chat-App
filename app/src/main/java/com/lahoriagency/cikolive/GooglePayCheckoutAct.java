@@ -9,6 +9,8 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -16,6 +18,7 @@ import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -83,6 +86,9 @@ public class GooglePayCheckoutAct extends AppCompatActivity {
     private int diamondCount;
     private PaymentsClient mPaymentsClient;
     private Diamond diamond;
+    private AppCompatButton btnContinue;
+    private LinearLayout layoutGoogle;
+    private TextView txtPayingFor;
     ActivityResultLauncher<IntentSenderRequest> resolvePaymentForResult = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(),
             result -> {
@@ -114,7 +120,10 @@ public class GooglePayCheckoutAct extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_checkout);
+        btnContinue = findViewById(R.id.con_to_Checkout);
+        txtPayingFor = findViewById(R.id.payingForText);
         addToGoogleWalletButton = findViewById(R.id.addG);
+        layoutGoogle = findViewById(R.id.layoutGoogle);
         addToGoogleWalletButtonContainer = findViewById(R.id.buy_with_g);
         gPayBundle= new Bundle();
         mPaymentsClient = PaymentsUtil.createPaymentsClient(this);
@@ -133,6 +142,17 @@ public class GooglePayCheckoutAct extends AppCompatActivity {
         qbUser = gson1.fromJson(json1, QBUser.class);
 
         initializeUi();
+        btnContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addToGoogleWalletButton.setVisibility(View.VISIBLE);
+                addToGoogleWalletButtonContainer.setVisibility(View.VISIBLE);
+                googlePayButton.setVisibility(View.VISIBLE);
+                layoutGoogle.setVisibility(View.VISIBLE);
+
+            }
+        });
+        btnContinue.setOnClickListener(this::continueToG);
         gPayBundle=getIntent().getExtras();
         if(gPayBundle !=null){
             amount=gPayBundle.getLong("Amount");
@@ -140,6 +160,9 @@ public class GooglePayCheckoutAct extends AppCompatActivity {
             qbUser=gPayBundle.getParcelable("QBUser");
             profileID=gPayBundle.getInt("SAVED_PROFILE_ID");
 
+        }
+        if(amount >0){
+            txtPayingFor.setText("USD"+amount);
         }
 
         //model = new ViewModelProvider(this).get(CheckoutViewModel.class);
@@ -232,6 +255,7 @@ public class GooglePayCheckoutAct extends AppCompatActivity {
             savedProfile=gPayBundle.getParcelable("SavedProfile");
             qbUser=gPayBundle.getParcelable("QBUser");
             profileID=gPayBundle.getInt("SAVED_PROFILE_ID");
+            numberOfDiamonds=gPayBundle.getInt("numberOfDiamonds");
 
         }
         if(savedProfile !=null){
@@ -243,7 +267,7 @@ public class GooglePayCheckoutAct extends AppCompatActivity {
         }else {
             try {
 
-                diamondCount=diamond.getDiamondCount();
+                diamondCount=0;
 
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -259,7 +283,7 @@ public class GooglePayCheckoutAct extends AppCompatActivity {
             Toast.makeText(
                     this, getString(R.string.payments_show_name, billingName),
                     Toast.LENGTH_LONG).show();
-            numberOfDiamonds = Math.toIntExact(amount / 5);
+            //numberOfDiamonds = Math.toIntExact(amount / 5);
 
             diamondCount=diamondCount+numberOfDiamonds;
 
@@ -327,5 +351,8 @@ public class GooglePayCheckoutAct extends AppCompatActivity {
 
             addToGoogleWalletButton.setClickable(true);
         }
+    }
+
+    public void continueToG(View view) {
     }
 }

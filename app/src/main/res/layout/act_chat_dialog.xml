@@ -1,27 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context="com.lahoriagency.cikolive.NewPackage.ChatDialogActivity">
+    <TextView
+        android:id="@+id/textv_c"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/gilroy_regular"
+        android:gravity="center"
+        android:maxLines="1"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        tools:text="Chats" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_dialog_recycler_view"
         android:layout_width="match_parent"
+        android:padding="10dp"
         android:layout_height="wrap_content">
 
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/chat_dialog_add_user"
+    <LinearLayout
+        android:id="@+id/fabLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="30dp"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/ic_add"/>
+        android:layout_marginRight="5dp"
+        android:padding="12dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:clipToPadding="false"
+        android:gravity="center_vertical"
+        android:layout_gravity="bottom|end"
+        android:visibility="visible">
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red_brown_dark"
+            android:text="Create New Session"/>
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/chat_dialog_add_user"
+            android:layout_width="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_add"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fabLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:gravity="center_vertical"
+        android:layout_marginRight="5dp"
+        android:padding="12dp"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="bottom|end"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@color/color_blue_accent"
+            android:text="Add Users to Sessions"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab2_add_sessions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/fab_add"
+            app:fabSize="normal"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/fabLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:layout_marginRight="5dp"
+        android:padding="12dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="bottom|end"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@color/red_brown_dark"
+            android:text="Dashboard Home"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab3_chat_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            app:fab_colorNormal="@color/white"
+            app:srcCompat="@drawable/ic_home_black_24dp"
+            android:tint="@android:color/white"
+            app:fabSize="normal"/>
+    </LinearLayout>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

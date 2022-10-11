@@ -27,6 +27,9 @@
         <com.devspark.robototextview.widget.RobotoTextView
             android:id="@+id/text_splash_app_title"
             style="@style/SplashAppTitleStyle"
+            android:fontFamily="@font/hipster_script_pro"
+            android:gravity="center"
+            android:textColor="@color/white"
             tools:text="@string/app_name" />
 
         <com.devspark.robototextview.widget.RobotoTextView
@@ -38,16 +41,19 @@
 
     <com.devspark.robototextview.widget.RobotoTextView
         android:id="@+id/dim"
-        android:background="@drawable/rect6h"
-        style="@style/SplashAppVersionStyle"
+        android:background="@drawable/rect6d"
+        style="@style/SplashAppTitleStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        android:padding="40dp"
+        android:textColor="@color/red_brown_dark"
+        android:textSize="20sp"
+        android:fontFamily="@font/hipster_script_pro"
+        android:gravity="center"
+        android:padding="10dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
-        android:fontFamily="@font/gilroy_bold"
         tools:text="Your best Dating App" />
 
     <ImageView

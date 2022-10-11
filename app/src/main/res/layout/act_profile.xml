@@ -130,7 +130,47 @@
                     tools:text="I am a lovely person who want to flirt with Girls" />
 
             </LinearLayout>
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/rect6d"
+                android:layout_height="5dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:text="Videos"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:id="@+id/prof_video_recy"
+                android:padding="10dp"
+                android:clipToPadding="false"
+                android:layout_height="wrap_content"/>
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/rect6d"
+                android:layout_height="5dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:text="Pictures"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:id="@+id/prof_pix_recy"
+                android:clipToPadding="false"
+                android:padding="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
+
+
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/profileFab"
@@ -138,10 +178,11 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:scaleType="center"
+            android:padding="20dp"
+            app:fab_progress_backgroundColor="@color/black"
             android:src="@drawable/down_arrow_foreground"
-            android:tint="@color/white"
             android:visibility="visible"
-            app:backgroundTint="#f1f3f5"
+            app:backgroundTint="@color/white"
             app:elevation="4dp"
             app:layout_anchor="@id/profile_image_section"
             app:layout_anchorGravity="bottom|right|end"

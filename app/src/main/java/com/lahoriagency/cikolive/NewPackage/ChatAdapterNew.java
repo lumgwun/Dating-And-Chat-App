@@ -71,23 +71,23 @@ public class ChatAdapterNew extends QBMessagesAdapter<QBChatMessage> implements 
     protected void onBindViewMsgLeftHolder(TextMessageHolder holder, QBChatMessage chatMessage, int position) {
         holder.timeTextMessageTextView.setVisibility(View.GONE);
 
-        RobotoTextView opponentNameTextView = holder.itemView.findViewById(R.id.opponent_name_text_view);
+        /*RobotoTextView opponentNameTextView = holder.itemView.findViewById(R.id.opponent_name_text_view);
 
         opponentNameTextView.setTextColor(UiUtils.getRandomTextColorById(chatMessage.getSenderId()));
         opponentNameTextView.setText(getSenderName(chatMessage));
-        opponentNameTextView.setVisibility(View.GONE);
+        opponentNameTextView.setVisibility(View.GONE);*/
 
-        TextView customMessageTimeTextView = holder.itemView.findViewById(R.id.custom_msg_text_time_message);
-        customMessageTimeTextView.setText(getDate(chatMessage.getDateSent()));
+       // TextView customMessageTimeTextView = holder.itemView.findViewById(R.id.custom_msg_text_time_message);
+        //customMessageTimeTextView.setText(getDate(chatMessage.getDateSent()));
 
         super.onBindViewMsgLeftHolder(holder, chatMessage, position);
     }
 
     @Override
     protected void onBindViewAttachLeftHolder(ImageAttachHolder holder, QBChatMessage chatMessage, int position) {
-        TextView opponentNameTextView = holder.itemView.findViewById(R.id.opponent_name_attach_view);
-        opponentNameTextView.setTextColor(UiUtils.getRandomTextColorById(chatMessage.getSenderId()));
-        opponentNameTextView.setText(getSenderName(chatMessage));
+        //TextView opponentNameTextView = holder.itemView.findViewById(R.id.opponent_name_attach_view);
+        //opponentNameTextView.setTextColor(UiUtils.getRandomTextColorById(chatMessage.getSenderId()));
+        //opponentNameTextView.setText(getSenderName(chatMessage));
 
         super.onBindViewAttachLeftHolder(holder, chatMessage, position);
     }

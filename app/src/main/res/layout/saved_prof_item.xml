@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:transitionName="cardT"
+    android:id="@+id/user_card_prof"
+    app:cardUseCompatPadding="true"
+    card_view:cardCornerRadius="8dp"
+    card_view:cardBackgroundColor="@color/gray_10">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/Rel_L"
+        android:background="@drawable/shape_layer1d"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:id="@+id/layoutUp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/rect6b">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/user_prof_image"
+                android:layout_width="70dp"
+                android:src="@drawable/img_model_2"
+                android:layout_height="70dp"
+                android:layout_marginEnd="10dp"
+                android:transitionName="user_swipe_image_transition"
+                android:scaleType="centerCrop"/>
+            <TextView
+                android:id="@+id/userN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/proxima_soft_semibold"
+                android:textStyle="bold"
+                android:text="Ada Becky"
+                android:textColor="@color/red_brown_dark"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:weightSum="2"
+            android:layout_below="@+id/layoutUp">
+
+            <TextView
+                android:id="@+id/diamonds_default"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/proxima_soft_semibold"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:text="Chat Diamonds"
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/_distanceAway"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/proxima_soft_semibold"
+                android:textStyle="bold"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:text="5km away"
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="16sp" />
+
+
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

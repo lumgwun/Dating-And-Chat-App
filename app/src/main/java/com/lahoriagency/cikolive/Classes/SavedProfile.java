@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.users.model.QBUser;
 
 import java.io.Serializable;
@@ -37,10 +38,12 @@ public class SavedProfile implements Parcelable, Serializable {
     public static final String SAVED_PROFILE_LOOKING_GENDER = "saved_p_Looking_for";
     public static final String SAVED_PROFILE_LAST_SEEN = "saved_p_Last_seen";
     public static final String SAVED_PROFILE_STATUS = "saved_p_Status";
+    public static final String SAVED_PROFILE_DBID = "saved_p_DBID";
+    public static final String SAVED_PROFILE_DIAMOND = "saved_p_Diamond";
 
 
-    public static final String CREATE_SAVED_PROFILES_TABLE = "CREATE TABLE IF NOT EXISTS " + SAVED_PROFILE_TABLE + " (" + SAVED_PROFILE_ID + " INTEGER , " + SAVED_PROFILE_NAME + " TEXT, " + SAVED_PROFILE_AGE + " TEXT, " + SAVED_PROFILE_LOC + " TEXT, " + SAVED_PROFILE_GENDER + " TEXT, " + SAVED_PROFILE_PHOTO + " TEXT, " + SAVED_PROFILE_PHONE + " TEXT, " +
-            SAVED_PROFILE_EMAIL + " TEXT, " + SAVED_PROFILE_PASSWORD + " TEXT, " + SAVED_PROFILE_DEVICEID + " TEXT,"+ SAVED_PROFILE_DOB + " TEXT,"+ SAVED_PROFILE_COUNTRY + " TEXT,"+ SAVED_PROFILE_REFERRER + " TEXT,"+ SAVED_PROFILE_ABOUT_ME + " TEXT,"+ SAVED_PROFILE_MY_INT + " TEXT,"+ SAVED_PROFILE_LOOKING_GENDER + " TEXT,"+ SAVED_PROFILE_DATE_JOINED + " TEXT, "+ SAVED_PROFILE_USERPROF_INFO_ID + " TEXT,"+ SAVED_PROFILE_QBID + " TEXT,"+ SAVED_PROFILE_LAST_SEEN + " TEXT," + SAVED_PROFILE_STATUS + " TEXT,"+ "FOREIGN KEY(" + SAVED_PROFILE_USERPROF_INFO_ID + ") REFERENCES " + USER_PROF_INFO_TABLE + "(" + USER_PROF_INFO_ID + "),"+ "FOREIGN KEY(" + SAVED_PROFILE_QBID + ") REFERENCES " + QBUSER_TABLE + "(" + QBUSER_ID + "),"+"PRIMARY KEY(" + SAVED_PROFILE_ID  + "))";
+    public static final String CREATE_SAVED_PROFILES_TABLE = "CREATE TABLE IF NOT EXISTS " + SAVED_PROFILE_TABLE + " (" + SAVED_PROFILE_ID + " INTEGER , " + SAVED_PROFILE_NAME + " TEXT, " + SAVED_PROFILE_AGE + " TEXT, " + SAVED_PROFILE_LOC + " TEXT, " + SAVED_PROFILE_GENDER + " TEXT, " + SAVED_PROFILE_PHOTO + " BLOB, " + SAVED_PROFILE_PHONE + " TEXT, " +
+            SAVED_PROFILE_EMAIL + " TEXT, " + SAVED_PROFILE_PASSWORD + " TEXT, " + SAVED_PROFILE_DEVICEID + " TEXT,"+ SAVED_PROFILE_DOB + " TEXT,"+ SAVED_PROFILE_COUNTRY + " TEXT,"+ SAVED_PROFILE_REFERRER + " TEXT,"+ SAVED_PROFILE_ABOUT_ME + " TEXT,"+ SAVED_PROFILE_MY_INT + " TEXT,"+ SAVED_PROFILE_LOOKING_GENDER + " TEXT,"+ SAVED_PROFILE_DATE_JOINED + " TEXT, "+ SAVED_PROFILE_USERPROF_INFO_ID + " TEXT,"+ SAVED_PROFILE_QBID + " TEXT,"+ SAVED_PROFILE_LAST_SEEN + " TEXT," + SAVED_PROFILE_STATUS + " TEXT," + SAVED_PROFILE_DBID + " INTEGER,"+ SAVED_PROFILE_DIAMOND + " INTEGER,"+ "FOREIGN KEY(" + SAVED_PROFILE_USERPROF_INFO_ID + ") REFERENCES " + USER_PROF_INFO_TABLE + "(" + USER_PROF_INFO_ID + "),"+ "FOREIGN KEY(" + SAVED_PROFILE_QBID + ") REFERENCES " + QBUSER_TABLE + "(" + QBUSER_ID + "),"+"PRIMARY KEY(" + SAVED_PROFILE_DBID  + "))";
 
 
     public static final String PICTURE_TABLE = "pictureTable";
@@ -58,7 +61,7 @@ public class SavedProfile implements Parcelable, Serializable {
     private String savedPName;
     private String savedPAge;
     private String savedPLocation;
-    private int savedPGender;
+    private String savedPGender;
     private String savedPPhone;
     private String savedPEmail;
     private String savedPDob;
@@ -81,14 +84,17 @@ public class SavedProfile implements Parcelable, Serializable {
     private ArrayList<PurchaseDiamond> purchaseDiamonds;
     private ArrayList<RedeemRequest> redeemRequests;
     private ArrayList<DiamondTransfer> diamondHistories;
+    private ArrayList<QBChatDialog> qbChatDialogArrayList;
+
     private Diamond savedPDiamond;
     private LoginReply loginReply;
+    private int defaultDiamond;
 
     public SavedProfile() {
         super();
     }
 
-    public SavedProfile(int profileID, String profileName, String emailStrg, String passwordStg, String aboutMe, String myIntrest, String myAge, int userGender, String gender, String joinedDate, String country, String cityStrg, Uri mImageUri) {
+    public SavedProfile(int profileID, String profileName, String emailStrg, String passwordStg, String aboutMe, String myIntrest, String myAge, String userGender, String gender, String joinedDate, String country, String cityStrg, Uri mImageUri) {
         this.savedProfID =profileID;
         this.savedPName =profileName;
         this.savedPEmail =emailStrg;
@@ -104,6 +110,11 @@ public class SavedProfile implements Parcelable, Serializable {
         this.savedPImage =mImageUri;
     }
 
+
+    public void addQbChatDialog(QBChatDialog chatDialog) {
+        qbChatDialogArrayList = new ArrayList<>();
+        qbChatDialogArrayList.add(chatDialog);
+    }
     public void addRedeemRequest(int id, String date, int type, int diamondCount, String amount) {
         redeemRequests = new ArrayList<>();
         RedeemRequest redeemRequest = new RedeemRequest(id,date, type, diamondCount,amount);
@@ -146,7 +157,7 @@ public class SavedProfile implements Parcelable, Serializable {
         savedPName = in.readString();
         savedPAge = in.readString();
         savedPLocation = in.readString();
-        savedPGender = in.readInt();
+        savedPGender = in.readString();
         savedPPhone = in.readString();
         savedPEmail = in.readString();
         savedPPassword = in.readString();
@@ -166,7 +177,7 @@ public class SavedProfile implements Parcelable, Serializable {
         }
     };
 
-    public SavedProfile(String surname, String emailStrg, String passwordStg, String savedPAboutMe, String savedPMyInterest, String savedPAge, int myGender, String savedPLookingFor, String savedPDateJoined, String savedPCountry, String cityStrg, Uri mImageUri) {
+    public SavedProfile(String surname, String emailStrg, String passwordStg, String savedPAboutMe, String savedPMyInterest, String savedPAge, String myGender, String savedPLookingFor, String savedPDateJoined, String savedPCountry, String cityStrg, Uri mImageUri) {
      this.savedPName =surname;
         this.savedPEmail =emailStrg;
         this.savedPPassword =passwordStg;
@@ -226,11 +237,11 @@ public class SavedProfile implements Parcelable, Serializable {
     }
 
 
-    public int getSavedPGender() {
+    public String getSavedPGender() {
         return savedPGender;
     }
 
-    public void setSavedPGender(int savedPGender) {
+    public void setSavedPGender(String savedPGender) {
         this.savedPGender = savedPGender;
     }
 
@@ -277,7 +288,7 @@ public class SavedProfile implements Parcelable, Serializable {
         parcel.writeString(savedPName);
         parcel.writeString(savedPAge);
         parcel.writeString(savedPLocation);
-        parcel.writeInt(savedPGender);
+        parcel.writeString(savedPGender);
         parcel.writeString(savedPPhone);
         parcel.writeString(savedPEmail);
         parcel.writeString(savedPPassword);
@@ -451,5 +462,21 @@ public class SavedProfile implements Parcelable, Serializable {
 
     public LoginReply getLoginReply() {
         return loginReply;
+    }
+
+    public int getDefaultDiamond() {
+        return defaultDiamond;
+    }
+
+    public void setDefaultDiamond(int defaultDiamond) {
+        this.defaultDiamond = defaultDiamond;
+    }
+
+    public ArrayList<QBChatDialog> getQbChatDialogArrayList() {
+        return qbChatDialogArrayList;
+    }
+
+    public void setQbChatDialogArrayList(ArrayList<QBChatDialog> qbChatDialogArrayList) {
+        this.qbChatDialogArrayList = qbChatDialogArrayList;
     }
 }

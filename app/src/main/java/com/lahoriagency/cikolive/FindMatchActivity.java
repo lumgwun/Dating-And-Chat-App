@@ -95,7 +95,7 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
     int profileID;
     private String userName,password,profileName;
     private QBUser qbUser;
-    private UserProfileInfo userProfileInfo;
+    private UserProfileInfo opponentProfileInfo,myProfileInfo;
 
 
 
@@ -111,7 +111,9 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
         setTitle("Find Match Mate");
         currentUser= new QBUser();
         savedProfile= new SavedProfile();
-        userProfileInfo= new UserProfileInfo();
+        opponentProfileInfo = new UserProfileInfo();
+        myProfileInfo = new UserProfileInfo();
+
         gson= new Gson();
         gson1= new Gson();
         gson2= new Gson();
@@ -128,7 +130,8 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
         json1 = userPreferences.getString("LastQBUserUsed", "");
         currentUser = gson1.fromJson(json1, QBUser.class);
         json2 = userPreferences.getString("LastUserProfileInfoUsed", "");
-        userProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
+        myProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
+        //opponentProfileInfo = gson2.fromJson(json2, UserProfileInfo.class);
 
         loadPermissions(Manifest.permission.ACCESS_FINE_LOCATION, REQUEST_FINE_LOCATION);
         locationListener = new GPSLocationListener();
@@ -214,7 +217,9 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
             }
         } else if (requestCode == REQUEST_DIALOG_ID_FOR_UPDATE) {
             Fragment fragment = contentFragment.getFragmentForPosition(2);
-            fragment.onActivityResult(requestCode, resultCode, data);
+            if (fragment != null) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
         } else if (requestCode == UserFragment.REQUEST_SETTINGS_CODE) {
             if (data != null) {
                 if (data.getIntExtra("action", 0) == SettingsActivity.LOGOUT_ACTION) {
@@ -225,7 +230,9 @@ public class FindMatchActivity extends AppCompatActivity implements GoogleApiCli
             }
         } else {
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frag_match);
-            fragment.onActivityResult(requestCode, resultCode, data);
+            if (fragment != null) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 

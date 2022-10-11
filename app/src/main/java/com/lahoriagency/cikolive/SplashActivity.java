@@ -94,7 +94,7 @@ public class SplashActivity extends AppCompatActivity {
         setTitle("Welcome to CIKO Live");
         sharedPrefsHelper= new SharedPrefsHelper(this);
         videoview = (VideoView) findViewById(R.id.videoView_Splash);
-        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.ciko_video);
+        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.ciko_video1);
         videoview.setVideoURI(uri);
         videoview.start();
 
@@ -165,7 +165,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         videoview = (VideoView) findViewById(R.id.videoView_Splash);
-        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.ciko_video);
+        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.ciko_video1);
         videoview.setVideoURI(uri);
         videoview.start();
 

@@ -48,7 +48,6 @@
 
         <!--Message Info Container-->
         <LinearLayout
-            android:id="@+id/ll_message_info_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
@@ -102,7 +101,6 @@
                 tools:visibility="visible">
 
                 <TextView
-                    android:id="@+id/tv_forwarded_from"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/color_search_hint"
@@ -162,7 +160,6 @@
                 tools:text="Conference started" />
 
             <TextView
-                android:id="@+id/tv_conference_not_join"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/incoming_mes_join_bg"
@@ -211,7 +208,6 @@
                 tools:visibility="visible">
 
                 <TextView
-                    android:id="@+id/tv_image_f_from"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/color_search_hint"
@@ -245,7 +241,6 @@
             tools:visibility="visible">
 
             <RelativeLayout
-                android:id="@+id/rl_video_attach_preview_container"
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
                 android:background="@drawable/attachment_video_placeholder">
@@ -257,7 +252,6 @@
                     android:scaleType="centerCrop" />
 
                 <ImageView
-                    android:id="@+id/iv_attach_video_play_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -290,7 +284,6 @@
                 tools:visibility="visible">
 
                 <TextView
-                    android:id="@+id/tv_video_forward_from"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/color_search_hint"
@@ -311,7 +304,6 @@
 
             <!--Video Info Container-->
             <LinearLayout
-                android:id="@+id/ll_attach_video_info_container"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_alignParentBottom="true"
@@ -348,7 +340,6 @@
             tools:visibility="visible">
 
             <RelativeLayout
-                android:id="@+id/rl_file_attach_preview_container"
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
                 android:background="@drawable/attachment_file_placeholder">
@@ -380,7 +371,6 @@
                 tools:visibility="visible">
 
                 <TextView
-                    android:id="@+id/tv_file_forward_from"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/color_search_hint"
@@ -401,7 +391,6 @@
 
             <!--File Info Container-->
             <LinearLayout
-                android:id="@+id/ll_attach_file_info_con"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_alignParentBottom="true"

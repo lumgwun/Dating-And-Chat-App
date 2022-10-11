@@ -359,7 +359,6 @@ taken when we met lasttime..! 💖"
                         app:cardCornerRadius="10dp">
 
                         <ImageView
-                            android:id="@+id/img"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
 

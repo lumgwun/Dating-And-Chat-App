@@ -14,7 +14,6 @@
         android:background="@drawable/shape_layer1c"
         android:layout_height="wrap_content">
         <com.google.android.material.bottomappbar.BottomAppBar
-            android:id="@+id/bottomAppBarCon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"

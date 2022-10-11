@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.lahoriagency.cikolive">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -14,6 +13,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <permission android:name="android.permission.READ_CALENDAR" />
+    <permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission
         android:name="android.permission.LOCAL_MAC_ADDRESS"
         tools:ignore="ProtectedPermissions" />
@@ -41,6 +44,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACTION_MANAGE_OVERLAY_PERMISSION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -60,6 +64,22 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:node="replace">
 
+        <activity
+            android:name=".NewPackage.ChatSessionAction"
+            android:exported="true"
+            android:theme="@style/Theme.CIKOLIVE.NoActionBar">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="cikolive.page.link"
+                    android:pathPrefix="/session"
+                    android:scheme="https" />
+            </intent-filter>
+            <!-- android:pathPrefix="/signUp" -->
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -166,8 +186,21 @@
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name=".CreateProfileActivity"
+            android:exported="true"
             android:label="@string/title_activity_create_profile"
-            android:theme="@style/Theme.CIKOLIVE.NoActionBar" />
+            android:theme="@style/Theme.CIKOLIVE.NoActionBar">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="cikolive.page.link"
+                    android:pathPrefix="/profile"
+                    android:scheme="https" />
+            </intent-filter>
+            <!-- android:pathPrefix="/signUp" -->
+        </activity>
         <activity
             android:name=".RedeemRequestActivity"
             android:label="@string/title_activity_redeem_request"
@@ -234,14 +267,18 @@
             android:value="default_channel_id" />
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" /> <!-- <12451000 -->
+            android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.quickblox.messages.TYPE"
             android:value="GCM" /> <!-- android:name="com.quickblox.messages.SENDER_ID" -->
         <!-- android:value="@string/sender_id" /> -->
         <meta-data
             android:name="com.quickblox.messages.QB_ENVIRONMENT"
-            android:value="DEVELOPMENT" />
+            android:value="PRODUCTION" />
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
+
         <receiver
             android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
             android:exported="true"

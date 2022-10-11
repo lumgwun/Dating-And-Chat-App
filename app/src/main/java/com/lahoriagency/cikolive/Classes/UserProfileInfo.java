@@ -20,7 +20,9 @@ public class UserProfileInfo implements Parcelable {
     private String name;
     private List<String> photoLinks;
     private ArrayList<String> photoLinkArray;
-    private ArrayList<Uri> profileMediaFiles;
+    //private ArrayList<Uri> profileMediaFilesUri;
+    private ArrayList<String> videoLinks;
+    //private ArrayList<Uri> videoLinksUri;
     private String upiPhoto;
     private int age;
     private int matchValue;
@@ -29,6 +31,7 @@ public class UserProfileInfo implements Parcelable {
     private String upiAboutMe;
     private String upiInterest;
     private String upiMyCountry;
+    private double chatDiamondAmount;
     private String upiLookingForGender;
 
     public static final String USER_PROF_INFO_ID = "upi_Id";
@@ -48,6 +51,7 @@ public class UserProfileInfo implements Parcelable {
     public static final String CREATE_USER_PROF_INFO_TABLE = "CREATE TABLE IF NOT EXISTS " + USER_PROF_INFO_TABLE + " ( " + USER_PROF_INFO_ID + " INTEGER  , " + USER_PROF_QB_ID + " INTEGER , " + USER_PROF_INFO_SP_ID + " INTEGER  , " +
             USER_PROF_INFO_NAME + " TEXT, " + USER_PROF_INFO_DESC + " TEXT, " + USER_PROF_INFO_AGE + " TEXT, " + USER_PROF_INFO_MATCHED_VALUE + " TEXT, " + USER_PROF_INFO_DISTANCE + " TEXT, " + USER_PROF_INFO_ABOUT_ME + " TEXT, "+ USER_PROF_INTEREST20 + " TEXT, "+ USER_PROF_INFO_COUNTRY + " TEXT, "+
             "FOREIGN KEY(" + USER_PROF_QB_ID + ") REFERENCES " + QBUSER_TABLE + "(" + QBUSER_ID + "),"+ "FOREIGN KEY(" + USER_PROF_INFO_SP_ID + ") REFERENCES " + SAVED_PROFILE_TABLE + "(" + SAVED_PROFILE_ID + "),"+"PRIMARY KEY(" + USER_PROF_INFO_ID  + "))";
+
 
     public UserProfileInfo() {
         super();
@@ -257,15 +261,33 @@ public class UserProfileInfo implements Parcelable {
         return upiPhoto;
     }
 
+
     public void setUpiPhoto(String upiPhoto) {
         this.upiPhoto = upiPhoto;
     }
 
-    public ArrayList<Uri> getProfileMediaFiles() {
-        return profileMediaFiles;
+   /* public ArrayList<Uri> getProfileMediaFilesUri() {
+        return profileMediaFilesUri;
     }
 
-    public void setProfileMediaFiles(ArrayList<Uri> profileMediaFiles) {
-        this.profileMediaFiles = profileMediaFiles;
+    public void setProfileMediaFilesUri(ArrayList<Uri> profileMediaFilesUri) {
+        this.profileMediaFilesUri = profileMediaFilesUri;
+    }*/
+
+    public ArrayList<String> getVideoLinks() {
+        return videoLinks;
+    }
+
+    public void setVideoLinks(ArrayList<String> videoLinks) {
+        this.videoLinks = videoLinks;
+    }
+
+
+    public double getChatDiamondAmount() {
+        return chatDiamondAmount;
+    }
+
+    public void setChatDiamondAmount(double chatDiamondAmount) {
+        this.chatDiamondAmount = chatDiamondAmount;
     }
 }

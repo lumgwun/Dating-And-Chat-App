@@ -1,9 +1,8 @@
 package com.lahoriagency.cikolive;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,8 +16,10 @@ import java.util.ArrayList;
 
 public class MediaSliderAct extends MediaSliderActivity {
     private Bundle bundle;
-    ArrayList<String> list;
-    private String mediaType;
+    ArrayList<String> videoList;
+    ArrayList<String> imageList;
+    private String mediaFileType;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,17 +27,20 @@ public class MediaSliderAct extends MediaSliderActivity {
         //setContentView(R.layout.act_photo_slider);
         bundle= new Bundle();
         bundle=getIntent().getExtras();
-        list = new ArrayList<>();
+        videoList = new ArrayList<>();
         if(bundle !=null){
-            list=bundle.getStringArrayList("Pictures");
-            mediaType=bundle.getString("MediaType");
+            videoList =bundle.getStringArrayList("Videos");
+            imageList =bundle.getStringArrayList("Pictures");
+            mediaFileType=bundle.getString("mediaFileType");
         }
-        if(mediaType !=null){
-            if(mediaType.equalsIgnoreCase("Photo")){
-                loadMediaSliderView(list,"image",true,true,false,"Image-Slider","#000000",null,0);
+
+
+        if(mediaFileType !=null){
+            if(mediaFileType.equalsIgnoreCase("image")){
+                loadMediaSliderView(imageList,"image",true,true,false,"Image-Slider","#000000",null,0);
 
             }else {
-                loadMediaSliderView(list,"video",true,true,false,"Video-Slider","#000000",null,0);
+                loadMediaSliderView(videoList,"video",true,true,false,"Video-Slider","#000000",null,0);
             }
         }
 

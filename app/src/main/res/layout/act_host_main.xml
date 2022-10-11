@@ -105,7 +105,7 @@
                             android:background="@drawable/bg_cornered_rect_500"
                             android:backgroundTint="@color/red_13"
                             android:fontFamily="@font/gilroy_semi_bold"
-                            android:text="@string/pending"
+                            android:text="Verified"
                             android:textAllCaps="false"
                             android:textColor="@color/red"
                             android:textSize="14sp" />
@@ -255,10 +255,10 @@
                                 android:layout_weight="1"
                                 android:fontFamily="@font/gilroy_black"
                                 android:letterSpacing=".08"
-                                android:text="@string/dim_dim"
+                                android:text="Collect your money!"
                                 android:textAllCaps="true"
                                 android:textColor="@color/black"
-                                android:textSize="18sp" />
+                                android:textSize="12sp" />
 
 
                         </LinearLayout>
@@ -272,7 +272,7 @@
                         android:layout_marginTop="10dp"
                         android:fontFamily="@font/gilroy_bold"
                         android:letterSpacing=".07"
-                        android:text="23987"
+                        android:text="50"
                         android:textAllCaps="true"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
@@ -307,7 +307,7 @@
                         android:ellipsize="end"
                         android:fontFamily="@font/gilroy_regular"
                         android:maxLines="1"
-                        android:text="@string/minimum_threshold_50_000"
+                        android:text="minimum threshold 5000"
                         android:textColor="@color/gray_dark"
                         android:textSize="12sp" />
 
@@ -334,11 +334,9 @@
                     android:layout_marginTop="15dp"
                     android:background="@drawable/bg_cornered_rect_10"
                     android:backgroundTint="@color/bg_chats"
-                    android:padding="15dp">
-
+                    android:padding="5dp">
 
                     <TextView
-
                         android:id="@+id/tv_total"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -353,13 +351,14 @@
 
                     <TextView
                         android:id="@+id/tv_colectiont"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_total"
                         android:layout_marginTop="15dp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:letterSpacing=".07"
-                        android:text="23987"
+                        android:text="0"
+                        android:padding="20dp"
                         android:textAllCaps="true"
                         android:textColor="@color/gray_dark"
                         android:textSize="14sp" />
@@ -367,7 +366,6 @@
                         android:layout_width="match_parent"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="50dp"
-                        android:id="@+id/card_l1"
                         app:cardBackgroundColor="#f3f5f7"
                         android:layout_height="wrap_content">
 
@@ -378,7 +376,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_colectiont"
                         android:layout_marginTop="15dp"
-                        android:weightSum="2"
+                        android:weightSum="3"
                         android:backgroundTint="@color/red_brown_dark"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
@@ -390,7 +388,7 @@
                             android:layout_weight="1"
                             android:onClick="getDiamondHistory"
                             android:id="@+id/diamond_History"
-                            android:background="@drawable/bg_gradiant_500"
+                            android:background="@drawable/rect6da"
                             android:fontFamily="@font/gilroy_semi_bold"
                             android:gravity="center"
                             android:text="@string/history"
@@ -401,14 +399,30 @@
                             android:layout_width="0dp"
                             android:layout_height="43dp"
                             android:layout_weight="1"
+                            android:layout_marginEnd="10dp"
                             android:id="@+id/redeem_Btn_Request"
-                            android:background="@drawable/bg_gradiant_500"
+                            android:background="@drawable/rect6da"
                             android:fontFamily="@font/gilroy_semi_bold"
                             android:gravity="center"
                             android:onClick="goToRedeemReq"
                             android:text="@string/redeem_requests"
                             android:textColor="@color/black"
                             android:textSize="14sp" />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="0dp"
+                            android:layout_height="43dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
+                            android:layout_marginStart="10dp"
+                            android:onClick="transferDToWallet"
+                            android:id="@+id/diamond_transfer"
+                            android:background="@drawable/rect6da"
+                            android:fontFamily="@font/gilroy_semi_bold"
+                            android:gravity="center"
+                            android:text="Transfer to Wallet"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+
                     </LinearLayout>
 
 

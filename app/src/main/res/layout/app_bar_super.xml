@@ -17,12 +17,10 @@
             android:layout_height="wrap_content">
             <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
-                android:id="@+id/toolbar_cus"
                 android:layout_height="wrap_content"/>
 
             <FrameLayout
                 android:layout_height="match_parent"
-                android:id="@+id/frameContainer_cus2"
                 android:layout_width="match_parent">
 
                 <LinearLayout
@@ -33,7 +31,6 @@
                     android:background="@color/red_brown_dark"
                     android:layout_gravity="top">
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/profile_image_ciko"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:src="@drawable/ic_admin_user"
@@ -55,7 +52,6 @@
                         app:contentPadding="2dp">
 
                         <com.balysv.materialripple.MaterialRippleLayout
-                            android:id="@+id/acct2_layout"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             app:mrl_rippleAlpha="0.2"
@@ -70,7 +66,6 @@
                                 android:clickable="false">
 
                                 <androidx.appcompat.widget.AppCompatTextView
-                                    android:id="@+id/all_Super"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
@@ -126,7 +121,6 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/cus_BankBalance4444"
                 android:textAllCaps="true"
                 android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
@@ -158,7 +152,6 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/cus_BankN"
                     android:textAllCaps="true"
                     android:textStyle="bold"
                     android:gravity="center_horizontal"

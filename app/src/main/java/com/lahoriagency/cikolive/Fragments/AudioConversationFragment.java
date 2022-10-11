@@ -19,6 +19,7 @@ import com.quickblox.videochat.webrtc.AppRTCAudioManager;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("deprecation")
 public class AudioConversationFragment extends BaseConversationFragment implements CallActivity.OnChangeAudioDevice {
     private static final String TAG = AudioConversationFragment.class.getSimpleName();
 

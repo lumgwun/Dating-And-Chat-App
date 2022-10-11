@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/contentPanel"
+<androidx.appcompat.widget.LinearLayoutCompat android:id="@+id/contentPanel"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/random_color_3"
     android:layout_height="match_parent"
     android:clickable="true">
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/match_dialog_overlay"
         android:orientation="vertical">
     </FrameLayout>
     <LinearLayout
         android:id="@+id/match_dialog_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
@@ -45,60 +47,118 @@
             android:layout_gravity="center"
             android:gravity="center" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/match_dialog_image_left"
-                android:layout_width="@dimen/_96sdp"
-                android:layout_height="@dimen/_96sdp"
-                android:layout_marginRight="16dp"
-                app:civ_border_width="@dimen/_2sdp"
-                app:civ_border_color="@color/white"
-                tools:src="@drawable/ic_profile" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/match_dialog_image_right"
-                android:layout_width="@dimen/_96sdp"
-                android:layout_height="@dimen/_96sdp"
-                android:layout_marginLeft="16dp"
-                app:civ_border_width="@dimen/_2sdp"
-                app:civ_border_color="@color/white"
-                tools:src="@drawable/ic_admin_user" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-
-            android:orientation="vertical">
-            <Button
-                android:id="@+id/match_dialog_send_message"
-                android:layout_width="@dimen/_240sdp"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content"
-                android:text="Send message"
-                android:textColor="@color/cardview_light_background"
-                android:background="@drawable/rect6g"
-                />
-
-            <Button
-                android:id="@+id/match_dialog_keep_swiping"
-                android:layout_marginTop="16dp"
-                android:layout_width="@dimen/_240sdp"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content"
-                android:text="Keep swiping"
-                android:textColor="@color/cardview_light_background"
-                android:background="@drawable/rect6h"
-                />
-
-
-        </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+        <pl.bclogic.pulsator4droid.library.PulsatorLayout
+            android:id="@+id/pulsator"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="10dp"
+            app:pulse_color="@color/app_color"
+            app:pulse_count="4"
+            app:pulse_duration="7000"
+            app:pulse_interpolator="Accelerate"
+            app:pulse_repeat="0"
+            app:pulse_startFromScratch="true">
+
+            <RelativeLayout
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                android:layout_centerInParent="true">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/match_dialog_image_left"
+                    android:layout_width="@dimen/_96sdp"
+                    android:layout_height="@dimen/_96sdp"
+                    android:layout_marginRight="16dp"
+                    app:civ_border_width="@dimen/_2sdp"
+                    app:civ_border_color="@color/white"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/bg_cornered_rect_500"
+                    android:backgroundTint="@color/yellow_intense"
+                    tools:src="@drawable/ic_profile" />
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="20dp"
+                    app:cardCornerRadius="500dp">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/match_dialog_image_right"
+                        android:layout_width="@dimen/_96sdp"
+                        android:layout_height="@dimen/_96sdp"
+                        android:layout_marginLeft="16dp"
+                        app:civ_border_width="@dimen/_2sdp"
+                        app:civ_border_color="@color/white"
+                        android:backgroundTint="@color/yellow_intense"
+                        android:scaleType="centerCrop"
+                        tools:src="@drawable/img_model" />
+
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+
+        </pl.bclogic.pulsator4droid.library.PulsatorLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/match_dialog_send_message"
+            android:layout_width="@dimen/_240sdp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Send message"
+            android:textColor="@color/cardview_light_background"
+            android:background="@drawable/rect6g"
+            />
+
+        <Button
+            android:id="@+id/match_dialog_keep_swiping"
+            android:layout_marginTop="16dp"
+            android:layout_width="@dimen/_240sdp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Keep swiping"
+            android:textColor="@color/cardview_light_background"
+            android:background="@drawable/rect6h" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/fabLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:gravity="center_horizontal"
+        android:padding="12dp"
+        android:orientation="vertical"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center_horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:text="Continue search"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_con_match"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/fab_add"
+            app:fabSize="normal"/>
+    </LinearLayout>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

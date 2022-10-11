@@ -66,7 +66,6 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:id="@+id/item_l3"
                 android:orientation="vertical"
                 android:layout_below="@id/item_l1"
                 android:layout_height="wrap_content">

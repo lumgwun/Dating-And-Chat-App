@@ -2,6 +2,7 @@ package com.lahoriagency.cikolive.NewPackage;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,10 +33,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 import com.lahoriagency.cikolive.Adapters.OpponentsFromCallAdapter;
+import com.lahoriagency.cikolive.Adapters.SavedProfileAdapter;
+import com.lahoriagency.cikolive.Adapters.UserSwipeProfileAdapter;
 import com.lahoriagency.cikolive.AppSupportAct;
 import com.lahoriagency.cikolive.AttachmentImageActivity;
 import com.lahoriagency.cikolive.BaseActNew;
@@ -43,7 +47,6 @@ import com.lahoriagency.cikolive.CallActivity;
 import com.lahoriagency.cikolive.Classes.AttachmentPreviewAdapter;
 import com.lahoriagency.cikolive.Classes.AttachmentPreviewAdapterView;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
-import com.lahoriagency.cikolive.Classes.CircularProgressIndicator;
 import com.lahoriagency.cikolive.Classes.Diamond;
 import com.lahoriagency.cikolive.Classes.ImagePickHelper;
 import com.lahoriagency.cikolive.Classes.PushUtils;
@@ -60,6 +63,8 @@ import com.lahoriagency.cikolive.Classes.VerboseQbChatConnectionListener;
 import com.lahoriagency.cikolive.Classes.WebRtcSessionManager;
 import com.lahoriagency.cikolive.Conference.AppConference;
 import com.lahoriagency.cikolive.Conference.OpponentsActivity;
+import com.lahoriagency.cikolive.DataBase.SavedProfileDAO;
+import com.lahoriagency.cikolive.DataBase.UserProfileInfoDAO;
 import com.lahoriagency.cikolive.Fragments.ProgressDialogFragment;
 import com.lahoriagency.cikolive.Interfaces.Consts;
 import com.lahoriagency.cikolive.Interfaces.OnImagePickedListener;
@@ -70,6 +75,8 @@ import com.lahoriagency.cikolive.ProfileActivity;
 import com.lahoriagency.cikolive.R;
 import com.lahoriagency.cikolive.SettingsActivity;
 import com.melnykov.fab.FloatingActionButton;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 import com.quickblox.auth.session.QBSettings;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.listeners.QBMessageStatusListener;
@@ -91,11 +98,13 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -108,7 +117,7 @@ import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
 import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
 @SuppressWarnings("deprecation")
-public class ChatMatchAct extends BaseActNew implements OnImagePickedListener, QBMessageStatusListener, View.OnClickListener {
+public class ChatMatchAct extends BaseActNew implements OnImagePickedListener, QBMessageStatusListener, View.OnClickListener,SavedProfileAdapter.OnItemsClickListener {
     public static final String EXTRA_DIALOG_ID = "dialogId";
     public static final String userId = "userId";
     private static final String TAG = ChatMatchAct.class.getSimpleName();
@@ -167,6 +176,7 @@ public class ChatMatchAct extends BaseActNew implements OnImagePickedListener, Q
     private double liveAmt;
     private int liveDuration;
     private Bundle extras;
+    FloatingActionButton fabVideo;
     private View.OnClickListener openProfileActivityOnClickListener;
     private RelativeLayout emptyChatLayout;
     private TextView emptyChatMatchText;
@@ -178,7 +188,18 @@ public class ChatMatchAct extends BaseActNew implements OnImagePickedListener, Q
     long diff,minutes;
     private OpponentsFromCallAdapter fromCallAdapter;
     private String chatName;
-
+    private SwipyRefreshLayout refreshLayout;
+    private RecyclerView chatersRecylerView;
+    private UserSwipeProfileAdapter userSwipeProfileAdapter;
+    private ArrayList<UserProfileInfo> userArrayList;
+    private List<SavedProfile> profileArrayList;
+    private List<SavedProfile> profileAgeArrayList;
+    private UserProfileInfoDAO userProfileInfoDAO;
+    private SavedProfileDAO savedProfileDAO;
+    private  SavedProfile chatersSavedProf;
+    private String gender;
+    private SavedProfileAdapter savedProfAdapter;
+    private UserProfileInfo userProfileInfo;
 
     public static void start(Context context, boolean isRunForCall) {
         Intent intent = new Intent(context, ChatMatchAct.class);
@@ -206,10 +227,15 @@ public class ChatMatchAct extends BaseActNew implements OnImagePickedListener, Q
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_match_chat);
-        setTitle("Live Event");
+        setTitle("Live Chat");
         setStatusbarColor();
         extras= new Bundle();
         date= new Date();
+        userProfileInfo= new UserProfileInfo();
+        userArrayList= new ArrayList<>();
+        profileArrayList= new ArrayList<>();
+        savedProfileDAO= new SavedProfileDAO(this);
+        userProfileInfoDAO= new UserProfileInfoDAO(this);
         QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
@@ -241,11 +267,38 @@ public class ChatMatchAct extends BaseActNew implements OnImagePickedListener, Q
         emptyChatCircleImageView = _findViewById(R.id.empty_chat_layout_circle_image_view);
         emptyChatMatchValueText = _findViewById(R.id.empty_chat_layout_match_value);
         emptyChatIndicator = _findViewById(R.id.empty_chat_layout_indicator);
+        refreshLayout = findViewById(R.id.match_refresh_l);
+        chatersRecylerView = findViewById(R.id.list_chaters);
 
         if(savedProfile !=null){
             diamond=savedProfile.getSavedPDiamond();
 
         }
+        refreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh(SwipyRefreshLayoutDirection direction) {
+                loadUsersFromQb();
+            }
+        });
+
+        refreshLayout.setColorSchemeResources(R.color.color_new_blue, R.color.random_color_2, R.color.random_color_3, R.color.random_color_7);
+
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setStackFromEnd(true);
+        chatMessagesRecyclerView.setLayoutManager(layoutManager);
+
+        messagesList = new ArrayList<>();
+        chatAdapter = new ChatAdapterNew(this, qbChatDialog, messagesList);
+        chatAdapter.setPaginationHistoryListener(new PaginationListener());
+        chatMessagesRecyclerView.addItemDecoration(
+                new StickyRecyclerHeadersDecoration(chatAdapter));
+
+        chatMessagesRecyclerView.setAdapter(chatAdapter);
+        imageAttachClickListener = new ImageAttachClickListener();
+
+
+
         if(qbUser !=null){
             qbUserID=qbUser.getFileId();
         }
@@ -270,7 +323,7 @@ public class ChatMatchAct extends BaseActNew implements OnImagePickedListener, Q
             qbUserId = getIntent().getIntExtra(userId, 0);
             Log.v(TAG, "deserialized dialog = " + qbChatDialog);
             qbChatDialog.initForChat(QBChatService.getInstance());
-
+            QBChatDialog qbChatDialog= new QBChatDialog();
             initViews();
             setUpAppBar();
             initMessagesRecyclerView();
@@ -381,6 +434,34 @@ public class ChatMatchAct extends BaseActNew implements OnImagePickedListener, Q
 
 
     }
+    public void loadUsersFromQb() {
+        chatersRecylerView = findViewById(R.id.list_chaters);
+        userArrayList= new ArrayList<>();
+        profileAgeArrayList= new ArrayList<>();
+        savedProfile= new SavedProfile();
+        gson= new Gson();
+        currentUser= new QBUser();
+        gson1= new Gson();
+        gson2= new Gson();
+        qbUser= new QBUser();
+        diamond= new Diamond();
+        sharedPref= getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = sharedPref.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        userProfileInfoDAO= new UserProfileInfoDAO(this);
+        if(savedProfile !=null){
+            gender=savedProfile.getSavedPLookingFor();
+        }
+        savedProfileDAO= new SavedProfileDAO(this);
+        profileArrayList=savedProfileDAO.getAllSavedProfsForGender(gender);
+        chatersRecylerView.setLayoutManager(new LinearLayoutManager(ChatMatchAct.this, LinearLayoutManager.HORIZONTAL, false));
+        Collections.shuffle(profileArrayList, new Random(System.currentTimeMillis()));
+        savedProfAdapter = new SavedProfileAdapter(ChatMatchAct.this, profileArrayList);
+        chatersRecylerView.setItemAnimator(new DefaultItemAnimator());
+        chatersRecylerView.setNestedScrollingEnabled(false);
+        chatersRecylerView.setClickable(true);
+        chatersRecylerView.setAdapter(savedProfAdapter);
+    }
     public void showMessage(QBChatMessage message) {
         messageEditText = _findViewById(R.id.edit_chat_message);
         iv_firsticon = findViewById(R.id.iv_1sticon);
@@ -485,8 +566,8 @@ public class ChatMatchAct extends BaseActNew implements OnImagePickedListener, Q
         emptyChatMatchValueText = _findViewById(R.id.empty_chat_layout_match_value);
         emptyChatIndicator = _findViewById(R.id.empty_chat_layout_indicator);
 
-        videoButton = findViewById(R.id.video_floating_button);
-        videoButton.setOnClickListener(this);
+        fabVideo = findViewById(R.id.video_floating_button);
+        fabVideo.setOnClickListener(this);
 
         attachmentPreviewContainerLayout = _findViewById(R.id.layout_attachment_preview_container);
 
@@ -597,16 +678,28 @@ public class ChatMatchAct extends BaseActNew implements OnImagePickedListener, Q
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
+        switch (item.getItemId()) {
+            case R.id.menu_chat_action_info:
 
-
+                return true;
+            case R.id.menu_chat_action_add:
+                // do something
+                return true;
+            case R.id.menu_chat_action_leave:
+                leaveGroupChat();
+                return true;
+            case R.id.menu_chat_payment:
+                // do something
+                return true;
+            case R.id.menu_chat_action_delete:
+                deleteChat();
+                return true;
             default:
-                return super.onOptionsItemSelected(item);
+                return super.onContextItemSelected(item);
         }
+
     }
 
     private void sendDialogId() {
@@ -738,6 +831,8 @@ public class ChatMatchAct extends BaseActNew implements OnImagePickedListener, Q
         if(qbChatDialog !=null){
             chatName = QbDialogUtils.getDialogName(qbChatDialog);
 
+        }else {
+            showEmptyChatView();
         }
 
         String chatName = QbDialogUtils.getDialogName(qbChatDialog);
@@ -760,12 +855,24 @@ public class ChatMatchAct extends BaseActNew implements OnImagePickedListener, Q
             photoLink = QbDialogUtils.getQBUserPhotos(qbChatDialog).get(0);
         }
         AppConference.getImageLoader().downloadImage(photoLink, actionBarImageView);
-        abar.setCustomView(viewActionBar, params);
-        abar.setDisplayShowCustomEnabled(true);
-        abar.setDisplayShowTitleEnabled(false);
-        abar.setDisplayHomeAsUpEnabled(true);
-        abar.setIcon(R.color.transparent);
-        abar.setHomeButtonEnabled(true);
+        if (abar != null) {
+            abar.setCustomView(viewActionBar, params);
+        }
+        if (abar != null) {
+            abar.setDisplayShowCustomEnabled(true);
+        }
+        if (abar != null) {
+            abar.setDisplayShowTitleEnabled(false);
+        }
+        if (abar != null) {
+            abar.setDisplayHomeAsUpEnabled(true);
+        }
+        if (abar != null) {
+            abar.setIcon(R.color.transparent);
+        }
+        if (abar != null) {
+            abar.setHomeButtonEnabled(true);
+        }
         final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_material);
         upArrow.setColorFilter(getResources().getColor(R.color.primary_purple), PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
@@ -777,8 +884,8 @@ public class ChatMatchAct extends BaseActNew implements OnImagePickedListener, Q
         emptyChatTimeText.setText(TimeUtils.getTimeSpan(qbChatDialog.getCreatedAt()));
         AppConference.getImageLoader().downloadImage(photoLink, emptyChatCircleImageView);
         emptyChatCircleImageView.setOnClickListener(openProfileActivityOnClickListener);
-        emptyChatIndicator.setProgress(qbChatDialog.getCustomData().getInteger("matchValue"), 100);
-        emptyChatMatchValueText.setText(qbChatDialog.getCustomData().getInteger("matchValue").toString() + "%");
+        emptyChatIndicator.setProgress(qbChatDialog.getCustomData().getInteger("matchValue"), true);
+        emptyChatMatchValueText.setText(MessageFormat.format("{0}%", qbChatDialog.getCustomData().getInteger("matchValue").toString()));
 
         Animation emptyChatAnim = AnimationUtils.loadAnimation(ChatMatchAct.this, R.anim.empty_chat_elements);
         emptyChatAnim.setInterpolator(new SpringInterpolator(0.4f));
@@ -1064,7 +1171,6 @@ public class ChatMatchAct extends BaseActNew implements OnImagePickedListener, Q
 
         opponentsList.add(qbUserId);
 
-
         QBRTCTypes.QBConferenceType conferenceType = isVideoCall
                 ? QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO
                 : QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO;
@@ -1089,6 +1195,21 @@ public class ChatMatchAct extends BaseActNew implements OnImagePickedListener, Q
 
     @Override
     public void processMessageRead(String s, String s1, Integer integer) {
+
+    }
+
+    @Override
+    public void onProfileClick(SavedProfile profile) {
+        userProfileInfo= new UserProfileInfo();
+        Intent intent = new Intent(ChatMatchAct.this, ProfileActivity.class);
+        if(profile !=null){
+            userProfileInfo = profile.getSavedPUserProfileInfo();
+
+        }
+        userProfileInfo.setMatchValue(qbChatDialog.getCustomData().getInteger("matchValue"));
+        intent.putExtra(EXTRA_USER_PROFILE, userProfileInfo);
+        intent.putExtra(EXTRA_SWIPE_VIEW_SOURCE, false);
+        startActivity(intent);
 
     }
 

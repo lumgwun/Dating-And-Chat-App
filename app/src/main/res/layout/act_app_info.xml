@@ -124,7 +124,6 @@
             tools:text="example.example.com" />
 
         <TextView
-            android:id="@+id/text_qa_version_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/appinfo_qa_verion"

@@ -17,7 +17,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:textAlignment="center"
-            android:id="@+id/title22"
             android:text="Diamond Tranx"
             android:padding="20dp"
             android:textColor="@color/colorPrimaryDark"
@@ -29,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:textAlignment="center"
-            android:id="@+id/txtRecycler"
             android:text="All transactions"
             android:padding="20dp"
             android:textColor="@color/colorPrimaryDark"
@@ -92,7 +90,6 @@
                 android:layout_height="wrap_content">
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/dob_text_sign"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -131,7 +128,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:textAlignment="center"
-            android:id="@+id/txtRecycByDate"
             android:text="Transactions for Date"
             android:padding="20dp"
             android:textColor="@color/colorPrimaryDark"
@@ -163,7 +159,6 @@
             android:orientation="vertical"
             android:layout_below="@id/cardReport"
             android:background="@drawable/rect6g"
-            android:id="@+id/layoutClient"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
             android:paddingBottom="20dp"
@@ -186,7 +181,6 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
         <TextView
-            android:id="@+id/notifi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/inputMessage2"

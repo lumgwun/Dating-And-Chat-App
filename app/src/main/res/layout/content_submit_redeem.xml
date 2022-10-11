@@ -22,7 +22,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
-                android:text="Select Payment Gateway"
+                android:text="Select Diamonds to Buy"
                 android:textSize="20sp"
                 android:gravity="center_horizontal"
                 android:layout_marginBottom="20dp"
@@ -30,11 +30,16 @@
                 android:layout_height="wrap_content"/>
             <androidx.appcompat.widget.AppCompatSpinner
                 android:layout_width="match_parent"
-                android:entries="@array/payment_Gateways"
+                android:entries="@array/diamonds"
                 android:padding="30dp"
+                android:textColor="@color/white"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
                 android:id="@+id/spnGateWays"
+                android:textColorHint="@color/white"
+                android:spinnerMode="dropdown"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/rect6da"
+                android:background="@drawable/rect6d"
                 android:layout_height="wrap_content"/>
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -44,14 +49,12 @@
                 android:layout_height="wrap_content">
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
-                    android:text="1 Diamond = USD5"
+                    android:text="500 Diamond = USD10"
                     android:textSize="20sp"
                     android:gravity="center_horizontal"
                     android:layout_marginBottom="20dp"
                     android:layout_marginTop="10dp"
                     android:layout_height="wrap_content"/>
-
-
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
@@ -62,13 +65,12 @@
                     android:layout_marginRight="1dp"
                     app:cardPreventCornerOverlap="false"
                     app:contentPadding="0dp">
-                    <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/amtToPay"
+                    <TextView
+                        android:id="@+id/amtToPayJHG"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:focusable="true"
                         android:hint="Amount to pay in USD"
-                        android:inputType="number"
                         android:background="@drawable/rect6h"
                         android:textStyle="bold"
                         android:textColorHint="@color/black"
@@ -91,7 +93,7 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
                 app:cardCornerRadius="2dp"
                 app:cardElevation="2dp"
                 android:gravity="center_horizontal"

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="150dp"
+        android:layout_marginBottom="-30dp"
+        android:innerRadius="0dp"
+        android:shape="ring"
+        android:padding="30dp"
+        android:thicknessRatio="1.9"
+        app:cardBackgroundColor="@color/black_instead_blur"
+        app:cardCornerRadius="35dp"
+        app:cardElevation="0dp"
+        app:cardMaxElevation="0dp"
+        android:layout_height="150dp">
+        <VideoView
+            android:id="@+id/videoProfPix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:tint="@android:color/white"
+            android:padding="5dp" />
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

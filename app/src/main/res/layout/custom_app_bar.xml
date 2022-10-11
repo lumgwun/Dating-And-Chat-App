@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/app_bar_height"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/appThemeColor"
-    android:orientation="vertical">
+    android:orientation="horizontal">
+    <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
+        android:id="@+id/match_refresh_l"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp"
+        app:srl_direction="top">
+
+        <view class="androidx.recyclerview.widget.RecyclerView"
+            android:id="@+id/list_chaters"
+            android:divider="@drawable/rect6"
+            android:layoutDirection="ltr"
+            style="@style/ListViewWithoutDividerStyle" />
+    </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -11,6 +28,8 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/match_refresh_l"
         android:layout_alignParentLeft="true">
 
         <ImageView
@@ -29,7 +48,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/app_name"
         android:textColor="@color/white"
         android:textSize="@dimen/textSize_17" />
 
@@ -44,7 +62,6 @@
 
 
         <ImageView
-            android:id="@+id/iv_lasticon"
             android:layout_width="20dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -53,7 +70,6 @@
             android:layout_marginRight="@dimen/spacing_10" />
 
         <ImageView
-            android:id="@+id/iv_save_changes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -61,8 +77,6 @@
             android:layout_marginEnd="@dimen/spacing_10"
             android:visibility="gone"
             android:layout_marginRight="@dimen/spacing_10" />
-
-
 
     </LinearLayout>
 </RelativeLayout>

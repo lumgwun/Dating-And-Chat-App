@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.navigation.ui.AppBarConfiguration;
 
@@ -23,9 +23,9 @@ public class SubmitRedeemActivity extends BaseActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private AppCompatButton btnSubmit;
-    private AppCompatEditText editAmount;
-    private AppCompatSpinner spnPaymentGateWays;
-    private String selectedGateWay;
+    //private AppCompatEditText editAmount;
+    private AppCompatSpinner spnPaymentAmt;
+    private String selectedDiamond;
     private FloatingActionButton fab;
     SharedPreferences sharedPref;
     Bundle userExtras;
@@ -35,9 +35,10 @@ public class SubmitRedeemActivity extends BaseActivity {
     String json, json1, json2,userName,password,profileName;
     private QBUser qbUser;
     private Bundle payBundle;
-    private int profileID;
+    private int profileID,numberOfDiamonds;
     private String strgAmount;
     private long amount;
+    private TextView txtAmtToPay;
     public static void start(Context context) {
         Intent intent = new Intent(context, SubmitRedeemActivity.class);
         context.startActivity(intent);
@@ -64,15 +65,15 @@ public class SubmitRedeemActivity extends BaseActivity {
         userName = sharedPref.getString("SAVED_PROFILE_EMAIL", "");
         password = sharedPref.getString("SAVED_PROFILE_PASSWORD", "");
         profileName = sharedPref.getString("SAVED_PROFILE_NAME", "");
-        editAmount =findViewById(R.id.amtToPay);
+        txtAmtToPay =findViewById(R.id.amtToPayJHG);
         btnSubmit =findViewById(R.id.submit_pay);
-        spnPaymentGateWays =findViewById(R.id.spnGateWays);
+        spnPaymentAmt =findViewById(R.id.spnGateWays);
 
-        spnPaymentGateWays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spnPaymentAmt.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //selectedGateWay = spnPaymentGateWays.getSelectedItem().toString();
-                selectedGateWay = (String) parent.getSelectedItem().toString();
+                selectedDiamond = (String) parent.getSelectedItem().toString();
 
             }
 
@@ -80,16 +81,85 @@ public class SubmitRedeemActivity extends BaseActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+        if(selectedDiamond !=null){
+            if(selectedDiamond.equalsIgnoreCase("500 Diamonds")){
+                amount=10;
+                numberOfDiamonds=500;
+            }
+            if(selectedDiamond.equalsIgnoreCase("1,000 Diamonds")){
+                amount=20;
+                numberOfDiamonds=1000;
+            }
+            if(selectedDiamond.equalsIgnoreCase("2,000 Diamonds")){
+                amount=40;
+                numberOfDiamonds=2000;
+            }
+            if(selectedDiamond.equalsIgnoreCase("3,000 Diamonds")){
+                amount=60;
+                numberOfDiamonds=3000;
+            }
+            if(selectedDiamond.equalsIgnoreCase("4,000 Diamonds")){
+                amount=80;
+                numberOfDiamonds=4000;
+            }
+            if(selectedDiamond.equalsIgnoreCase("5,000 Diamonds")){
+                amount=100;
+                numberOfDiamonds=5000;
+            }
+            if(selectedDiamond.equalsIgnoreCase("10,000 Diamonds")){
+                amount=200;
+                numberOfDiamonds=10000;
+            }
+            if(selectedDiamond.equalsIgnoreCase("20,000 Diamonds")){
+                amount=400;
+                numberOfDiamonds=20000;
+            }
+            if(selectedDiamond.equalsIgnoreCase("30,000 Diamonds")){
+                amount=600;
+                numberOfDiamonds=30000;
+            }
+            if(selectedDiamond.equalsIgnoreCase("40,000 Diamonds")){
+                amount=800;
+                numberOfDiamonds=40000;
+            }
+            if(selectedDiamond.equalsIgnoreCase("50,000 Diamonds")){
+                amount=1000;
+                numberOfDiamonds=50000;
+            }
+            if(selectedDiamond.equalsIgnoreCase("60,000 Diamonds")){
+                amount=1200;
+                numberOfDiamonds=60000;
+            }
+            if(selectedDiamond.equalsIgnoreCase("70,000 Diamonds")){
+                amount=1400;
+                numberOfDiamonds=70000;
+            }
+            if(selectedDiamond.equalsIgnoreCase("80,000 Diamonds")){
+                amount=1600;
+                numberOfDiamonds=80000;
+            }
+            if(selectedDiamond.equalsIgnoreCase("90,000 Diamonds")){
+                amount=1800;
+                numberOfDiamonds=90000;
+            }
+            if(selectedDiamond.equalsIgnoreCase("100,000 Diamonds")){
+                amount=2000;
+                numberOfDiamonds=100000;
+            }
+            if(selectedDiamond.equalsIgnoreCase("1,000,000 Diamonds")){
+                amount=20000;
+                numberOfDiamonds=1000000;
+            }
+        }
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                strgAmount=editAmount.getText().toString();
-                amount= Long.parseLong((strgAmount));
                 payBundle.putParcelable("SavedProfile",savedProfile);
                 payBundle.putParcelable("QBUser", (Parcelable) qbUser);
                 payBundle.putString("SAVED_PROFILE_NAME",profileName);
                 payBundle.putInt("SAVED_PROFILE_ID",profileID);
+                payBundle.putInt("numberOfDiamonds",numberOfDiamonds);
                 payBundle.putLong("Amount",amount);
                 Intent dialogIntent = new Intent(SubmitRedeemActivity.this, GooglePayCheckoutAct.class);
                 dialogIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

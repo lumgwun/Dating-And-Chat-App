@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/history_Rel"
     android:layout_height="match_parent"
     android:background="?android:attr/activatedBackgroundIndicator">
 
@@ -11,13 +12,11 @@
         android:layout_width="match_parent"
         app:cardCornerRadius="20dp"
         app:cardElevation="50dp"
-        android:id="@+id/card_l1"
         app:cardBackgroundColor="#f3f5f7"
         android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:id="@+id/id_l1"
             android:padding="10dp"
             android:orientation="vertical"
             android:background="@drawable/bg_cornered_rect_10"
@@ -27,7 +26,6 @@
                 android:orientation="horizontal"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:id="@+id/img_accou4"
                     android:layout_width="58dp"
                     android:layout_height="20dp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -39,13 +37,44 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
             <TextView
                 android:layout_width="match_parent"
-                android:text=" From"
-                android:id="@+id/dh_from"
+                android:text=" Dialog ID: 8907"
+                android:fontFamily="@font/hipster_script_pro"
+                android:id="@+id/Dialog_id"
                 android:layout_marginEnd="5dp"
-                android:layout_marginStart="8dp"
+                android:textStyle="bold"
+                android:layout_marginStart="3dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/red_brown_dark"
                 android:layout_height="wrap_content"/>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="0dp"
+                    android:text=" From"
+                    android:layout_weight="1"
+                    android:id="@+id/dh_from"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/red_brown_dark"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:text=" To"
+                    android:layout_weight="1"
+                    android:id="@+id/dh_To"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/red_brown_dark"
+                    android:layout_height="wrap_content"/>
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
 
             <TextView
@@ -54,7 +83,7 @@
                 android:id="@+id/dh_cOUNt"
                 android:layout_marginEnd="5dp"
                 android:textStyle="bold"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="3dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/red_brown_dark"
                 android:layout_height="wrap_content"/>
@@ -64,7 +93,7 @@
                 android:id="@+id/dh_Date"
                 android:layout_marginEnd="5dp"
                 android:textStyle="bold"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="3dp"
                 android:layout_marginBottom="20dp"
                 android:textColor="@color/red_brown_dark"
                 android:layout_height="wrap_content"/>

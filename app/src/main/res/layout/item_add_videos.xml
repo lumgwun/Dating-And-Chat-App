@@ -5,11 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:fitsSystemWindows="true">
     <androidx.cardview.widget.CardView
-        android:layout_width="70dp"
+        android:layout_width="90dp"
         android:layout_height="70dp"
+        app:cardBackgroundColor="@color/foreground_text_color"
         android:layout_marginEnd="10dp"
         app:cardCornerRadius="10dp">
 
@@ -17,16 +18,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
+            <VideoView
                 android:id="@+id/videoToBeAdded"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@color/bg_chat_messages" />
+                android:src="@color/black" />
 
             <RelativeLayout
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_centerInParent="true">
 
                 <ImageView
@@ -45,7 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="6dp"
-                    android:src="@drawable/ic_plus"
+                    android:src="@drawable/ic_video_call"
                     app:tint="@color/gray_light" />
             </RelativeLayout>
         </RelativeLayout>

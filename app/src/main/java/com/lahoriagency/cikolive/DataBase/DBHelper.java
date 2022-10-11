@@ -371,7 +371,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String phone =lastProfileUsed.getSavedPPhone();
         String dob =lastProfileUsed.getSavedPDob();
         String age =lastProfileUsed.getSavedPAge();
-        int gender =lastProfileUsed.getSavedPGender();
+        String gender =lastProfileUsed.getSavedPGender();
         String email =lastProfileUsed.getSavedPEmail();
         String location =lastProfileUsed.getSavedPLocation();
         String password =lastProfileUsed.getSavedPPassword();
@@ -397,7 +397,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String phone =lastProfileUsed.getSavedPPhone();
         String dob =lastProfileUsed.getSavedPDob();
         String age =lastProfileUsed.getSavedPAge();
-        int gender =lastProfileUsed.getSavedPGender();
+        String gender =lastProfileUsed.getSavedPGender();
         String email =lastProfileUsed.getSavedPEmail();
         String location =lastProfileUsed.getSavedPLocation();
         String password =lastProfileUsed.getSavedPPassword();
@@ -420,7 +420,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 savedProfile.setSavedPCountry(cursor.getString(10));
                 savedProfile.setSavedPLocation(cursor.getString(3));
                 savedProfile.setSavedPImage(Uri.parse(cursor.getString(5)));
-                savedProfile.setSavedPGender(cursor.getInt(4));
+                savedProfile.setSavedPGender(cursor.getString(4));
                 profileList.add(savedProfile);
             }while(cursor.moveToNext());
         }

@@ -3,7 +3,10 @@ package com.lahoriagency.cikolive.Fragments;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Fade;
 import android.transition.Slide;
@@ -20,13 +23,32 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.github.clans.fab.FloatingActionButton;
+import com.google.firebase.FirebaseApp;
+import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Classes.AppChat;
 import com.lahoriagency.cikolive.Classes.AppE;
+import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SmoothInterpolator;
 import com.lahoriagency.cikolive.Classes.SpringInterpolator;
+import com.lahoriagency.cikolive.FindMatchActivity;
+import com.lahoriagency.cikolive.NewPackage.SessionFreePaid;
 import com.lahoriagency.cikolive.R;
+import com.quickblox.auth.session.QBSettings;
+import com.quickblox.users.model.QBUser;
+
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import pl.bclogic.pulsator4droid.library.PulsatorLayout;
+
+import static android.content.Context.MODE_PRIVATE;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_ACCT_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_APP_ID;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_AUTH_KEY;
+import static com.lahoriagency.cikolive.BuildConfig.QUICKBLOX_SECRET_KEY;
 
 public class MatchFragment extends Fragment {
 
@@ -47,6 +69,23 @@ public class MatchFragment extends Fragment {
     private Integer recipientId;
     private Integer matchValue;
     private boolean addedToLayout;
+    private static final String PREF_NAME = "Ciko";
+    private static final String APPLICATION_ID = QUICKBLOX_APP_ID;   //QUICKBLOX_APP_ID
+    private static final String AUTH_KEY = QUICKBLOX_AUTH_KEY;
+    private static final String AUTH_SECRET = QUICKBLOX_SECRET_KEY;
+    private static final String ACCOUNT_KEY = QUICKBLOX_ACCT_KEY;
+    private static final String SERVER_URL = "";
+    SharedPreferences sharedPref;
+    Bundle userExtras;
+    private SavedProfile savedProfile;
+    Gson gson, gson1,gson2;
+    String json, json1, json2,user,password,name;
+    private QBUser qbUser;
+    private int userID;
+    int diamondCount,diamondID,diamondAmt;
+    private int collections,qbUserID,sessionID;
+    private Uri profilePix;
+    private FloatingActionButton fabMatch;
 
     public MatchFragment() {
     }
@@ -55,23 +94,79 @@ public class MatchFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View viewRoot = inflater.inflate(R.layout.fragment_match, container, false);
         viewGroupContainer = viewRoot.findViewById(R.id.contentPanel);
+        FirebaseApp.initializeApp(Objects.requireNonNull(getContext()));
+        QBSettings.getInstance().init(Objects.requireNonNull(getContext()), APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+        savedProfile= new SavedProfile();
+        gson= new Gson();
+        gson1= new Gson();
+        gson2= new Gson();
+        qbUser= new QBUser();
+        Animation translater22 = AnimationUtils.loadAnimation(Objects.requireNonNull(getContext()), R.anim.bounce);
+        sharedPref= getContext().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        json = sharedPref.getString("LastSavedProfileUsed", "");
+        savedProfile = gson.fromJson(json, SavedProfile.class);
+        json1 = sharedPref.getString("LastQBUserUsed", "");
+        qbUser = gson1.fromJson(json1, QBUser.class);
+        if(savedProfile !=null){
+            profilePix=savedProfile.getSavedPImage();
+        }
         matchText = viewRoot.findViewById(R.id.match_dialog_match_text);
+        fabMatch = viewRoot.findViewById(R.id.fab_con_match);
+
         matchText.setVisibility(View.INVISIBLE);
         matchValueText = viewRoot.findViewById(R.id.match_dialog_match_value_text);
         String matchValueTextString = String.format("Your and %s's\npersonality fit together in %d%%!", matchUserName, matchValue);
         matchValueText.setText(matchValueTextString);
         matchValueText.setVisibility(View.INVISIBLE);
         imageViewLeft = viewRoot.findViewById(R.id.match_dialog_image_left);
-        imageViewLeft.setImageBitmap(AppE.getImageLoader().getBitmapFromMemCache(imageLeftLink));
+        //imageViewLeft.setImageBitmap(AppE.getImageLoader().getBitmapFromMemCache(imageLeftLink));
+        Glide.with(getContext())
+                .asBitmap()
+                .load(profilePix)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .error(R.drawable.ic_alert)
+                //.listener(listener)
+                .skipMemoryCache(true)
+                .fitCenter()
+                .centerCrop()
+                .into(imageViewLeft);
         imageViewLeft.setVisibility(View.INVISIBLE);
         imageViewRight = viewRoot.findViewById(R.id.match_dialog_image_right);
         imageViewRight.setImageBitmap(AppE.getImageLoader().getBitmapFromMemCache(imageRightLink));
         imageViewRight.setVisibility(View.INVISIBLE);
         buttonKeepSwipping = viewRoot.findViewById(R.id.match_dialog_keep_swiping);
         buttonSendMessage = viewRoot.findViewById(R.id.match_dialog_send_message);
+        PulsatorLayout pulsator = viewRoot.findViewById(R.id.pulsator);
         buttonSendMessage.setVisibility(View.INVISIBLE);
         buttonKeepSwipping.setVisibility(View.INVISIBLE);
         int colorFrom = Color.parseColor("#00000000");
+        pulsator.start();
+        fabMatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Animation animationDialog = AnimationUtils.loadAnimation(AppE.getAppContext(), R.anim.match_dialog_dismiss);
+                Animation animationOverlay = AnimationUtils.loadAnimation(AppE.getAppContext(), R.anim.match_dialog_overlay_dismiss);
+                animationDialog.setAnimationListener(new Animation.AnimationListener() {
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        actionsListener.keepSwipingButtonClicked();
+                        //actionsListener.showMatchDialogIfAny();
+                    }
+
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+                });
+                startActivity(new Intent(getActivity(), FindMatchActivity.class));
+
+            }
+        });
 
         int colorTo = Color.parseColor("#ee222222");
         ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
@@ -151,6 +246,7 @@ public class MatchFragment extends Fragment {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         actionsListener.keepSwipingButtonClicked();
+                        actionsListener.showMatchDialogIfAny();
                     }
 
                     @Override
@@ -186,7 +282,7 @@ public class MatchFragment extends Fragment {
                     public void onAnimationRepeat(Animation animation) {
                     }
                 });
-                getView().findViewById(R.id.match_dialog_overlay).startAnimation(animationOverlay);
+                Objects.requireNonNull(getView()).findViewById(R.id.match_dialog_overlay).startAnimation(animationOverlay);
                 getView().findViewById(R.id.match_dialog_container).startAnimation(animationDialog);
             }
         });
@@ -281,14 +377,10 @@ public class MatchFragment extends Fragment {
     }
 
 
-    /*private void listeners() {
-        binding.btnFindMatch.setOnClickListener(view -> startActivity(new Intent(getActivity(), FindMatchActivity.class)));
+    private void listeners() {
+        //btnFindMatch.setOnClickListener(view -> startActivity(new Intent(getActivity(), FindMatchActivity.class)));
     }
 
-    private void init() {
-        binding.pulsator.start();
-
-    }*/
 
 
 }

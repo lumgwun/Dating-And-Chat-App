@@ -5,7 +5,6 @@
     android:layout_height="match_parent">
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
-        android:id="@+id/payT1"
         android:gravity="center_horizontal"
         android:text="Client ID:98765"
         android:layout_height="wrap_content"/>

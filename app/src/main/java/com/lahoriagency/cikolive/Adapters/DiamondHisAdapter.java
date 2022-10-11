@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,15 +17,16 @@ import com.lahoriagency.cikolive.R;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
-public class DiamondHisAdapter extends RecyclerView.Adapter<DiamondHisAdapter.RecyclerViewHolder> {
+public class DiamondHisAdapter extends RecyclerView.Adapter<DiamondHisAdapter.RecyclerViewHolder> implements View.OnClickListener{
 
     private ArrayList<DiamondTransfer> diamondHistories;
     private Context mcontext;
     int resources;
-    private String from, date;
+    private String from, date,dialogID,to;
     FragmentActivity activity;
     int diamondCount;
     private OnItemsClickListener listener;
+    private DiamondTransfer diamondTransfer;
 
     public DiamondHisAdapter(ArrayList<DiamondTransfer> recyclerDataArrayList, Context mcontext) {
         this.diamondHistories = recyclerDataArrayList;
@@ -66,10 +68,22 @@ public class DiamondHisAdapter extends RecyclerView.Adapter<DiamondHisAdapter.Re
             from=recyclerData.getdH_From();
             diamondCount=recyclerData.getdH_Count();
             date=recyclerData.getdH_Date();
+            dialogID=recyclerData.getdH_Dialog_ID();
+            to=recyclerData.getdH_To();
         }
+        holder.txtDialogID.setText(MessageFormat.format("Dialog ID:{0}", dialogID));
         holder.txtDiamondFrom.setText(MessageFormat.format("From:{0}", from));
+
         holder.txtDate.setText(MessageFormat.format("Date:{0}",date));
+        holder.txtTo.setText(MessageFormat.format("To:{0}",to));
+
         holder.txtDCount.setText(MessageFormat.format("Count:{0}", diamondCount));
+        holder.root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
     }
     @Override
@@ -82,19 +96,30 @@ public class DiamondHisAdapter extends RecyclerView.Adapter<DiamondHisAdapter.Re
 
         private TextView txtDiamondFrom;
         private TextView txtDate;
-        private TextView txtDCount;
+        private TextView txtDCount,txtDialogID,txtTo;
+        private RelativeLayout root;
 
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            root = itemView.findViewById(R.id.history_Rel);
+            txtDialogID = itemView.findViewById(R.id.Dialog_id);
             txtDiamondFrom = itemView.findViewById(R.id.dh_from);
+            txtTo = itemView.findViewById(R.id.dh_To);
             txtDCount = itemView.findViewById(R.id.dh_cOUNt);
             txtDate = itemView.findViewById(R.id.dh_Date);
 
         }
     }
     public interface OnItemsClickListener{
-        void onItemClick(DiamondTransfer diamondTransfer);
+        void onDiamondItemClick(DiamondTransfer diamondTransfer);
+    }
+    @Override
+    public void onClick(View view) {
+        if (listener != null) {
+            listener.onDiamondItemClick(diamondTransfer);
+        }
+
     }
 }
