@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.lahoriagency.cikolive.Classes.AppChat;
-import com.lahoriagency.cikolive.Classes.AppConference;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
 import com.lahoriagency.cikolive.Classes.DialogsManager;
 import com.lahoriagency.cikolive.Classes.ErrorUtils;
@@ -37,6 +36,9 @@ import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 
 import java.lang.reflect.Field;
 
+import com.lahoriagency.cikolive.Conference.AppConference;
+import com.lahoriagency.cikolive.NewPackage.ChatHelperCon;
+import com.lahoriagency.cikolive.NewPackage.DialogsManagerCon;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
@@ -66,16 +68,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         return ((AppConference) getApplicationContext()).getSharedPrefsHelper();
     }
 
-    protected ChatHelper getChatHelper() {
+    protected ChatHelperCon getChatHelper() {
         return ((AppConference) getApplicationContext()).getChatHelper();
     }
 
-    protected DialogsManager getDialogsManager() {
+    protected DialogsManagerCon getDialogsManager() {
         return ((AppConference) getApplicationContext()).getDialogsManager();
     }
-
-
-
 
     protected void showErrorSnackbar(@StringRes int resId, Exception e, View.OnClickListener clickListener) {
         View rootView = getWindow().getDecorView().findViewById(android.R.id.content);

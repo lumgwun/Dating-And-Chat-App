@@ -4,7 +4,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.lahoriagency.cikolive.Classes.AppConference;
+
+import com.lahoriagency.cikolive.Conference.AppConference;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBDialogType;
 import com.quickblox.users.model.QBUser;

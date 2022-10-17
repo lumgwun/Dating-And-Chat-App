@@ -11,7 +11,7 @@ import android.widget.EditText;
 
 import com.lahoriagency.cikolive.BaseActivity;
 import com.lahoriagency.cikolive.Classes.AppChat;
-import com.lahoriagency.cikolive.Classes.AppConference;
+
 import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.AppPush;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;

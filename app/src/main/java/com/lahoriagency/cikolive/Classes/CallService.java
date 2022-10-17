@@ -26,6 +26,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
 import com.lahoriagency.cikolive.CallActivity;
+import com.lahoriagency.cikolive.Conference.AppConference;
 import com.lahoriagency.cikolive.Fragments.AudioConversationFragment;
 import com.lahoriagency.cikolive.Fragments.VideoConversationFragment;
 import com.lahoriagency.cikolive.R;
@@ -941,6 +942,7 @@ public class CallService extends Service {
         @Override
         public void onLocalAudioTrackReceive(ConferenceSession conferenceSession, QBRTCAudioTrack qbrtcAudioTrack) {
             Log.d(TAG, "onLocalAudioTrackReceive()");
+
             boolean isMicEnabled = ((AppConference) getApplicationContext()).getSharedPrefsHelper().get(Consts.PREF_MIC_ENABLED, true);
             currentSession.getMediaStreamManager().getLocalAudioTrack().setEnabled(isMicEnabled);
         }

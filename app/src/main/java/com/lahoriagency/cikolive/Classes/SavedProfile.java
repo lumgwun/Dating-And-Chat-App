@@ -40,10 +40,13 @@ public class SavedProfile implements Parcelable, Serializable {
     public static final String SAVED_PROFILE_STATUS = "saved_p_Status";
     public static final String SAVED_PROFILE_DBID = "saved_p_DBID";
     public static final String SAVED_PROFILE_DIAMOND = "saved_p_Diamond";
+    public static final String SAVED_PROF_REF_REWARD_COUNT = "saved_p_Reward_Count";
+
+
 
 
     public static final String CREATE_SAVED_PROFILES_TABLE = "CREATE TABLE IF NOT EXISTS " + SAVED_PROFILE_TABLE + " (" + SAVED_PROFILE_ID + " INTEGER , " + SAVED_PROFILE_NAME + " TEXT, " + SAVED_PROFILE_AGE + " TEXT, " + SAVED_PROFILE_LOC + " TEXT, " + SAVED_PROFILE_GENDER + " TEXT, " + SAVED_PROFILE_PHOTO + " BLOB, " + SAVED_PROFILE_PHONE + " TEXT, " +
-            SAVED_PROFILE_EMAIL + " TEXT, " + SAVED_PROFILE_PASSWORD + " TEXT, " + SAVED_PROFILE_DEVICEID + " TEXT,"+ SAVED_PROFILE_DOB + " TEXT,"+ SAVED_PROFILE_COUNTRY + " TEXT,"+ SAVED_PROFILE_REFERRER + " TEXT,"+ SAVED_PROFILE_ABOUT_ME + " TEXT,"+ SAVED_PROFILE_MY_INT + " TEXT,"+ SAVED_PROFILE_LOOKING_GENDER + " TEXT,"+ SAVED_PROFILE_DATE_JOINED + " TEXT, "+ SAVED_PROFILE_USERPROF_INFO_ID + " TEXT,"+ SAVED_PROFILE_QBID + " TEXT,"+ SAVED_PROFILE_LAST_SEEN + " TEXT," + SAVED_PROFILE_STATUS + " TEXT," + SAVED_PROFILE_DBID + " INTEGER,"+ SAVED_PROFILE_DIAMOND + " INTEGER,"+ "FOREIGN KEY(" + SAVED_PROFILE_USERPROF_INFO_ID + ") REFERENCES " + USER_PROF_INFO_TABLE + "(" + USER_PROF_INFO_ID + "),"+ "FOREIGN KEY(" + SAVED_PROFILE_QBID + ") REFERENCES " + QBUSER_TABLE + "(" + QBUSER_ID + "),"+"PRIMARY KEY(" + SAVED_PROFILE_DBID  + "))";
+            SAVED_PROFILE_EMAIL + " TEXT, " + SAVED_PROFILE_PASSWORD + " TEXT, " + SAVED_PROFILE_DEVICEID + " TEXT,"+ SAVED_PROFILE_DOB + " TEXT,"+ SAVED_PROFILE_COUNTRY + " TEXT,"+ SAVED_PROFILE_REFERRER + " TEXT,"+ SAVED_PROFILE_ABOUT_ME + " TEXT,"+ SAVED_PROFILE_MY_INT + " TEXT,"+ SAVED_PROFILE_LOOKING_GENDER + " TEXT,"+ SAVED_PROFILE_DATE_JOINED + " TEXT, "+ SAVED_PROFILE_USERPROF_INFO_ID + " TEXT,"+ SAVED_PROFILE_QBID + " TEXT,"+ SAVED_PROFILE_LAST_SEEN + " TEXT," + SAVED_PROFILE_STATUS + " TEXT," + SAVED_PROFILE_DBID + " INTEGER,"+ SAVED_PROFILE_DIAMOND + " INTEGER,"+ SAVED_PROF_REF_REWARD_COUNT + " INTEGER,"+ "FOREIGN KEY(" + SAVED_PROFILE_USERPROF_INFO_ID + ") REFERENCES " + USER_PROF_INFO_TABLE + "(" + USER_PROF_INFO_ID + "),"+ "FOREIGN KEY(" + SAVED_PROFILE_QBID + ") REFERENCES " + QBUSER_TABLE + "(" + QBUSER_ID + "),"+"PRIMARY KEY(" + SAVED_PROFILE_DBID  + "))";
 
 
     public static final String PICTURE_TABLE = "pictureTable";
@@ -89,6 +92,7 @@ public class SavedProfile implements Parcelable, Serializable {
     private Diamond savedPDiamond;
     private LoginReply loginReply;
     private int defaultDiamond;
+    private int savedPRefRewardCount;
 
     public SavedProfile() {
         super();
@@ -478,5 +482,13 @@ public class SavedProfile implements Parcelable, Serializable {
 
     public void setQbChatDialogArrayList(ArrayList<QBChatDialog> qbChatDialogArrayList) {
         this.qbChatDialogArrayList = qbChatDialogArrayList;
+    }
+
+    public int getSavedPRefRewardCount() {
+        return savedPRefRewardCount;
+    }
+
+    public void setSavedPRefRewardCount(int savedPRefRewardCount) {
+        this.savedPRefRewardCount = savedPRefRewardCount;
     }
 }

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "810586473830-m5jt1cgpenf7ok4t0m65fk787lfd7okr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lahoriagency.cikolive",
+            "certificate_hash": "205483d73c86d8d892dbe8beee03511beea5be9a"
+          }
+        },
+        {
           "client_id": "810586473830-aao25dbb8p8nmoml7uvm779ldf7dk0dq.apps.googleusercontent.com",
           "client_type": 3
         }

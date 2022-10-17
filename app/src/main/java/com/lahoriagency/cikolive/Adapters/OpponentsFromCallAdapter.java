@@ -17,8 +17,8 @@ import android.widget.ToggleButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lahoriagency.cikolive.Classes.AppChat;
-import com.lahoriagency.cikolive.Classes.AppConference;
 import com.lahoriagency.cikolive.Classes.QBRTCSessionUtils;
+import com.lahoriagency.cikolive.Conference.AppConference;
 import com.lahoriagency.cikolive.R;
 import com.lahoriagency.cikolive.Conference.BaseConversationFragment;
 import com.quickblox.conference.ConferenceSession;

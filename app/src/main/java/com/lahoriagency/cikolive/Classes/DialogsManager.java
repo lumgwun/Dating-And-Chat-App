@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.lahoriagency.cikolive.Conference.AppConference;
 import com.lahoriagency.cikolive.R;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBRestChatService;
@@ -197,6 +198,7 @@ public class DialogsManager {
                     Log.d(TAG, "Joining error: " + e.getMessage());
                 }
             });
+
             ((AppConference) context).getChatHelper().join(dialog, new QBEntityCallback<Void>() {
                 @Override
                 public void onSuccess(Void aVoid, Bundle bundle) {

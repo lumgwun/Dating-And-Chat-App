@@ -28,6 +28,20 @@ public class SharedPrefsHelper {
     public SharedPrefsHelper(Context context) {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
+    public static synchronized SharedPrefsHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new SharedPrefsHelper(context);
+        }
+        return instance;
+    }
+    public static synchronized SharedPrefsHelper getInstance() {
+        if (instance == null) {
+            instance = new SharedPrefsHelper();
+        }
+
+        return instance;
+    }
+
     public void setFirstTimeLaunch(boolean isFirstTime) {
         editor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
         editor.commit();
@@ -39,13 +53,6 @@ public class SharedPrefsHelper {
 
 
 
-    public static synchronized SharedPrefsHelper getInstance() {
-        if (instance == null) {
-            instance = new SharedPrefsHelper();
-        }
-
-        return instance;
-    }
 
     public SharedPrefsHelper() {
         instance = this;

@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.lahoriagency.cikolive.Classes.AppChat;
-import com.lahoriagency.cikolive.Classes.AppConference;
 import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
 import com.lahoriagency.cikolive.Classes.MyPreferences;

@@ -32,6 +32,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.os.SystemClock;
 import android.provider.CalendarContract;
 import android.text.TextUtils;
@@ -55,7 +56,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
@@ -66,6 +66,7 @@ import com.lahoriagency.cikolive.Classes.QbDialogHolder;
 import com.lahoriagency.cikolive.Classes.QbEntityCallbackImpl;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.UserProfileInfo;
+import com.lahoriagency.cikolive.CreateProfileActivity;
 import com.lahoriagency.cikolive.Interfaces.ItemClickListener;
 import com.lahoriagency.cikolive.ListUsersActivity;
 import com.lahoriagency.cikolive.R;
@@ -92,6 +93,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static android.content.ContentValues.TAG;
@@ -145,7 +147,7 @@ public class ChatDialogActivity extends AppCompatActivity implements View.OnClic
     int PERMISSION_ALL33 = 23;
     int diamondCount,diamondID,diamondAmt;
     private int collections,qbUserID,sessionID;
-    private SessionFreePaid sessionFreePaid;
+    private SessionFreePaid sessionFreePaid,linkSession;
     private String startTimeOfSession,qbDialogID,selectedNoOfSessions, sessionEndMinutes,sessionDiamond,sessionTittle, sessionMaleGender,sessionFeMaleGender;
     SimpleDateFormat hourMinutes = new SimpleDateFormat("HH:mm");
     AppCompatTextView txtWelcome;
@@ -159,8 +161,12 @@ public class ChatDialogActivity extends AppCompatActivity implements View.OnClic
     private  long maxDateAllowed;
     private Calendar newCalendar;
     private Spinner spnNoOfSession;
+    private String startDateTime, qbDialogID33,path, limiter,limitExtra;
     public static final int REQUEST_DIALOG_ID_FOR_UPDATE = 15;
     Cursor calCursor;
+    private Calendar cal33;
+    private Bundle linkBundle;
+    private int linkedSavedProfID;
     private TimePicker.OnTimeChangedListener mNullTimeChangedListener =
             new TimePicker.OnTimeChangedListener() {
 
@@ -258,6 +264,7 @@ public class ChatDialogActivity extends AppCompatActivity implements View.OnClic
         QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
         savedProfile= new SavedProfile();
         gson= new Gson();
+        linkBundle= new Bundle();
         gson1= new Gson();
         gson2= new Gson();
         qbUser= new QBUser();
@@ -265,21 +272,44 @@ public class ChatDialogActivity extends AppCompatActivity implements View.OnClic
         newCalendar=Calendar.getInstance();
         Animation translater22 = AnimationUtils.loadAnimation(this, R.anim.bounce);
         sessionFreePaid= new SessionFreePaid();
+        linkSession= new SessionFreePaid();
         sharedPref= getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         json = sharedPref.getString("LastSavedProfileUsed", "");
         savedProfile = gson.fromJson(json, SavedProfile.class);
         json1 = sharedPref.getString("LastQBUserUsed", "");
         qbUser = gson1.fromJson(json1, QBUser.class);
+        getSessionLink();
         if(savedProfile !=null){
             name=savedProfile.getSavedPName();
             userPix=savedProfile.getSavedPImage();
+            savedProfileID=savedProfile.getSavedProfID();
         }
+        linkBundle=getIntent().getExtras();
         fabHome = findViewById(R.id.fab3_chat_home);
-        sessionID = ThreadLocalRandom.current().nextInt(122, 1631);
+
         floatingActionButton = findViewById(R.id.chat_dialog_add_user);
         fabAddSession = findViewById(R.id.fab2_add_sessions);
         progressbar = findViewById(R.id.progressBar_Session);
         spnNoOfSession = findViewById(R.id.session_spinner);
+        cal33 = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+
+        if(linkBundle !=null){
+            sessionID=linkBundle.getInt("sessionID");
+            startDateTime=linkBundle.getString("startDateTime");
+            linkedSavedProfID=linkBundle.getInt("SAVED_PROFILE_ID");
+            qbDialogID33=linkBundle.getString("qbDialogID");
+            linkSession=linkBundle.getParcelable("SessionFreePaid");
+        }else {
+            sessionID = ThreadLocalRandom.current().nextInt(122, 1631);
+            startDateTime = mdformat.format(cal33.getTime());
+
+        }
+
+
+
+        handleFirebaseDynamicLink(linkSession,linkedSavedProfID,startDateTime,sessionID,qbDialogID33,savedProfile);
+
 
         View bottomSheet = findViewById(R.id.bottom_sheet_session);
         spnNoOfSession.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -311,17 +341,6 @@ public class ChatDialogActivity extends AppCompatActivity implements View.OnClic
 
         selectPix = findViewById(R.id.session_picP);
         closeBottom_sheet = findViewById(R.id.btn_close_bs);
-        ActionCodeSettings actionCodeSettings =
-                ActionCodeSettings.newBuilder()
-                        .setUrl("https://cikolive.page.link/")
-                        .setHandleCodeInApp(true)
-                        .setAndroidPackageName(
-                                "com.lahoriagency.cikolive",
-                                true, /* installIfNotAvailable */
-                                "12"    /* minimumVersion */)
-                        .build();
-        handleFirebaseDynamicLink(sessionID);
-
 
         startTimePicker.setIs24HourView(true);
         selectPix.setOnClickListener(new View.OnClickListener() {
@@ -471,6 +490,29 @@ public class ChatDialogActivity extends AppCompatActivity implements View.OnClic
         setClicks();
 
         loadChatDialogs();
+
+    }
+    private void getSessionLink(){
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                        // Get deep link from result (may be null if no link is found)
+                        Uri deepLink = null;
+                        if (pendingDynamicLinkData != null) {
+                            deepLink = pendingDynamicLinkData.getLink();
+                        }
+
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "getDynamicLink:onFailure", e);
+                    }
+                });
+
     }
 
     @SuppressLint("Recycle")
@@ -532,8 +574,6 @@ public class ChatDialogActivity extends AppCompatActivity implements View.OnClic
         getContentResolver().insert(CalendarContract.Reminders.CONTENT_URI, reminder);
 
 
-
-
        /* Intent intent = new Intent(getBaseContext(),NotificationReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
@@ -586,6 +626,7 @@ public class ChatDialogActivity extends AppCompatActivity implements View.OnClic
                     qbDialogID=result.getDialogId();
 
                 }
+                handleNewFirebaseDynamicLink(qbDialogID);
 
                 Log.d("Chat created", result.toString());
 
@@ -609,6 +650,103 @@ public class ChatDialogActivity extends AppCompatActivity implements View.OnClic
 //            }
 //        });
     }
+    private void handleNewFirebaseDynamicLink(String qbDialogID) {
+        try {
+            dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                    .setLink(Uri.parse("https://cikolive.page.link/session/?QbDialogID=" + qbDialogID))
+                    .setDomainUriPrefix("https://cikolive.page.link/session/")
+                    .setAndroidParameters(
+                            new DynamicLink.AndroidParameters.Builder("com.lahoriagency.cikolive").build())
+                    .buildDynamicLink();
+            try {
+                String url = URLDecoder.decode(dynamicLink.getUri().toString(), "UTF-8");
+                Log.d(TAG, "handleFirebaseDynamicLink: " + url);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+    }
+    private void handleFirebaseDynamicLink(SessionFreePaid linkSession, int linkedSavedProfID, String startDateTime, int sessionID, String qbDialogID33, SavedProfile savedProfile) {
+        try {
+
+            FirebaseDynamicLinks.getInstance()
+                    .getDynamicLink(getIntent())
+                    .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                        @Override
+                        public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                            Uri deepLink = null;
+                            String genderMale, genderFemale;
+                            if (pendingDynamicLinkData != null) {
+                                deepLink = pendingDynamicLinkData.getLink();
+                                if (deepLink != null) {
+                                    //limiter = deepLink.getQueryParameter("session");
+                                    limitExtra = deepLink.getQuery();
+                                    path = deepLink.getPath();
+                                }
+
+                            }
+
+                            if (path != null && path.equals("/session")) {
+                                if(limitExtra.equalsIgnoreCase(qbDialogID33)){
+                                    savedProfileID=linkSession.getSessionProfID();
+
+                                }
+                                if(savedProfileID==linkSession.getSessionProfID()){
+                                    Bundle newBundle = new Bundle();
+                                    Intent chatDialogIntent = new Intent(ChatDialogActivity.this, ChatDialogHostAct.class);
+                                    newBundle.putParcelable("SessionFreePaid",linkSession);
+                                    newBundle.putParcelable("SavedProfile",savedProfile);
+                                    newBundle.putParcelable("SessionFreePaid",linkSession);
+                                    newBundle.putInt("SAVED_PROFILE_ID",savedProfileID);
+                                    newBundle.putString("startDateTime",startDateTime);
+                                    newBundle.putString("qbDialogID",qbDialogID);
+
+                                    chatDialogIntent.putExtras(newBundle);
+                                    startActivity(chatDialogIntent);
+
+                                }else {
+                                    Bundle newBundle = new Bundle();
+                                    Intent chatDialogIntent = new Intent(ChatDialogActivity.this, ChatSessionAction.class);
+                                    newBundle.putParcelable("SessionFreePaid",linkSession);
+                                    newBundle.putString("startDateTime",startDateTime);
+                                    newBundle.putString("qbDialogID",qbDialogID);
+                                    chatDialogIntent.putExtras(newBundle);
+                                    startActivity(chatDialogIntent);
+                                }
+
+                            }
+
+
+                        }
+                    })
+                    .addOnFailureListener(this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "getDynamicLink:onFailure", e);
+                        }
+                    });
+
+            try {
+                String url = URLDecoder.decode(dynamicLink.getUri().toString(), "UTF-8");
+                Log.d(TAG, "handleFirebaseDynamicLink: " + url);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+    }
+
     private void updatedDialog(final String dialogId) {
         ChatHelper.getInstance().getDialogById(dialogId, new QbEntityCallbackImpl<QBChatDialog>() {
             @Override
@@ -715,29 +853,6 @@ public class ChatDialogActivity extends AppCompatActivity implements View.OnClic
 
     }
 
-
-    private void handleFirebaseDynamicLink(int sessionID) {
-        try {
-            dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                    .setLink(Uri.parse("https://cikolive.page.link/profile/?Session_ID=" + sessionID))
-                    .setDomainUriPrefix("https://cikolive.page.link/session/")
-                    .setAndroidParameters(
-                            new DynamicLink.AndroidParameters.Builder("com.lahoriagency.cikolive").build())
-                    .buildDynamicLink();
-            try {
-                String url = URLDecoder.decode(dynamicLink.getUri().toString(), "UTF-8");
-                Log.d(TAG, "handleFirebaseDynamicLink: " + url);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-
-
-
-
-    }
     private void updateDisplay(TimePicker timePicker, int hourOfDay, int minute) {
         int nextMinute = 0;
 

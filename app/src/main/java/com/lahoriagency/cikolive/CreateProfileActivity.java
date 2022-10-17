@@ -12,6 +12,7 @@ import android.content.ClipData;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -122,6 +123,7 @@ import com.lahoriagency.cikolive.Classes.UserProfileInfo;
 import com.lahoriagency.cikolive.Classes.ValidationUtils;
 import com.lahoriagency.cikolive.DataBase.DBHelper;
 import com.lahoriagency.cikolive.DataBase.SavedProfileDAO;
+import com.lahoriagency.cikolive.NewPackage.AppRefReceiver;
 import com.lahoriagency.cikolive.NewPackage.ChatDialogActivity;
 import com.lahoriagency.cikolive.NewPackage.ChatMainAct;
 import com.lahoriagency.cikolive.Utils.SessionManager;
@@ -417,6 +419,7 @@ public class CreateProfileActivity extends BaseActivity {
     private PictureAdapter pictureAdapter;
     private PictureAdapter.ItemListener pictureListener;
     private RadioButton radioBtnFemale,radioBtnMale;
+    private AppRefReceiver appRefReceiver;
     public static void start(Context context) {
         Intent intent = new Intent(context, CreateProfileActivity.class);
         context.startActivity(intent);
@@ -578,8 +581,10 @@ public class CreateProfileActivity extends BaseActivity {
         }
         checkInternetConnection();
         FirebaseApp.initializeApp(this);
+        appRefReceiver= new AppRefReceiver();
         QBSettings.getInstance().init(this, APPLICATION_ID, AUTH_KEY, AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+        referrerClient = InstallReferrerClient.newBuilder(this).build();
         init();
         mArrayUri = new ArrayList<Uri>();
         getDeviceID(deviceID);
@@ -602,6 +607,7 @@ public class CreateProfileActivity extends BaseActivity {
         gson1= new Gson();
         gson2= new Gson();
         gson3= new Gson();
+        getCikoLiveReferrer(referrerClient);
         userProfileInfo= new UserProfileInfo();
         savedProfile= new SavedProfile();
         userPreferences= getSharedPreferences(PREF_NAME, MODE_PRIVATE);
@@ -967,6 +973,59 @@ public class CreateProfileActivity extends BaseActivity {
             // OK, you can do your job
         }
 
+    }
+    private void getCikoLiveReferrer(InstallReferrerClient referrerClient) {
+        referrerClient.startConnection(new InstallReferrerStateListener() {
+            @Override
+            public void onInstallReferrerSetupFinished(int responseCode) {
+                switch (responseCode) {
+                    case InstallReferrerClient.InstallReferrerResponse.OK:
+                        ReferrerDetails response = null;
+                        appRefReceiver= new AppRefReceiver();
+
+                        try {
+                            response = referrerClient.getInstallReferrer();
+
+                            String referrerUrl = response.getInstallReferrer();
+
+                            long referrerClickTime = response.getReferrerClickTimestampSeconds();
+
+                            long appInstallTime = response.getInstallBeginTimestampSeconds();
+
+                            boolean instantExperienceLaunched = response.getGooglePlayInstantParam();
+
+                            referrer = response.getInstallReferrer();
+                            //IntentFilter filter = new IntentFilter();
+                            Intent intent = new Intent();
+                            intent.setAction("com.example.broadcast.MY_NOTIFICATION");
+                            intent.putExtra("data", "Nothing to see here, move along.");
+                            sendBroadcast(intent);
+
+                            IntentFilter filter = new IntentFilter("com.android.vending.INSTALL_REFERRER");
+                            filter.addAction(Intent.ACTION_MAIN);
+                            registerReceiver(appRefReceiver, filter, "android.permission.INSTALL_PACKAGES", null );
+                            registerReceiver(appRefReceiver, filter );
+
+
+                            //refrerTV.setText("Referrer is : \n" + referrerUrl + "\n" + "Referrer Click Time is : " + referrerClickTime + "\nApp Install Time : " + appInstallTime);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED:
+                        Toast.makeText(CreateProfileActivity.this, "Feature not supported..", Toast.LENGTH_SHORT).show();
+                        break;
+                    case InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE:
+                        Toast.makeText(CreateProfileActivity.this, "Fail to establish connection", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+
+            @Override
+            public void onInstallReferrerServiceDisconnected() {
+                Toast.makeText(CreateProfileActivity.this, "Service disconnected..", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     private void handleFirebaseDynamicLink(int profileID) {
         try {

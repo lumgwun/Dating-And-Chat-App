@@ -55,7 +55,6 @@ public class ChatHelper {
 
     public static final int DIALOG_ITEMS_PER_PAGE = 100;
 
-
     private static ChatHelper instance;
 
     private QBChatService qbChatService;
@@ -65,28 +64,24 @@ public class ChatHelper {
     private ArrayList<QBUser> usersLoadedFromDialogs = new ArrayList<>();
     private ArrayList<QBUser> usersLoadedFromMessage = new ArrayList<>();
     private ArrayList<QBUser> usersLoadedFromMessages = new ArrayList<>();
-
-
-
-
     private Context context;
-
-
     public boolean isLogged() {
         return QBChatService.getInstance().isLoggedIn();
     }
 
-
-
     public ChatHelper(Context context) {
         this.context = context;
-        QBSettings.getInstance().setLogLevel(LogLevel.DEBUG);
+        try {
+            QBSettings.getInstance().setLogLevel(LogLevel.DEBUG);
+        } catch (NoClassDefFoundError e) {
+            e.printStackTrace();
+        }
+
         QBChatService.setDebugEnabled(true);
         QBChatService.setConfigurationBuilder(buildChatConfigs());
         QBChatService.setDefaultPacketReplyTimeout(10000);
         QBChatService.getInstance().setUseStreamManagement(true);
     }
-
 
     public ChatHelper() {
         super();
@@ -94,10 +89,14 @@ public class ChatHelper {
         qbChatService.setUseStreamManagement(true);
     }
 
-
     public static synchronized ChatHelper getInstance() {
         if (instance == null) {
-            QBSettings.getInstance().setLogLevel(LogLevel.DEBUG);
+            try {
+                QBSettings.getInstance().setLogLevel(LogLevel.DEBUG);
+            } catch (NoClassDefFoundError e) {
+                e.printStackTrace();
+            }
+
             QBChatService.setDebugEnabled(true);
             QBChatService.setConfigurationBuilder(buildChatConfigs());
             QBChatService.setDefaultPacketReplyTimeout(10000);
@@ -109,15 +108,6 @@ public class ChatHelper {
 
     private static QBChatService.ConfigurationBuilder buildChatConfigs() {
         QBChatService.ConfigurationBuilder configurationBuilder = new QBChatService.ConfigurationBuilder();
-
-        /*configurationBuilder.setSocketTimeout(AppChat.SOCKET_TIMEOUT);
-        configurationBuilder.setUseTls(AppChat.USE_TLS);
-        configurationBuilder.setKeepAlive(AppChat.KEEP_ALIVE);
-        configurationBuilder.setAutojoinEnabled(AppChat.AUTO_JOIN);
-        configurationBuilder.setAutoMarkDelivered(AppChat.AUTO_MARK_DELIVERED);
-        configurationBuilder.setReconnectionAllowed(AppChat.RECONNECTION_ALLOWED);
-        configurationBuilder.setAllowListenNetwork(AppChat.ALLOW_LISTEN_NETWORK);
-        configurationBuilder.setPort(AppChat.CHAT_PORT);*/
 
         SampleConfigs sampleConfigs = App.getSampleConfigs();
 

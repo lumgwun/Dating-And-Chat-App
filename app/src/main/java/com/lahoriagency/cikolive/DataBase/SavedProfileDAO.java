@@ -31,9 +31,11 @@ import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_PASSW
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_PHONE;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_PHOTO;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_QBID;
+import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_REFERRER;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_STATUS;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_TABLE;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_USERPROF_INFO_ID;
+import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROF_REF_REWARD_COUNT;
 import static com.lahoriagency.cikolive.Classes.UserProfileInfo.USER_PROF_INFO_ID;
 import static com.lahoriagency.cikolive.Classes.UserProfileInfo.USER_PROF_INFO_TABLE;
 import static java.lang.String.valueOf;
@@ -236,6 +238,28 @@ public class SavedProfileDAO extends DBHelperDAO{
         db.delete(SAVED_PROFILE_TABLE,
                 selection,
                 selectionArgs);
+
+    }
+
+    public void updateRewardCount(String refLink,int newUserCount) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SAVED_PROF_REF_REWARD_COUNT, newUserCount);
+        String selection = SAVED_PROFILE_REFERRER + "=?";
+        String[] selectionArgs = new String[]{refLink};
+        sqLiteDatabase.update(SAVED_PROFILE_TABLE, contentValues, selection, selectionArgs);
+
+
+    }
+
+    public void updateRefCount(String refLink,int newUserCount) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SAVED_PROF_REF_REWARD_COUNT, newUserCount);
+        String selection = SAVED_PROFILE_REFERRER + "=?";
+        String[] selectionArgs = new String[]{refLink};
+        sqLiteDatabase.update(SAVED_PROFILE_TABLE, contentValues, selection, selectionArgs);
+
 
     }
 

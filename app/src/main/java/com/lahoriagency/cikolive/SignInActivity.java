@@ -63,7 +63,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.dynamiclinks.DynamicLink;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.google.gson.Gson;
 import com.lahoriagency.cikolive.BottomSheets.WebBottomSheet;
 import com.lahoriagency.cikolive.Classes.AppChat;
@@ -165,10 +169,11 @@ public class SignInActivity extends BaseActivity {
     private SharedPreferences userPreferences;
     private int profileID;
     private Gson gson,gson1;
-    private String json,json1,userName,pass;
+    private String json,json1,userName,pass,refLink;
     private QBUser qbUser;
     private Bundle bundle;
     private boolean logFromSession;
+    private Uri mInvitationUrl;
 
 
 
@@ -218,11 +223,32 @@ public class SignInActivity extends BaseActivity {
             message = getIntent().getExtras().getString(Consts.EXTRA_FCM_MESSAGE);
 
         }
+        refLink = "https://cikolive.page.link/?invitedby=" + savedProfile;
         if(savedProfile !=null){
             userName=savedProfile.getSavedPEmail();
             pass=savedProfile.getSavedPPassword();
 
         }
+        FirebaseDynamicLinks.getInstance().createDynamicLink()
+                .setLink(Uri.parse(refLink))
+                .setDomainUriPrefix("https://cikolive.page.link/")
+                .setAndroidParameters(
+                        new DynamicLink.AndroidParameters.Builder("com.lahoriagency.cikolive")
+                                .setMinimumVersion(1)
+                                .build())
+                /*.setIosParameters(
+                        new DynamicLink.IosParameters.Builder("com.example.ios")
+                                .setAppStoreId("123456789")
+                                .setMinimumVersion("1.0.1")
+                                .build())*/
+                .buildShortDynamicLink()
+                .addOnSuccessListener(new OnSuccessListener<ShortDynamicLink>() {
+                    @Override
+                    public void onSuccess(ShortDynamicLink shortDynamicLink) {
+                        mInvitationUrl = shortDynamicLink.getShortLink();
+                        // ...
+                    }
+                });
 
         edtPassword = findViewById(R.id.password_signin);
         edtUser = findViewById(R.id.userName);

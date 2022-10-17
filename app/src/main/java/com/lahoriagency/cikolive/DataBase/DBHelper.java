@@ -54,6 +54,7 @@ import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_EMAIL
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_LOC;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_NAME;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_PASSWORD;
+import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_REFERRER;
 import static com.lahoriagency.cikolive.Classes.SavedProfile.SAVED_PROFILE_TABLE;
 import static com.lahoriagency.cikolive.Classes.TimeLine.CREATE_ACCOUNT_TIMELINE_TABLE;
 import static com.lahoriagency.cikolive.Classes.TimeLine.TIMELINE_TABLE;
@@ -68,7 +69,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private SQLiteDatabase sqLiteDatabase;
     private Context context;
     public static String DB_PATH = "/data/Ciko";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 7;
     private static final String DATABASE_NAME = "ciko_live_db";
     private static final String TABLE_STUDENTS = "students";
     private static final String ID = "id";
@@ -196,9 +197,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return "";
     }
 
-
-
-
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -243,6 +241,56 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(" DROP TABLE IF EXISTS "+ PICTURE_TABLE);
 
         onCreate(db);
+    }
+    public int getReferrerRewardCount(String refLink) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = SAVED_PROFILE_REFERRER + "=?";
+        int refCount=0;
+        String[] selectionArgs = new String[]{valueOf(refLink)};
+        Cursor cursor = db.query(SAVED_PROFILE_TABLE, null, selection, selectionArgs, null, null, null);
+
+        if (cursor.getCount() < 1) {
+            cursor.close();
+            return 0;
+        }
+
+        if(cursor!=null && cursor.getCount() > 0) {
+            if (cursor.moveToFirst()) {
+                do {
+                    refCount=cursor.getInt(23);
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+
+        }
+
+        db.close();
+        return refCount;
+    }
+    public int getReferrerCount(String refLink) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = SAVED_PROFILE_REFERRER + "=?";
+        int refCount=0;
+        String[] selectionArgs = new String[]{valueOf(refLink)};
+        Cursor cursor = db.query(SAVED_PROFILE_TABLE, null, selection, selectionArgs, null, null, null);
+
+        if (cursor.getCount() < 1) {
+            cursor.close();
+            return 0;
+        }
+
+        if(cursor!=null && cursor.getCount() > 0) {
+            if (cursor.moveToFirst()) {
+                do {
+                    refCount=cursor.getColumnCount();
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+
+        }
+
+        db.close();
+        return refCount;
     }
     public long insertNewModelItem(ModelItem modelItem) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();

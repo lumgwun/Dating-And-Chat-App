@@ -3,6 +3,7 @@ package com.lahoriagency.cikolive;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
@@ -11,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.os.RemoteException;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +30,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.android.installreferrer.api.InstallReferrerClient;
+import com.android.installreferrer.api.InstallReferrerStateListener;
+import com.android.installreferrer.api.ReferrerDetails;
 import com.devspark.robototextview.widget.RobotoTextView;
 import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Classes.Consts;
@@ -36,6 +41,7 @@ import com.lahoriagency.cikolive.Classes.PermissionsChecker;
 import com.lahoriagency.cikolive.Classes.SavedProfile;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.ToastUtils;
+import com.lahoriagency.cikolive.NewPackage.AppRefReceiver;
 import com.lahoriagency.cikolive.NewPackage.ChatMainAct;
 import com.lahoriagency.cikolive.NewPackage.ConfChatAct;
 import com.lahoriagency.cikolive.NewPackage.SignUpActivity;
@@ -78,6 +84,9 @@ public class SplashActivity extends AppCompatActivity {
     RobotoTextView appName;
     RobotoTextView txtDimDim;
     VideoView videoview;
+    InstallReferrerClient referrerClient;
+    private AppRefReceiver appRefReceiver;
+    private String referrer;
 
     /*@Override
     public void onClick(View v) {
@@ -92,11 +101,14 @@ public class SplashActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.act_splash);
         setTitle("Welcome to CIKO Live");
+        referrerClient = InstallReferrerClient.newBuilder(this).build();
         sharedPrefsHelper= new SharedPrefsHelper(this);
+        appRefReceiver= new AppRefReceiver();
         videoview = (VideoView) findViewById(R.id.videoView_Splash);
         Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.ciko_video1);
         videoview.setVideoURI(uri);
         videoview.start();
+        getCikoLiveReferrer(referrerClient);
 
         qbUser= new QBUser();
         savedProfile=new SavedProfile();
@@ -161,6 +173,60 @@ public class SplashActivity extends AppCompatActivity {
         }
 
     }
+
+    private void getCikoLiveReferrer(InstallReferrerClient referrerClient) {
+        referrerClient.startConnection(new InstallReferrerStateListener() {
+            @Override
+            public void onInstallReferrerSetupFinished(int responseCode) {
+                switch (responseCode) {
+                    case InstallReferrerClient.InstallReferrerResponse.OK:
+                        ReferrerDetails response = null;
+                        appRefReceiver= new AppRefReceiver();
+                        try {
+                            response = referrerClient.getInstallReferrer();
+
+                            String referrerUrl = response.getInstallReferrer();
+
+                            long referrerClickTime = response.getReferrerClickTimestampSeconds();
+
+                            long appInstallTime = response.getInstallBeginTimestampSeconds();
+
+                            boolean instantExperienceLaunched = response.getGooglePlayInstantParam();
+
+                            referrer = response.getInstallReferrer();
+                            //IntentFilter filter = new IntentFilter();
+                            Intent intent = new Intent();
+                            intent.setAction("com.example.broadcast.MY_NOTIFICATION");
+                            intent.putExtra("data", "Nothing to see here, move along.");
+                            sendBroadcast(intent);
+
+                            IntentFilter filter = new IntentFilter("com.android.vending.INSTALL_REFERRER");
+                            filter.addAction(Intent.ACTION_MAIN);
+                            registerReceiver(appRefReceiver, filter, "android.permission.INSTALL_PACKAGES", null );
+                            registerReceiver(appRefReceiver, filter );
+
+
+                            //refrerTV.setText("Referrer is : \n" + referrerUrl + "\n" + "Referrer Click Time is : " + referrerClickTime + "\nApp Install Time : " + appInstallTime);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED:
+                        Toast.makeText(SplashActivity.this, "Feature not supported..", Toast.LENGTH_SHORT).show();
+                        break;
+                    case InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE:
+                        Toast.makeText(SplashActivity.this, "Fail to establish connection", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+
+            @Override
+            public void onInstallReferrerServiceDisconnected() {
+                Toast.makeText(SplashActivity.this, "Service disconnected..", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();

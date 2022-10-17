@@ -1,12 +1,16 @@
 package com.lahoriagency.cikolive.Conference;
 import android.app.Application;
+import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.multidex.MultiDexApplication;
+import androidx.work.Logger;
 
 import com.lahoriagency.cikolive.Classes.ActivityLifecycle;
 import com.lahoriagency.cikolive.Classes.BackgroundListener;
+import com.lahoriagency.cikolive.Classes.ChatHelper;
+import com.lahoriagency.cikolive.Classes.DialogsManager;
 import com.lahoriagency.cikolive.Classes.ImageLoader;
 import com.lahoriagency.cikolive.Classes.QBDialogsHolderImpl;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
@@ -52,6 +56,11 @@ public class AppConference extends MultiDexApplication {
     private ChatHelperCon chatHelper;
     private DialogsManagerCon dialogsManager;
     private static ImageLoader imageLoader;
+    private Context contxt;
+
+    public static Logger logger;
+    private ChatHelper chatHelperA;
+    private DialogsManager dialogsManagerA;
 
     @Override
     public void onCreate() {
@@ -66,9 +75,42 @@ public class AppConference extends MultiDexApplication {
         initUsersHolder();
         initDialogsHolder();
         initChatHelper();
+        initChatHelperA();
         initDialogsManager();
+        initDialogsManagerA();
 
         ProcessLifecycleOwner.get().getLifecycle().addObserver(new BackgroundListener());
+
+
+    }
+
+
+    private void initChatHelperA() {
+        try {
+            chatHelperA = new ChatHelper(getApplicationContext());
+
+        } catch (NoClassDefFoundError e) {
+            System.out.println("Oops!");
+        }
+
+    }
+
+    public ChatHelper getChatHelperA() {
+        try {
+            return chatHelperA;
+        } catch (NoClassDefFoundError e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private void initDialogsManagerA() {
+        dialogsManagerA = new DialogsManager(getApplicationContext());
+    }
+
+    public DialogsManager getDialogsManagerA() {
+        return dialogsManagerA;
     }
     public static ImageLoader getImageLoader() {
         return imageLoader;
@@ -99,7 +141,22 @@ public class AppConference extends MultiDexApplication {
     }
 
     private void initChatHelper() {
-        chatHelper = new ChatHelperCon(getApplicationContext());
+        try {
+            chatHelper = new ChatHelperCon(getApplicationContext());
+
+        } catch (NoClassDefFoundError e) {
+            System.out.println("Oops!");
+        }
+
+    }
+    private void initChatHelper(Context context) {
+        try {
+            chatHelper = new ChatHelperCon(context);
+
+        } catch (NoClassDefFoundError e) {
+            System.out.println("Oops!");
+        }
+
     }
 
     public ChatHelperCon getChatHelper() {

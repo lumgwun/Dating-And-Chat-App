@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lahoriagency.cikolive.Classes.AppChat;
-import com.lahoriagency.cikolive.Classes.AppConference;
 import com.lahoriagency.cikolive.Classes.UiUtils;
+import com.lahoriagency.cikolive.Conference.AppConference;
 import com.lahoriagency.cikolive.R;
 import com.quickblox.users.model.QBUser;
 

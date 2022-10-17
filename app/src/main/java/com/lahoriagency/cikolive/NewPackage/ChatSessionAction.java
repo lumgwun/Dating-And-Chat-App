@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -33,10 +34,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.gson.Gson;
 import com.lahoriagency.cikolive.Classes.Diamond;
 import com.lahoriagency.cikolive.Classes.DiamondTransfer;
@@ -85,7 +89,7 @@ public class ChatSessionAction extends AppCompatActivity {
     private Uri userPix;
     private SessionFreePaid sessionFreePaid;
     private int collections,qbUserID,sessionID;
-    private Calendar calendar;
+    private Calendar calendar,newCalendar;
     private Uri mImageUri;
     ContentLoadingProgressBar progressBar;
     CircleImageView profilePix;
@@ -102,7 +106,7 @@ public class ChatSessionAction extends AppCompatActivity {
     private int sessionDiamond;
     private long eventID;
     private QBChatDialog qbChatDialog;
-    private String cal_meeting_id,diamondTime;
+    private String cal_meeting_id,startDateTime,diamondTime,sessionDateTime;
     private List<Integer> usersList;
     private ImageView backImgButton;
     private DiamondTransfer diamondTransfer;
@@ -180,8 +184,11 @@ public class ChatSessionAction extends AppCompatActivity {
             name=qbUser.getFullName();
         }
         sessionBundle = getIntent().getExtras();
+        newCalendar=Calendar.getInstance();
         if (sessionBundle != null) {
             sessionFreePaid = sessionBundle.getParcelable("SessionFreePaid");
+            sessionID=sessionBundle.getInt("sessionID");
+            startDateTime=sessionBundle.getString("startDateTime");
         }
         if (sessionFreePaid != null) {
             usersList = sessionFreePaid.getSessionUserIDs();
@@ -190,6 +197,11 @@ public class ChatSessionAction extends AppCompatActivity {
             eventID=sessionFreePaid.getEventId();
             eventTittle=sessionFreePaid.getSessionTittle();
         }
+        newCalendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        sessionDateTime = mdformat.format(newCalendar.getTime());
+        //TODO
+
         homeBundle.putInt("qbUserID", qbUserID);
         homeBundle.putParcelable("QBUser", (Parcelable) qbUser);
         homeBundle.putParcelable("SavedProfile", savedProfile);
@@ -215,8 +227,8 @@ public class ChatSessionAction extends AppCompatActivity {
         });
         backImgButton.setOnClickListener(this::goBackToTheHome);
         calendar = Calendar.getInstance();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        diamondTime = mdformat.format(calendar.getTime());
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat mdformat33 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        diamondTime = mdformat33.format(calendar.getTime());
 
         btnPayWithDiamond.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -279,16 +291,8 @@ public class ChatSessionAction extends AppCompatActivity {
         btnPayWithDiamond.startAnimation(translater);
         btnPayWithDiamond.setOnClickListener(this::PayWithDiamond);
 
-        ActionCodeSettings actionCodeSettings =
-                ActionCodeSettings.newBuilder()
-                        .setUrl("https://cikolive.page.link/")
-                        .setHandleCodeInApp(true)
-                        .setAndroidPackageName(
-                                "com.lahoriagency.cikolive",
-                                true, /* installIfNotAvailable */
-                                "12"    /* minimumVersion */)
-                        .build();
         handleFirebaseDynamicLink(sessionID);
+
         mdformat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         actionDate = mdformat.format(cal.getTime());
 
@@ -354,14 +358,29 @@ public class ChatSessionAction extends AppCompatActivity {
         }
         return false;
     }
+
     private void handleFirebaseDynamicLink(int sessionID) {
         try {
-            dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                    .setLink(Uri.parse("https://cikolive.page.link/profile/?Session_ID=" + sessionID))
-                    .setDomainUriPrefix("https://cikolive.page.link/session/")
-                    .setAndroidParameters(
-                            new DynamicLink.AndroidParameters.Builder("com.lahoriagency.cikolive").build())
-                    .buildDynamicLink();
+
+            FirebaseDynamicLinks.getInstance()
+                    .getDynamicLink(getIntent())
+                    .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                        @Override
+                        public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                            Uri deepLink = null;
+                            if (pendingDynamicLinkData != null) {
+                                deepLink = pendingDynamicLinkData.getLink();
+                            }
+
+                        }
+                    })
+                    .addOnFailureListener(this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "getDynamicLink:onFailure", e);
+                        }
+                    });
+
             try {
                 String url = URLDecoder.decode(dynamicLink.getUri().toString(), "UTF-8");
                 Log.d(TAG, "handleFirebaseDynamicLink: " + url);

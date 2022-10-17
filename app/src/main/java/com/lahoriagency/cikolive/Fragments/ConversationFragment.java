@@ -31,12 +31,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lahoriagency.cikolive.Adapters.OpponentsFromCallAdapter;
 import com.lahoriagency.cikolive.Classes.AppChat;
-import com.lahoriagency.cikolive.Classes.AppConference;
 import com.lahoriagency.cikolive.Classes.AppE;
 import com.lahoriagency.cikolive.Classes.CallService;
 import com.lahoriagency.cikolive.Classes.NoChildClickableRecyclerView;
 import com.lahoriagency.cikolive.Classes.SharedPrefsHelper;
 import com.lahoriagency.cikolive.Classes.WebRtcSessionManager;
+import com.lahoriagency.cikolive.Conference.AppConference;
 import com.lahoriagency.cikolive.Conference.QBUsersHolder;
 import com.lahoriagency.cikolive.Interfaces.Consts;
 import com.lahoriagency.cikolive.Interfaces.ConversationFragmentCallback;

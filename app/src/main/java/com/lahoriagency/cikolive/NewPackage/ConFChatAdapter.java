@@ -31,12 +31,13 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.lahoriagency.cikolive.Classes.AppConference;
+
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask;
 import com.lahoriagency.cikolive.Classes.BaseAsyncTask22;
 import com.lahoriagency.cikolive.Classes.ChatHelper;
 import com.lahoriagency.cikolive.Classes.ToastUtils;
 import com.lahoriagency.cikolive.Classes.ValidationUtils;
+import com.lahoriagency.cikolive.Conference.AppConference;
 import com.lahoriagency.cikolive.R;
 import com.quickblox.chat.model.QBAttachment;
 import com.quickblox.chat.model.QBChatDialog;
